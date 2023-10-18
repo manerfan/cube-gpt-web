@@ -15,9 +15,9 @@
  */
 
 import { Form, Input } from "antd";
-import { CSSProperties, FC } from "react";
+import { CSSProperties } from "react";
 import Image from "next/image";
-import { LoadingOutlined } from "@ant-design/icons";
+import styles from "./styles.module.css";
 
 export default function ChatInput({
   onSubmit,
@@ -53,10 +53,11 @@ export default function ChatInput({
           suffix={
             <button
               type="submit"
-              className="absolute bottom-2 right-2.5 rounded-lg bg-blue-100 p-2 text-sm w-10 h-10 font-medium hover:bg-blue-200 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:text-base"
+              className={`absolute bottom-2 right-2.5 rounded-lg bg-blue-100 p-2 text-sm w-10 h-10 font-medium focus:outline-none focus:ring-4 focus:ring-blue-300 sm:text-base ${loading ? 'cursor-progress' : 'hover:bg-blue-200'}`}
+              disabled={loading}
             >
               {loading ? (
-                <LoadingOutlined />
+                <div className={styles['lds-ellipsis']}><div></div><div></div><div></div><div></div></div>
               ) : (
                 <Image
                   className="relative"

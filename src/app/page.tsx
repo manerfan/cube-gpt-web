@@ -16,7 +16,7 @@
 
 "use client";
 
-import ChatInput from "@/components/ChatInput";
+import ChatInput from "@/components/chat-input/ChatInput";
 import HomeHeader from "./HomeHeader";
 import HomeFooter from "./HomeFooter";
 import HomeInfo from "./HomeInfo";
