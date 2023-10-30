@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-import "./globals.css";
+import "@/app/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import StyledComponentsRegistry from '@/libs/AntdRegistry';
+import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+
+import StyledComponentsRegistry from "@/libs/AntdRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export function generateStaticParams() {
+  return [{ locale: "zh" }, { locale: "en" }];
+}
 
 export const metadata: Metadata = {
   title: "Cube Chat | Speek FREELY with Me!",
@@ -35,15 +42,27 @@ export const metadata: Metadata = {
   keywords: ["gpt", "chatgpt", "aigc"],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params: { locale },
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
+  let messages;
+  try {
+    messages = (await import(`@/messages/${locale}.json`)).default;
+  } catch (error) {
+    console.error(error);
+    notFound();
+  }
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={inter.className}>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

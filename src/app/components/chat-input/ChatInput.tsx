@@ -17,7 +17,7 @@
 import { Form, Input } from "antd";
 import { CSSProperties } from "react";
 import Image from "next/image";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 export default function ChatInput({
   onSubmit,
@@ -46,10 +46,11 @@ export default function ChatInput({
       >
         <Input
           className="h-14 w-full border-none bg-slate-100 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base"
-          placeholder="Enter your prompt and Chat with me!"
+          placeholder={loading ? "Waiting Response ..." : "Enter your prompt and Chat with me!"}
           bordered={false}
           autoFocus
           size="large"
+          disabled={loading}
           suffix={
             <button
               type="submit"

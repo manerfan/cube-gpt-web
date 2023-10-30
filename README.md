@@ -36,3 +36,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 [在Next.js中使用Antd](https://ant-design.antgroup.com/docs/react/use-with-next-cn)
+
+[在Next.js中使用i18n](https://nextjs.org/docs/app/building-your-application/routing/internationalization)
+[next-intl](https://i18nexus.com/tutorials/nextjs/next-intl)
