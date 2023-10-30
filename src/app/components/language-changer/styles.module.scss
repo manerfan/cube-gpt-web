@@ -1,0 +1,48 @@
+.acss-btn {
+    transition: all 0.2s;
+    cursor: pointer;
+
+    .btn-inner {
+        -webkit-transition: all 0.2s;
+        transition: all 0.2s;
+    }
+
+    .acss-inner {
+        position: relative;
+        width: 1.2em;
+        height: 1.2em;
+
+        .acss-span, span {
+            position: absolute;
+            font-size: 1.2em;
+            line-height: 1;
+            border: 1px solid rgba(0, 0, 0, 0.88);
+            color: rgba(0, 0, 0, 0.88);
+        }
+
+        .acss-active {
+            left: -5%;
+            top: 0;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.88);
+            color: #ffffff;
+            -webkit-transform: scale(0.7);
+            -moz-transform: scale(0.7);
+            -ms-transform: scale(0.7);
+            transform: scale(0.7);
+            transform-origin: 0 0;
+        }
+
+        .acss-disactive {
+            right: -5%;
+            bottom: 0;
+            z-index: 0;
+            -webkit-transform: scale(0.5);
+            -moz-transform: scale(0.5);
+            -ms-transform: scale(0.5);
+            transform: scale(0.5);
+            transform-origin: 100% 100%;
+        }
+    }
+
+}

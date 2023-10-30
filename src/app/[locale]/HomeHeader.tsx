@@ -15,8 +15,13 @@
  */
 
 import Image from "next/image";
+import LanguageChanger from "../components/language-changer/LanguageChanger";
 
-export default function HomeHeader() {
+export default function HomeHeader({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
   return (
     <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
       <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4">
@@ -25,6 +30,8 @@ export default function HomeHeader() {
         <code className="font-mono">
           Speek <span className="font-bold">FREELY</span> with Me!
         </code>
+
+        <LanguageChanger size="small" params={{ locale }} className="ml-3" />
       </p>
       <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">
         <a
