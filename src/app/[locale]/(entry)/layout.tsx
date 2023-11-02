@@ -16,29 +16,28 @@
 
 "use client";
 
-import ChatInput from "@/app/components/chat-input/ChatInput";
-import HomeHeader from "./HomeHeader";
-import HomeFooter from "./HomeFooter";
-import LogoInfo from "@/app/components/logo/LogoInfo";
+import { Layout } from "antd";
+import styles from "./styles.module.scss";
+import Background from "./Background";
 
-export default function Home({
+import HomeHeader from "../HomeHeader";
+
+export default function LoginLayout({
+  children,
   params: { locale },
 }: {
+  children: React.ReactNode;
   params: { locale: string };
 }) {
   return (
-    <main className="flex relative min-h-screen flex-col items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24">
-      <HomeHeader params={{ locale }} />
-
-      <LogoInfo />
-
-      <ChatInput
-        className="my-2"
-        style={{ marginTop: "5rem", marginBottom: "2rem" }}
-        onSubmit={(values) => console.log(values)}
-      />
-
-      <HomeFooter />
-    </main>
+    <>
+      <Layout className={`w-screen min-h-screen ${styles.layout}`}>
+        <Background />
+        <HomeHeader className="m-auto mt-4" params={{ locale }} />
+        <Layout.Content className="place-items-center grid">
+          {children}
+        </Layout.Content>
+      </Layout>
+    </>
   );
 }

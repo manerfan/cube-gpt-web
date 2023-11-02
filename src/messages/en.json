@@ -1,3 +1,27 @@
 {
-    "home": {}
+  "home": {
+    "header": {
+      "start": "Start"
+    },
+    "footer": {
+      "docs": "Docs",
+      "deploy": "Deploy"
+    }
+  },
+  "login": {
+    "username": {
+      "placeholder": "Username",
+      "tip": "Please input your Username!"
+    },
+    "password": {
+      "placeholder": "Password",
+      "tip": "Please input your Password!"
+    },
+    "button": {
+      "login": "Log in"
+    }
+  },
+  "chat": {
+    "slogon": "Think as you think and Reach as you reach."
+  }
 }

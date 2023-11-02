@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
+"use client";
+
 import { Form, Input } from "antd";
 import { CSSProperties } from "react";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
 import styles from "./styles.module.scss";
+
 
 export default function ChatInput({
   onSubmit,
   loading,
+  autoFocus,
   className,
   style,
 }: {
   onSubmit?: (values: any) => void;
   loading?: boolean | undefined;
+  autoFocus?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }) {
+  const t = useTranslations('chat');
+
   return (
     <Form
       name="basic"
@@ -46,9 +54,9 @@ export default function ChatInput({
       >
         <Input
           className="h-14 w-full border-none bg-slate-100 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base"
-          placeholder={loading ? "Waiting Response ..." : "Enter your prompt and Chat with me!"}
+          placeholder={loading ? "Waiting Response ..." : t('slogon')}
           bordered={false}
-          autoFocus
+          autoFocus={autoFocus}
           size="large"
           disabled={loading}
           suffix={

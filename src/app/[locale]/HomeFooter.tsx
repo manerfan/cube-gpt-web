@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
+"use client";
+
+import { useTranslations } from 'next-intl';
+
 export default function HomeFooter() {
+  const t = useTranslations('home.footer');
+
   return (
     <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
       <a
@@ -24,7 +30,7 @@ export default function HomeFooter() {
         rel="noopener noreferrer"
       >
         <h2 className={`mb-3 text-2xl font-semibold`}>
-          Docs{" "}
+          {t('docs')}{" "}
           <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
             -&gt;
           </span>
@@ -75,7 +81,7 @@ export default function HomeFooter() {
         rel="noopener noreferrer"
       >
         <h2 className={`mb-3 text-2xl font-semibold`}>
-          Deploy{" "}
+          {t('deploy')}{" "}
           <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
             -&gt;
           </span>

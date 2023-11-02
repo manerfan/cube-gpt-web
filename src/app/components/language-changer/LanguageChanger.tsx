@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+"use client";
+
 import { useRouter, usePathname } from "next-intl/client";
 import { Button } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";

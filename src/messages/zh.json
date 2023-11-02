@@ -1,3 +1,27 @@
 {
-    "home": {}
+  "home": {
+    "header": {
+      "start": "开始"
+    },
+    "footer": {
+      "docs": "文档",
+      "deploy": "部署"
+    }
+  },
+  "login": {
+    "username": {
+      "placeholder": "用户名",
+      "tip": "请输入您的用户名"
+    },
+    "password": {
+      "placeholder": "密码",
+      "tip": "请输入您的密码"
+    },
+    "button": {
+      "login": "登录"
+    }
+  },
+  "chat": {
+    "slogon": "想你所想 及你所及"
+  }
 }
