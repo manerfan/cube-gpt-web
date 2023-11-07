@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-export default function flattenMessages(
-  nestedMessages: Record<string, any>,
-  prefix = '',
-) {
-  return Object.keys(nestedMessages).reduce(
-    (messages: Record<string, any>, key) => {
-      let value = nestedMessages[key];
-      let prefixedKey = prefix ? `${prefix}.${key}` : key;
-
-      if (typeof value === 'string') {
-        messages[prefixedKey] = value;
-      } else {
-        Object.assign(messages, flattenMessages(value, prefixedKey));
-      }
-
-      return messages;
-    },
-    {},
+const BackgroundWaveAnimation: React.FC = () => {
+  return (
+    <div
+      className="absolute z-1 w-full h-3/4 lg:h-2/3"
+      style={{
+        background: 'url(/loading/wave.svg) center bottom no-repeat',
+        backgroundSize: 'cover',
+      }}
+    ></div>
   );
-}
+};
+
+export default BackgroundWaveAnimation;

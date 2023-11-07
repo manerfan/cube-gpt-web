@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 const Footer: React.FC = () => {
   const intl = useIntl();

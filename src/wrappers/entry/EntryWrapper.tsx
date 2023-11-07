@@ -1,4 +1,20 @@
-import { Link, Outlet, useIntl } from 'umi';
+/**
+ * Copyright 2023 Maner·Fan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Link, Outlet, useIntl } from '@umijs/max';
 
 import HeaderSimple from '@/components/header/HeaderSimple';
 import { Card, Col, Image, Layout, Row } from 'antd';
@@ -6,6 +22,7 @@ import { Card, Col, Image, Layout, Row } from 'antd';
 import LogoBlock from '@/components/logo/LogoBlock';
 import styles from './styles.module.scss';
 import BackgroundBaanderole from '@/components/background/BackgroundBanderole';
+import BackgroundFoamAnimation from '@/components/background/BackgroundWaveFoam';
 
 const EntryWrapper: React.FC = () => {
   const intl = useIntl();
@@ -13,8 +30,11 @@ const EntryWrapper: React.FC = () => {
   return (
     <Layout className={`w-screen min-h-screen ${styles.layout}`}>
       <HeaderSimple className="m-auto mt-4" />
+      
       <BackgroundBaanderole />
-      <Layout.Content className="place-items-center grid">
+      <BackgroundFoamAnimation />
+    
+      <Layout.Content className="place-items-center grid mt-16 mb-32 lg:my-0">
         <Row wrap={true} gutter={24} justify="center" className="w-full">
           <Col
             span={22}

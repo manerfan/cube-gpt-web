@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-export default function flattenMessages(
-  nestedMessages: Record<string, any>,
-  prefix = '',
-) {
-  return Object.keys(nestedMessages).reduce(
-    (messages: Record<string, any>, key) => {
-      let value = nestedMessages[key];
-      let prefixedKey = prefix ? `${prefix}.${key}` : key;
-
-      if (typeof value === 'string') {
-        messages[prefixedKey] = value;
-      } else {
-        Object.assign(messages, flattenMessages(value, prefixedKey));
-      }
-
-      return messages;
-    },
-    {},
+const BackgroundFoamAnimation: React.FC = () => {
+  return (
+    <div
+      className="absolute z-1 w-full h-full place-items-center grid"
+    >
+      <div className="w-full h-full" style={{
+        background: 'url(/loading/foam.svg) center center no-repeat',
+        backgroundSize: 'cover',
+      }}></div>
+    </div>
   );
-}
+};
+
+export default BackgroundFoamAnimation;

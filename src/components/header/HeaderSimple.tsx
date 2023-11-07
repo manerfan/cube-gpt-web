@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { Image } from 'antd';
 import LanguageChanger from '@/components/language-changer/LanguageChanger';
+import { Link } from '@umijs/max';
+import { Image } from 'antd';
 
 const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
   return (
@@ -30,11 +31,22 @@ const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
         <code className="font-mono">
           Speek <span className="font-bold">FREELY</span> with Me!
         </code>
-        
-        <LanguageChanger size="small" className="ml-3 bottom-0.5"/>
+        <LanguageChanger size="small" className="ml-3 bottom-0.5" />
       </p>
       <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">
-        <a
+        <Link
+          to="/login"
+          className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
+        >
+          <Image
+            src="/logo.png"
+            alt="CubeBit Logo"
+            width={60}
+            height={60}
+            preview={false}
+          />
+        </Link>
+        {/* <aÔ
           className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
           href="https://github.com/manerfan"
           target="_blank"
@@ -47,7 +59,7 @@ const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
             height={60}
             preview={false}
           />
-        </a>
+        </a> */}
       </div>
     </div>
   );

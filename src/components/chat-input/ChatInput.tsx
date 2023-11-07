@@ -18,7 +18,7 @@ import { Form, Input, Image } from "antd";
 import { CSSProperties } from "react";
 import styles from "./styles.module.scss";
 
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: any) => void;

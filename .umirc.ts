@@ -27,4 +27,5 @@ export default defineConfig({
     antd: true,
     baseNavigator: true,
   },
+  svgo: false
 });
