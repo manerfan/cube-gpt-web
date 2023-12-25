@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 import { Button } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { useState } from 'react';
-import { getLocale, setLocale } from 'umi';
+import { getLocale, setLocale } from '@umijs/max';
 
 import styles from './styles.module.scss';
 

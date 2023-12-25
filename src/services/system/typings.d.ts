@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-// 全局共享数据示例
-import { APP_NAME } from '@/constants';
-import { useState } from 'react';
+import '@interface/typings';
 
-const useUser = () => {
-  const [name, setName] = useState<string>(APP_NAME);
-  return {
-    name,
-    setName,
+declare namespace SYSTEM {
+  type SetupCmd = {
+    /**
+     * 用户名
+     */
+    name: string;
+
+    /**
+     * 邮箱
+     */
+    email: string;
+
+    /**
+     * 密码
+     */
+    password: string;
   };
-};
-
-export default useUser;
+}

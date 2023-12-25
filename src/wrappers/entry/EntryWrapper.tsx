@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import { Card, Col, Image, Layout, Row } from 'antd';
 
 import LogoBlock from '@/components/logo/LogoBlock';
 import styles from './styles.module.scss';
-import BackgroundBaanderole from '@/components/background/BackgroundBanderole';
-import BackgroundFoamAnimation from '@/components/background/BackgroundWaveFoam';
+import BackgroundBanderole from '@/components/background/BackgroundBanderole';
 
 const EntryWrapper: React.FC = () => {
   const intl = useIntl();
@@ -31,8 +30,7 @@ const EntryWrapper: React.FC = () => {
     <Layout className={`w-screen min-h-screen ${styles.layout}`}>
       <HeaderSimple className="m-auto mt-4" />
       
-      <BackgroundBaanderole />
-      <BackgroundFoamAnimation />
+      <BackgroundBanderole />
     
       <Layout.Content className="place-items-center grid mt-16 mb-32 lg:my-0">
         <Row wrap={true} gutter={24} justify="center" className="w-full">

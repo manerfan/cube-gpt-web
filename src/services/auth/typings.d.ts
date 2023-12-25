@@ -14,7 +14,23 @@
  * limitations under the License.
  */
 
-import flattenMessages from './flatten';
-import enUS from './messages/zh-CN.json';
+import '@interface/typings';
 
-export default flattenMessages(enUS);
+declare namespace AUTH {
+  type LoginCmd = {
+    /**
+     * 用户名
+     */
+    username: string;
+
+    /**
+     * 密码
+     */
+    password: string;
+  };
+
+  type AuthEntity = {
+    access_token: string;
+    token_type: string;
+  };
+}

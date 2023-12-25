@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@ import HeaderSimple from "@/components/header/HeaderSimple";
 import LogoInfo from "@/components/logo/LogoBlock";
 import Footer from "./components/Footer";
 import ChatInput from "@/components/chat-input/ChatInput";
-import BackgroundWaveAnimation from "@/components/background/BackgroundWaveAnimation";
+import BackgroundBanderole from "@/components/background/BackgroundBanderole";
 
 
 const HomePage: React.FC = () => {
   
   return (
     <>
-    <BackgroundWaveAnimation />
+    <BackgroundBanderole />
     <main className="flex relative min-h-screen flex-col items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24">
       <HeaderSimple />
       

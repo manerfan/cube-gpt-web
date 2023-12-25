@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-import flattenMessages from './flatten';
-import enUS from './messages/zh-CN.json';
+import type { Response } from '@/services/typings';
+import { request } from '@umijs/max';
+import type { USER } from './typings';
 
-export default flattenMessages(enUS);
+/**
+ * 获取当前登录人信息
+ * @returns User.UserEntity
+ */
+export async function me(options?: Record<string, any>) {
+  return request<Response.SingleResponse<USER.UserEntity>>(`/api/user/me`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

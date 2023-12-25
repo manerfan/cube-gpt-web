@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ type ProxyConfig = {
 
 const proxyConfig: ProxyConfig = {
   dev: {
-    '/api/': {
+    '/api': {
       // 要代理的地址
-      target: 'http://localhost:7001',
-      // changeOrigin: true,
+      target: 'http://127.0.0.1:8080/',
+      changeOrigin: true
     },
   },
 };

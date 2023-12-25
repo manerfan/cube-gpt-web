@@ -13,12 +13,17 @@
       "placeholder": "Username",
       "tip": "Please input your Username!"
     },
+    "email": {
+      "placeholder": "Email",
+      "tip": "Please input your Email!"
+    },
     "password": {
       "placeholder": "Password",
       "tip": "Please input your Password!"
     },
     "button": {
-      "login": "Log in"
+      "login": "Log in",
+      "setup": "Setup"
     }
   },
   "chat": {

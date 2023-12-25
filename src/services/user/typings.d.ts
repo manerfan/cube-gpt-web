@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import flattenMessages from './flatten';
-import enUS from './messages/zh-CN.json';
+import '@interface/typings';
 
-export default flattenMessages(enUS);
+declare namespace USER {
+  type UserEntity = {
+    uid: str;
+    name: string;
+    email: string;
+    avatar: string;
+  };
+}

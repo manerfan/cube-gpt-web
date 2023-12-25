@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const BackgroundBaanderole: React.FC = () => {
+const BackgroundBanderole: React.FC = () => {
   return (
     <div className="absolute z-1 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none">
         <div className="flex-none flex justify-end">
@@ -36,4 +36,4 @@ const BackgroundBaanderole: React.FC = () => {
   );
 };
 
-export default BackgroundBaanderole;
+export default BackgroundBanderole;

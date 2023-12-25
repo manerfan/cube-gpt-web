@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,74 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'umi';
+import { history, useIntl } from '@umijs/max';
 
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { EMAIL_PATTERN, PASSWORD_PATTERN } from '@/constants';
+import { setupService } from '@/services';
+import {
+  ContactsOutlined,
+  LockOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Button, Form, Input, message } from 'antd';
+
+const submitSetup = async (formData: any) => {
+  const { content } = await setupService.setup({
+    name: formData.name,
+    email: formData.email,
+    password: formData.password,
+  });
+
+  if (content) {
+    history.push('/login');
+  } else {
+    message.error('Init Error!');
+  }
+};
 
 const Login: React.FC = () => {
   const intl = useIntl();
 
   return (
-    <Form name="cube_chat_login">
+    <Form name="cube_chat_login" onFinish={submitSetup}>
       <Form.Item
-        name="username"
+        name="name"
         rules={[
           {
             required: true,
+            min: 3,
+            max: 32,
             message: intl.formatMessage({ id: 'login.username.tip' }),
           },
         ]}
       >
         <Input
           size="large"
+          minLength={3}
           maxLength={32}
           prefix={<UserOutlined className="site-form-item-icon" />}
+          type="text"
           placeholder={intl.formatMessage({ id: 'login.username.placeholder' })}
+        />
+      </Form.Item>
+      <Form.Item
+        name="email"
+        rules={[
+          {
+            required: true,
+            min: 5,
+            max: 128,
+            pattern: EMAIL_PATTERN,
+            message: intl.formatMessage({ id: 'login.email.tip' }),
+          },
+        ]}
+      >
+        <Input
+          size="large"
+          maxLength={128}
+          prefix={<ContactsOutlined className="site-form-item-icon" />}
+          type="text"
+          placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
         />
       </Form.Item>
       <Form.Item
@@ -45,12 +89,16 @@ const Login: React.FC = () => {
         rules={[
           {
             required: true,
+            min: 6,
+            max: 32,
+            pattern: PASSWORD_PATTERN,
             message: intl.formatMessage({ id: 'login.password.tip' }),
           },
         ]}
       >
         <Input
           size="large"
+          minLength={6}
           maxLength={32}
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"

@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,3 +15,9 @@
  */
 
 export const APP_NAME = 'Cube Chat';
+
+export const EMAIL_PATTERN =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
+export const PASSWORD_PATTERN = /^[a-zA-Z][a-zA-Z0-9_!@#$%&*]{5,31}$/;
+
+export const ACCESS_TOKEN = "access_token";
+export const TOKEN_TYPE = "token_type";

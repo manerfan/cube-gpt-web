@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Maner·Fan
+ * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@ import { Image } from 'antd';
 const LogoInfo: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
-      className={`mt-24 lg:mt-2 relative grid place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:lg:h-[360px] z-10 ${
-        className || ""
+      className={`mt-24 lg:mt-2 relative grid place-items-center z-10
+      before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] before:lg:h-[360px]
+      after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] ${
+        className || ''
       }`}
     >
       <Image
@@ -40,6 +42,6 @@ const LogoInfo: React.FC<{ className?: string }> = ({ className }) => {
       </span>
     </div>
   );
-}
+};
 
 export default LogoInfo;

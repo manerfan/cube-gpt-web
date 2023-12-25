@@ -11,7 +11,9 @@ export default defineConfig({
   access: {},
   model: {},
   initialState: {},
-  request: {},
+  request: {
+    dataField: 'content',
+  },
   clientLoader: {},
   clickToComponent: {},
   deadCode: {},
@@ -27,5 +29,5 @@ export default defineConfig({
     antd: true,
     baseNavigator: true,
   },
-  svgo: false
+  svgo: false,
 });

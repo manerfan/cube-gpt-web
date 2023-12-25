@@ -20,9 +20,6 @@ dependencies:
   antd:
     specifier: ^5.11.0
     version: 5.11.0(react-dom@18.2.0)(react@18.2.0)
-  click-to-react-component:
-    specifier: ^1.0.8
-    version: 1.0.8(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@types/react':
@@ -2723,20 +2720,6 @@ packages:
       - react-dom
     dev: false
 
-  /@floating-ui/react-dom-interactions@0.3.1(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-tP2KEh7EHJr5hokSBHcPGojb+AorDNUf0NYfZGg/M+FsMvCOOsSEeEF0O1NDfETIzDnpbHnCs0DuvCFhSMSStg==}
-    deprecated: Package renamed to @floating-ui/react
-    dependencies:
-      '@floating-ui/react-dom': 0.6.3(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0)
-      aria-hidden: 1.2.3
-      point-in-polygon: 1.1.0
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.35)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - react
-      - react-dom
-    dev: false
-
   /@floating-ui/react-dom@0.6.3(@types/react@18.2.35)(react-dom@18.1.0)(react@18.1.0):
     resolution: {integrity: sha512-hC+pS5D6AgS2wWjbmSQ6UR6Kpy+drvWGJIri6e1EDGADTPsCaa4KzCgmCczHrQeInx9tqs81EyDmbKJYY2swKg==}
     peerDependencies:
@@ -2747,20 +2730,6 @@ packages:
       react: 18.1.0
       react-dom: 18.1.0(react@18.1.0)
       use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.35)(react@18.1.0)
-    transitivePeerDependencies:
-      - '@types/react'
-    dev: false
-
-  /@floating-ui/react-dom@0.6.3(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-hC+pS5D6AgS2wWjbmSQ6UR6Kpy+drvWGJIri6e1EDGADTPsCaa4KzCgmCczHrQeInx9tqs81EyDmbKJYY2swKg==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@floating-ui/dom': 0.4.5
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.35)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -5163,20 +5132,6 @@ packages:
       '@floating-ui/react-dom-interactions': 0.3.1(@types/react@18.2.35)(react-dom@18.1.0)(react@18.1.0)
       htm: 3.1.1
       react: 18.1.0
-      react-merge-refs: 1.1.0
-    transitivePeerDependencies:
-      - '@types/react'
-      - react-dom
-    dev: false
-
-  /click-to-react-component@1.0.8(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YBNYOp00udy+NBEnUmM/3Df0Yco1iHNQ8k0ltlJVcDYK9AuYt14xPoJicBh/BokLqbzkci1p+pbdY5r4JXZC4g==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      '@floating-ui/react-dom-interactions': 0.3.1(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0)
-      htm: 3.1.1
-      react: 18.2.0
       react-merge-refs: 1.1.0
     transitivePeerDependencies:
       - '@types/react'
@@ -11882,19 +11837,6 @@ packages:
     dependencies:
       '@types/react': 18.2.35
       react: 18.1.0
-    dev: false
-
-  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.35)(react@18.2.0):
-    resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@types/react': 18.2.35
-      react: 18.2.0
     dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):
