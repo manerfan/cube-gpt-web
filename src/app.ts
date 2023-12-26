@@ -14,30 +14,66 @@
  * limitations under the License.
  */
 
-import { ErrorShowType } from '@/services';
+import { ErrorShowType, setupService, userService } from '@/services';
 import type { Response } from '@/services/typings';
-import { RequestConfig, RequestOptions, history } from '@umijs/max';
+import {
+  AxiosResponse,
+  RequestConfig,
+  RequestOptions,
+  history,
+} from '@umijs/max';
 import { message, notification } from 'antd';
+import _ from 'lodash';
 import { ACCESS_TOKEN, TOKEN_TYPE } from './constants';
+import { USER } from './services/user/typings';
+
+const loginPath = '/login';
+const ignoreAuthPath = ['/login', '/setup'];
 
 // 运行时配置
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function render(oldRender: Function) {
+  oldRender();
+}
+
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
-// export async function getInitialState(): Promise<{
-//   userMe?: USER.UserEntity;
-// }> {
-//   // const pathname = history.location.pathname;
+export async function getInitialState(): Promise<{
+  // 当前登录账号
+  userMe?: USER.UserEntity;
+  // 初始化状态
+  setupStatus?: boolean;
+}> {
+  // const pathname = history.location.pathname;
 
-//   const fetchUserInfo = async () => {
-//     try {
-//       const result = await userService.me();
-//       return result.content;
-//     } catch (ex) {
-//       return undefined;
-//     }
-//   };
-// }
+  const fetchUserInfo = async () => {
+    try {
+      const result = await userService.me();
+      return result.content;
+    } catch (ex) {
+      return undefined;
+    }
+  };
+
+  const fetchSetupStatus = async () => {
+    try {
+      const result = await setupService.isSetup();
+      return result.content;
+    } catch (ex) {
+      return undefined;
+    }
+  };
+
+  const [userMe, setupStatus] = await Promise.all<
+    [Promise<USER.UserEntity | undefined>, Promise<boolean | undefined>]
+  >([fetchUserInfo(), fetchSetupStatus()]);
+
+  return {
+    userMe: await userMe,
+    setupStatus: await setupStatus,
+  };
+}
 
 const errorShow = (error: any) => {
   // 判断error是否为数组
@@ -78,6 +114,35 @@ const errorShow = (error: any) => {
   }
 };
 
+const responseHandler = (
+  response: AxiosResponse<any>,
+  opts: any | undefined = undefined,
+) => {
+  // 处理401，跳转到登录
+  if (response.status === 401) {
+    // 首页和登录页不需要
+    if (
+      !(
+        location.pathname === '/' ||
+        _.some(ignoreAuthPath, (path) => location.pathname.startsWith(path))
+      )
+    ) {
+      message.info('登录中, 请稍等...');
+      let redirectUri = location.pathname.startsWith('/api')
+        ? '/'
+        : location.pathname;
+      if (redirectUri.startsWith(loginPath)) {
+        const searchParams = new URLSearchParams(location.search);
+        redirectUri = searchParams.get('redirectUri') || '/';
+      }
+      window.location.href = loginPath + '?redirectUri=' + redirectUri;
+    }
+
+    (opts || {}).skipErrorHandler = true;
+  }
+  return response;
+};
+
 // 请求配置：https://umijs.org/docs/max/request
 export const request: RequestConfig = {
   timeout: 1000,
@@ -100,6 +165,7 @@ export const request: RequestConfig = {
     },
     errorHandler(error: any, opts: any) {
       console.error(error);
+      responseHandler(error.response, opts);
 
       if (opts?.skipErrorHandler) {
         throw error;
@@ -129,7 +195,7 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // Bear Token
-      if (!!window.localStorage.getItem('accessToken')) {
+      if (!!window.localStorage.getItem(ACCESS_TOKEN)) {
         config.headers.Authorization = `${
           window.localStorage.getItem(TOKEN_TYPE) || 'bearer'
         } ${window.localStorage.getItem(ACCESS_TOKEN)}`;
@@ -137,14 +203,6 @@ export const request: RequestConfig = {
       return { ...config };
     },
   ],
-  responseInterceptors: [
-    // (response: AxiosResponse<any>) => {
-    //   const data = response.data;
-    //   if (!!data.content) {
-    //     return data.content;
-    //   }
-    //   return data;
-    // },
-  ],
+  responseInterceptors: [responseHandler],
   // other axios options you want
 };

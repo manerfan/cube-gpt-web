@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useIntl } from '@umijs/max';
+import { history, useIntl, useModel } from '@umijs/max';
 
 import {
   ACCESS_TOKEN,
@@ -25,20 +25,35 @@ import {
 import { authService } from '@/services';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
+import { useEffect, useState } from 'react';
 
-const submitLogin = async (formData: any) => {
-  const { content: auth } = await authService.login({
-    username: formData.username,
-    password: formData.password,
-  });
-
-  window.localStorage.setItem(ACCESS_TOKEN, auth.access_token);
-  window.localStorage.setItem(TOKEN_TYPE, auth.token_type || 'bearer');
-  window.location.href = '/';
+const redirectUri = () => {
+  const searchParams = new URLSearchParams(location.search);
+  return searchParams.get('redirectUri') || '/';
 };
 
 const Login: React.FC = () => {
   const intl = useIntl();
+  const { initialState } = useModel('@@initialState');
+
+  const [loading, setLoading] = useState(false);
+  const submitLogin = async (formData: any) => {
+    setLoading(true);
+    const { content: auth } = await authService.login({
+      username: formData.username,
+      password: formData.password,
+    }).finally(() => setLoading(false));
+
+    window.localStorage.setItem(ACCESS_TOKEN, auth.access_token);
+    window.localStorage.setItem(TOKEN_TYPE, auth.token_type || 'bearer');
+    window.location.href = redirectUri();
+  };
+
+  useEffect(() => {
+    if (!!initialState?.userMe) {
+      history.push('/');
+    }
+  }, [initialState]);
 
   return (
     <Form name="cube_chat_login" onFinish={submitLogin}>
@@ -91,6 +106,7 @@ const Login: React.FC = () => {
           htmlType="submit"
           className="login-form-button"
           size="large"
+          loading={loading}
         >
           {intl.formatMessage({ id: 'login.button.login' })}
         </Button>

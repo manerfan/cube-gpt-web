@@ -28,10 +28,10 @@ const metas: Metas = [
   {
     charset: 'utf-8',
   },
-  {
-    "http-equiv": "Content-Security-Policy",
-    content: "default-src 'self';",
-  },
+  // {
+  //   "http-equiv": "Content-Security-Policy",
+  //   content: "default-src 'self'; style-src 'self' 'unsafe-inline';",
+  // },
   {
     name: 'description',
     content: 'Speek FREELY with Me!',
