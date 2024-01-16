@@ -1,4 +1,4 @@
-import LogoInfo from './components/logo/LogoBlock';
+import LogoInfo from './components/logo/LogoInfo';
 
 const Loading: React.FC = () => {
   return (

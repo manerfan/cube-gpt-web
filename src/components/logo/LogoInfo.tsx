@@ -14,33 +14,45 @@
  * limitations under the License.
  */
 
-import { Image } from 'antd';
+import { Hero, HeroProps } from '@lobehub/ui';
+import { useIntl } from '@umijs/max';
+import { CSSProperties } from 'react';
+import LogoSlogan from './LogoSlogan';
 
-const LogoInfo: React.FC<{ className?: string }> = ({ className }) => {
+const LogoInfo: React.FC<{
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
+}> = ({ className, style }) => {
+  const intl = useIntl();
+
+  const actions: HeroProps['actions'] = [
+    {
+      icon: 'Github',
+      link: 'https://github.com/manerfan',
+      text: 'Github',
+    },
+    {
+      link: '/',
+      text: intl.formatMessage({ id: 'home.header.start' }),
+      type: 'primary',
+    },
+  ];
+
   return (
-    <div
-      className={`mt-24 lg:mt-2 relative grid place-items-center z-10
+    <>
+      <div
+        className={`relative grid place-items-center z-10
       before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] before:lg:h-[360px]
       after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] ${
         className || ''
       }`}
-    >
-      <Image
-        className="relative"
-        src="/logo.png"
-        alt="CubeBit Logo"
-        width={180}
-        height={180}
-        preview={false}
-      />
-      <span className="relative top-6 place-items-center grid md:space-x-4 md:block">
-        <code className="font-mono font-bold text-2xl">. CUBE CHAT</code>
-        <span className="hidden md:inline">|</span>
-        <span className="font-mono">
-          Speek <span className="font-bold">FREELY</span> with Me!
-        </span>
-      </span>
-    </div>
+        style={style || {}}
+      >
+        <Hero actions={actions} title="<b>. CUBE</b> CHAT" />
+
+        <LogoSlogan />
+      </div>
+    </>
   );
 };
 

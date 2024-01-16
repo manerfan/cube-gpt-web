@@ -14,32 +14,53 @@
  * limitations under the License.
  */
 
-import HeaderSimple from "@/components/header/HeaderSimple";
-import LogoInfo from "@/components/logo/LogoBlock";
-import Footer from "./components/Footer";
-import ChatInput from "@/components/chat-input/ChatInput";
-import BackgroundBanderole from "@/components/background/BackgroundBanderole";
+import BackgroundBanderole from '@/components/background/BackgroundBanderole';
+import Footer from '@/components/footer/Footer';
+import HeaderSimple from '@/components/header/HeaderSimple';
+import LogoInfo from '@/components/logo/LogoInfo';
+import { ThemeProvider } from '@lobehub/ui';
 
+import { Features, FeaturesProps } from '@lobehub/ui';
+import { Waypoints, MousePointerClick, Boxes} from 'lucide-react';
+
+const items: FeaturesProps['items'] = [
+  {
+    description:
+      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz.',
+    icon:  Waypoints,
+    title: '灵活开放',
+  },
+  {
+    description:
+      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx.',
+    icon: MousePointerClick,
+    title: '开箱即用',
+  },
+  {
+    description:
+      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz.',
+    icon: Boxes,
+    title: '私有部署',
+  },
+];
 
 const HomePage: React.FC = () => {
-  
   return (
-    <>
-    <BackgroundBanderole />
-    <main className="flex relative min-h-screen flex-col items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24">
-      <HeaderSimple />
+    <ThemeProvider>
+      <BackgroundBanderole />
       
-      <LogoInfo />
+      <main className="flex relative flex-col h-full min-h-screen items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24" style={{gridTemplateRows: 'auto 1fr auto'}}>
+        <HeaderSimple />
 
-      <ChatInput
-        className="my-2"
-        style={{ marginTop: "5rem", marginBottom: "2rem" }}
-        onSubmit={(values) => console.log(values)}
-      />
+        <LogoInfo className='mt-24 lg:mt-32 '/>
 
-      <Footer />
-    </main>
-    </>
+        <div className="mt-20 mb-16 md:mb-20">
+          <Features items={items} />
+        </div>
+
+        <Footer className='py-4 grow-0 shrink-0 mb-36 lg:mb-2' />
+      </main>
+    </ThemeProvider>
   );
 };
 
