@@ -18,6 +18,7 @@ import { Hero, HeroProps } from '@lobehub/ui';
 import { useIntl } from '@umijs/max';
 import { CSSProperties } from 'react';
 import LogoSlogan from './LogoSlogan';
+import IdeaSlogan from './IdeaSlogan';
 
 const LogoInfo: React.FC<{
   className?: string | undefined;
@@ -51,6 +52,7 @@ const LogoInfo: React.FC<{
         <Hero actions={actions} title="<b>. CUBE</b> CHAT" />
 
         <LogoSlogan />
+        <IdeaSlogan className="mt-4 underline decoration-4 decoration-sky-200"/>
       </div>
     </>
   );

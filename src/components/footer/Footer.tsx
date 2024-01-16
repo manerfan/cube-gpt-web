@@ -81,10 +81,10 @@ const Footer: React.FC<{
             </Typography.Link>
           </Tooltip>
           <Divider type="vertical" />
-          <LanguageChanger size="small" className="ml-3 bottom-0.5" />
+          <LanguageChanger size="small" />
         </Space>
         <Typography.Text className="text-gray-500">
-          © 2024 CubeBit Maner·Fan
+          © 2024 . CUBE CHAT Maner·Fan
         </Typography.Text>
       </Flex>
     </Flex>

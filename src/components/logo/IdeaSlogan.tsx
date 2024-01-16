@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-.layout {
-    min-height: 100vh !important;
+const IdeaSlogan: React.FC<{
+  className?: string | undefined;
+}> = ({ className }) => {
+  return (
+    <span className={`${className || ''}`}>
+      Empower Your Ideas, Expand Your Reach!
+    </span>
+  );
+};
 
-    .content {
-        div {
-            width: 100% !important;
-        }
-
-        .logo {
-
-            div,
-            img {
-                width: auto !important;
-            }
-        }
-
-        form {
-            button {
-                width: 100%;
-            }
-        }
-    }
-}
+export default IdeaSlogan;

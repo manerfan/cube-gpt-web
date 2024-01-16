@@ -23,29 +23,28 @@ import {
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Form, Input, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { ProForm, ProFormText } from '@ant-design/pro-components';
+import { message } from 'antd';
+import { useEffect } from 'react';
 
 const Login: React.FC = () => {
   const intl = useIntl();
   const { initialState } = useModel('@@initialState');
 
-  const [loading, setLoading] = useState(false);
   const submitSetup = async (formData: any) => {
-    setLoading(true);
     const { content } = await setupService.setup({
       name: formData.name,
       email: formData.email,
       password: formData.password,
-    }).finally(() => setLoading(false));
-  
+    });
+
     if (content) {
       history.push('/login');
     } else {
       message.error('Init Error!');
     }
   };
-  
+
   useEffect(() => {
     if (!!initialState?.setupStatus) {
       history.push('/login');
@@ -53,8 +52,8 @@ const Login: React.FC = () => {
   }, [initialState]);
 
   return (
-    <Form name="cube_chat_login" onFinish={submitSetup}>
-      <Form.Item
+    <ProForm name="cube_chat_setup" onFinish={submitSetup}>
+      <ProFormText
         name="name"
         rules={[
           {
@@ -64,17 +63,14 @@ const Login: React.FC = () => {
             message: intl.formatMessage({ id: 'login.username.tip' }),
           },
         ]}
-      >
-        <Input
-          size="large"
-          minLength={3}
-          maxLength={32}
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          type="text"
-          placeholder={intl.formatMessage({ id: 'login.username.placeholder' })}
-        />
-      </Form.Item>
-      <Form.Item
+        placeholder={intl.formatMessage({ id: 'login.username.placeholder' })}
+        fieldProps={{
+          size: 'large',
+          maxLength: 32,
+          prefix: <UserOutlined className="site-form-item-icon" />,
+        }}
+      />
+      <ProFormText
         name="email"
         rules={[
           {
@@ -85,16 +81,14 @@ const Login: React.FC = () => {
             message: intl.formatMessage({ id: 'login.email.tip' }),
           },
         ]}
-      >
-        <Input
-          size="large"
-          maxLength={128}
-          prefix={<ContactsOutlined className="site-form-item-icon" />}
-          type="text"
-          placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
-        />
-      </Form.Item>
-      <Form.Item
+        placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
+        fieldProps={{
+          size: 'large',
+          maxLength: 128,
+          prefix: <ContactsOutlined className="site-form-item-icon" />,
+        }}
+      />
+      <ProFormText.Password
         name="password"
         rules={[
           {
@@ -105,30 +99,15 @@ const Login: React.FC = () => {
             message: intl.formatMessage({ id: 'login.password.tip' }),
           },
         ]}
-      >
-        <Input
-          size="large"
-          minLength={6}
-          maxLength={32}
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          type="password"
-          placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}
-        />
-      </Form.Item>
-
-      <Form.Item>
-        <Button
-          block
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-          size="large"
-          loading={loading}
-        >
-          {intl.formatMessage({ id: 'login.button.login' })}
-        </Button>
-      </Form.Item>
-    </Form>
+        placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}
+        fieldProps={{
+          size: 'large',
+          minLength: 6,
+          maxLength: 32,
+          prefix: <LockOutlined className="site-form-item-icon" />,
+        }}
+      />
+    </ProForm>
   );
 };
 

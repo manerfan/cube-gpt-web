@@ -24,8 +24,8 @@ import {
 } from '@/constants';
 import { authService } from '@/services';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import { useEffect, useState } from 'react';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { useEffect } from 'react';
 
 const redirectUri = () => {
   const searchParams = new URLSearchParams(location.search);
@@ -36,13 +36,11 @@ const Login: React.FC = () => {
   const intl = useIntl();
   const { initialState } = useModel('@@initialState');
 
-  const [loading, setLoading] = useState(false);
   const submitLogin = async (formData: any) => {
-    setLoading(true);
     const { content: auth } = await authService.login({
       username: formData.username,
       password: formData.password,
-    }).finally(() => setLoading(false));
+    });
 
     window.localStorage.setItem(ACCESS_TOKEN, auth.access_token);
     window.localStorage.setItem(TOKEN_TYPE, auth.token_type || 'bearer');
@@ -56,8 +54,8 @@ const Login: React.FC = () => {
   }, [initialState]);
 
   return (
-    <Form name="cube_chat_login" onFinish={submitLogin}>
-      <Form.Item
+    <LoginForm name="cube_chat_login" onFinish={submitLogin}>
+      <ProFormText
         name="username"
         rules={[
           {
@@ -68,16 +66,14 @@ const Login: React.FC = () => {
             message: intl.formatMessage({ id: 'login.email.tip' }),
           },
         ]}
-      >
-        <Input
-          size="large"
-          maxLength={128}
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          type="text"
-          placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
-        />
-      </Form.Item>
-      <Form.Item
+        placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
+        fieldProps={{
+          size: 'large',
+          maxLength: 128,
+          prefix: <UserOutlined className="site-form-item-icon" />,
+        }}
+      />
+      <ProFormText.Password
         name="password"
         rules={[
           {
@@ -88,30 +84,15 @@ const Login: React.FC = () => {
             message: intl.formatMessage({ id: 'login.password.tip' }),
           },
         ]}
-      >
-        <Input
-          size="large"
-          minLength={6}
-          maxLength={32}
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          type="password"
-          placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}
-        />
-      </Form.Item>
-
-      <Form.Item>
-        <Button
-          block
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-          size="large"
-          loading={loading}
-        >
-          {intl.formatMessage({ id: 'login.button.login' })}
-        </Button>
-      </Form.Item>
-    </Form>
+        placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}
+        fieldProps={{
+          size: 'large',
+          minLength: 6,
+          maxLength: 32,
+          prefix: <LockOutlined className="site-form-item-icon" />,
+        }}
+      />
+    </LoginForm>
   );
 };
 

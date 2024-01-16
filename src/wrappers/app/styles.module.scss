@@ -14,26 +14,6 @@
  * limitations under the License.
  */
 
-.layout {
+ .layout {
     min-height: 100vh !important;
-
-    .content {
-        div {
-            width: 100% !important;
-        }
-
-        .logo {
-
-            div,
-            img {
-                width: auto !important;
-            }
-        }
-
-        form {
-            button {
-                width: 100%;
-            }
-        }
-    }
 }

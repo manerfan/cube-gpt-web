@@ -26,9 +26,6 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
-  lucide:
-    specifier: ^0.309.0
-    version: 0.309.0
   lucide-react:
     specifier: ^0.309.0
     version: 0.309.0(react@18.2.0)
@@ -8985,10 +8982,6 @@ packages:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
-
-  /lucide@0.309.0:
-    resolution: {integrity: sha512-e0G5Ld1f+wJeE/5DQII6KcWM+2fPcJoYI2DKPPGkeVoD6NbZSpA9vu7nA4F5JeBJMh+AMAWEoSJ5SQUDlh549Q==}
     dev: false
 
   /make-dir@2.1.0:

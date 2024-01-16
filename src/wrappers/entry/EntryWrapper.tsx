@@ -24,13 +24,14 @@ import LogoBlock from '@/components/logo/LogoInfo';
 import styles from './styles.module.scss';
 
 import { ThemeProvider } from '@lobehub/ui';
+import FooterSimple from '@/components/footer/FooterSimple';
 
 const EntryWrapper: React.FC = () => {
   const intl = useIntl();
 
   return (
     <ThemeProvider>
-      <Layout className={`w-screen min-h-screen ${styles.layout}`}>
+      <Layout className={`w-screen min-h-screen flex flex-col ${styles.layout}`}>
         <HeaderSimple className="m-auto mt-4" />
 
         <BackgroundBanderole />
@@ -56,12 +57,12 @@ const EntryWrapper: React.FC = () => {
                   </h1>
                 }
                 hoverable
-                className="relative w-full"
+                className={`relative w-full z-20 ${styles.content}`}
                 style={{ backgroundColor: 'rgb(255,255,255,0.5)' }}
               >
                 <Link
                   to="/"
-                  className="absolute place-items-center grid w-20 h-20 -top-10 bg-sky-100 border border-dashed border-sky-300 rounded-full transition-transform hover:shadow-lg hover:shadow-blue-200"
+                  className={`absolute place-items-center grid w-20 h-20 -top-10 bg-sky-100 border border-dashed border-sky-300 rounded-full transition-transform hover:shadow-lg hover:shadow-blue-200 ${styles.logo}`}
                 >
                   <Image
                     src="/logo.png"
@@ -76,6 +77,8 @@ const EntryWrapper: React.FC = () => {
               </Card>
             </Col>
           </Row>
+
+          <FooterSimple className='grow-0 shrink-0' />
         </Layout.Content>
       </Layout>
     </ThemeProvider>

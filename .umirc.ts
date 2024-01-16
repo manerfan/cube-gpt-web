@@ -22,7 +22,7 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   tailwindcss: {},
   metas: metas,
-  title: 'Cube Chat | Speek FREELY with Me!',
+  title: 'Cube Chat | Speek FREELY with Me! | Empower Your Ideas, Expand Your Reach!',
   locale: {
     default: 'zh-CN',
     baseSeparator: '-',
