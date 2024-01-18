@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-'use client';
-
 import { Button } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { useState } from 'react';

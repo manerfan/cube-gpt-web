@@ -15,18 +15,17 @@
  */
 
 import LanguageChanger from '@/components/language-changer/LanguageChanger';
-import { GithubOutlined, WechatOutlined } from '@ant-design/icons';
-import { Divider, Flex, Image, Space, Tooltip, Typography } from 'antd';
+import { Flex, Image, Space, Typography } from 'antd';
 import { CSSProperties } from 'react';
 import IdeaSlogan from '../logo/IdeaSlogan';
 
 const FooterSimple: React.FC<{
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({ className, style }) => {
-  const licenseInfo = (
-    <Flex gap="large" justify="center" align="start" vertical>
-      <Flex gap="middle" justify="center" align="start" vertical>
+}> = () => {
+  return (
+    <>
+      <Flex gap="small" justify="center" align="center" vertical>
         <Space align="end">
           <Image
             src="/logo.png"
@@ -35,75 +34,17 @@ const FooterSimple: React.FC<{
             height={32}
             preview={false}
           />
+          <Typography.Text className="text-gray-700">© 2024</Typography.Text>
           <Typography.Text
             strong
             className="underline decoration-4 decoration-sky-200"
           >
             . CUBE CHAT
           </Typography.Text>
-        </Space>
-        <Typography.Paragraph className="text-gray-500">
-          xxx yyy zzz xxx yyy zzz xxx yyy zzz
-          <br />
-          xxx yyy zzz xxx yyy zzz xxx yyy zzz
-        </Typography.Paragraph>
-      </Flex>
-      <Flex gap="middle" justify="center" align="start" vertical>
-        <Space align="start" size="large">
-          <Typography.Link
-            href="https://github.com/manerfan"
-            target="blank"
-            style={{ color: '#000' }}
-          >
-            <GithubOutlined />
-          </Typography.Link>
-          <Tooltip
-            title={
-              <Image
-                src="/wechat.png"
-                alt="Maner_Fan"
-                width={200}
-                height={200}
-                preview={false}
-              />
-            }
-          >
-            <Typography.Link style={{ color: '#000' }}>
-              <WechatOutlined />
-            </Typography.Link>
-          </Tooltip>
-          <Divider type="vertical" />
+          <Typography.Text className="text-gray-700">Maner·Fan</Typography.Text>
           <LanguageChanger size="small" />
         </Space>
-        <Typography.Text className="text-gray-500">
-          © 2024 CubeChat Maner·Fan
-        </Typography.Text>
-      </Flex>
-    </Flex>
-  );
-
-  return (
-    <>
-    <Flex gap="small" justify='center' align='center' vertical>
-      <Space align="end">
-        <Image
-          src="/logo.png"
-          alt="CubeBit Logo"
-          width={32}
-          height={32}
-          preview={false}
-        />
-        <Typography.Text className="text-gray-700">© 2024</Typography.Text>
-        <Typography.Text
-          strong
-          className="underline decoration-4 decoration-sky-200"
-        >
-          . CUBE CHAT
-        </Typography.Text>
-        <Typography.Text className="text-gray-700">Maner·Fan</Typography.Text>
-        <LanguageChanger size="small" />
-      </Space>
-      <IdeaSlogan className='block underline decoration-4 decoration-sky-200' />
+        <IdeaSlogan className="block underline decoration-4 decoration-sky-200" />
       </Flex>
     </>
   );

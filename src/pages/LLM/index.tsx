@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-const BackgroundFoamAnimation: React.FC = () => {
-  return (
-    <div
-      className="absolute z-1 w-full h-full place-items-center grid"
-    >
-      <div className="w-full h-full" style={{
-        background: 'url(/loading/foam.svg) center center no-repeat',
-        backgroundSize: 'cover',
-      }}></div>
-    </div>
-  );
-};
+const LLMConfig: React.FC = () => {
+    return <><span style={{height: '100vh'}}>1234</span></>
+}
 
-export default BackgroundFoamAnimation;
+export default LLMConfig;

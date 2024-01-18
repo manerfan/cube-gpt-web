@@ -21,9 +21,9 @@ import {
   Divider,
   Flex,
   Image,
+  Popover,
   Row,
   Space,
-  Tooltip,
   Typography,
 } from 'antd';
 import { CSSProperties } from 'react';
@@ -65,7 +65,7 @@ const Footer: React.FC<{
           >
             <GithubOutlined />
           </Typography.Link>
-          <Tooltip
+          <Popover
             title={
               <Image
                 src="/wechat.png"
@@ -79,7 +79,7 @@ const Footer: React.FC<{
             <Typography.Link style={{ color: '#000' }}>
               <WechatOutlined />
             </Typography.Link>
-          </Tooltip>
+          </Popover>
           <Divider type="vertical" />
           <LanguageChanger size="small" />
         </Space>

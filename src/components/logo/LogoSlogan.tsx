@@ -27,7 +27,7 @@ const LogoSlogan: React.FC<{
         <code className="font-mono font-bold text-2xl">. CUBE CHAT</code>
         <span>|</span>
         <span className="font-mono">
-          Speek <span className="font-bold">FREELY</span> with Me!
+          Speak <span className="font-bold">FREELY</span> with Me!
         </span>
       </span>
     </>

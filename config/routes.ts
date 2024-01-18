@@ -26,7 +26,26 @@ type Routes = Array<
   | { [x: string]: any }
 >;
 
+// 团队路由
+const teamRoutes: Routes = [
+  {
+    path: '',
+    redirect: '/space/:id/team',
+  },
+  // LLM供应商
+  {
+    path: 'llm',
+    component: './LLM',
+  },
+  // 团队
+  {
+    path: 'team',
+    component: './LLM',
+  },
+];
+
 const routes: Routes = [
+  // 首页
   {
     path: '/',
     component: './Home',
@@ -35,15 +54,28 @@ const routes: Routes = [
     path: '/home',
     component: './Home',
   },
+  // 初始化
   {
     path: '/setup',
     component: './Setup',
     wrappers: ['@/wrappers/entry/EntryWrapper'],
   },
+  // 登录
   {
     path: '/login',
     component: './Login',
     wrappers: ['@/wrappers/entry/EntryWrapper'],
+  },
+  // 空间
+  {
+    path: '/space/:id',
+    wrappers: ['@/wrappers/space/SpaceWrapper'],
+    routes: teamRoutes,
+  },
+  // 404
+  { 
+    path: '/*', 
+    redirect: '/', 
   },
 ];
 

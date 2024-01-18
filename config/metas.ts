@@ -34,7 +34,7 @@ const metas: Metas = [
   // },
   {
     name: 'description',
-    content: 'Speek FREELY with Me! Empower Your Ideas, Expand Your Reach!',
+    content: 'Speak FREELY with Me! 想你所想 及你所及!',
   },
   {
     name: 'application-name',

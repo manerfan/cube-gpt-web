@@ -28,7 +28,7 @@ const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
         <code className="font-mono font-bold">. CUBE CHAT</code>
         &nbsp;|&nbsp;
         <code className="font-mono">
-          Speek <span className="font-bold">FREELY</span> with Me!
+          Speak <span className="font-bold">FREELY</span> with Me!
         </code>
       </p>
       <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">

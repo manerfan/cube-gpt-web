@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+import { useIntl } from "@umijs/max";
+
 const IdeaSlogan: React.FC<{
   className?: string | undefined;
 }> = ({ className }) => {
+  const intl = useIntl();
+  
   return (
     <span className={`${className || ''}`}>
-      Empower Your Ideas, Expand Your Reach!
+      {intl.formatMessage({ id: 'chat.slogon' })}
     </span>
   );
 };
