@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { ErrorShowType, setupService, userService } from '@/services';
+import {
+  ErrorShowType,
+  llmService,
+  systemService,
+  userService,
+} from '@/services';
 import type { Response } from '@/services/typings';
 import {
   AxiosResponse,
@@ -25,10 +30,36 @@ import {
 import { message, notification } from 'antd';
 import _ from 'lodash';
 import { ACCESS_TOKEN, TOKEN_TYPE } from './constants';
+import { LLM } from './services/llm/typings';
+import { SYSTEM } from './services/system/typings';
 import { USER } from './services/user/typings';
 
 const loginPath = '/login';
 const ignoreAuthPath = ['/login', '/setup'];
+
+/**
+ * 将对象中下划线格式的键转换为驼峰格式
+ */
+function toCamelCase<T>(obj: T): T {
+  if (_.isArray(obj)) {
+    // 如果是数组，对数组的每个元素进行递归处理
+    return obj.map((item) => toCamelCase(item)) as T;
+  } else if (_.isObject(obj)) {
+    // 如果是对象，首先用 _.mapKeys 转换对象的键
+    return _.mapValues(
+      _.mapKeys(obj, (value, key) => _.camelCase(key)),
+      (value) => {
+        // 然后对对象的值进行递归处理
+        if (_.isObject(value)) {
+          return toCamelCase(value);
+        }
+        return value;
+      },
+    ) as T;
+  }
+  // 如果既不是对象也不是数组，直接返回原值
+  return obj;
+}
 
 // 运行时配置
 
@@ -44,6 +75,10 @@ export async function getInitialState(): Promise<{
   userMe?: USER.UserEntity;
   // 初始化状态
   setupStatus?: boolean;
+  // 应用
+  appInfo?: SYSTEM.AppInfo;
+  // 模型
+  providers?: LLM.ProviderSchema[];
 }> {
   // const pathname = history.location.pathname;
 
@@ -58,20 +93,45 @@ export async function getInitialState(): Promise<{
 
   const fetchSetupStatus = async () => {
     try {
-      const result = await setupService.isSetup();
+      const result = await systemService.isSetup();
       return result.content;
     } catch (ex) {
       return undefined;
     }
   };
 
-  const [userMe, setupStatus] = await Promise.all<
-    [Promise<USER.UserEntity | undefined>, Promise<boolean | undefined>]
-  >([fetchUserInfo(), fetchSetupStatus()]);
+  const fetchAppInfo = async () => {
+    try {
+      const result = await systemService.profile();
+      return result.content.appInfo;
+    } catch (ex) {
+      return undefined;
+    }
+  };
+
+  const fetchProviders = async () => {
+    try {
+      const result = await llmService.providers();
+      return result.content;
+    } catch (ex) {
+      return undefined;
+    }
+  };
+
+  const [userMe, setupStatus, appInfo, providers] = await Promise.all<
+    [
+      Promise<USER.UserEntity | undefined>,
+      Promise<boolean | undefined>,
+      Promise<SYSTEM.AppInfo | undefined>,
+      Promise<LLM.ProviderSchema[] | undefined>,
+    ]
+  >([fetchUserInfo(), fetchSetupStatus(), fetchAppInfo(), fetchProviders()]);
 
   return {
     userMe: await userMe,
     setupStatus: await setupStatus,
+    appInfo: await appInfo,
+    providers: await providers,
   };
 }
 
@@ -140,6 +200,8 @@ const responseHandler = (
 
     (opts || {}).skipErrorHandler = true;
   }
+
+  response.data = toCamelCase(response.data);
   return response;
 };
 

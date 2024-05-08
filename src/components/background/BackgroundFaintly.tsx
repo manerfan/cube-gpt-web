@@ -14,47 +14,22 @@
  * limitations under the License.
  */
 
+import styles from './styles.module.scss';
+
 const BackgroundFaintly: React.FC = () => {
   return (
     <section style={{ position: 'relative', flex: 1, maxWidth: '100%' }}>
       <div
+        className={`hidden ${styles.faintly} ${styles['faintly-left']}`}
         style={{
           backgroundImage:
             'linear-gradient( -45deg, #369eff, #95f3d9, #ffcb47, #e34ba9 )',
-          backgroundSize: '400% 400%',
-          borderRadius: 'inherit',
-          animation: '5s animation-1gj30q7 5s ease infinite',
-          pointerEvents: 'none',
-          position: 'absolute',
-          zIndex: 1,
           top: -100,
           left: '-20vw',
           transform: 'rotate(-4deg)',
-          opacity: 0.2,
-          width: '60vw',
-          height: 200,
-          filter: 'blur(100px)',
         }}
       ></div>
-      <div
-        style={{
-          backgroundImage:
-            'linear-gradient( -45deg, #ffcb47, #e34ba9, #369eff, #95f3d9 )',
-          backgroundSize: '400% 400%',
-          borderRadius: 'inherit',
-          animation: '5s animation-1gj30q7 5s ease infinite',
-          pointerEvents: 'none',
-          position: 'absolute',
-          zIndex: 1,
-          top: -100,
-          right: '-20vw',
-          transform: 'rotate(4deg)',
-          opacity: 0.2,
-          width: '60vw',
-          height: 200,
-          filter: 'blur(100px)',
-        }}
-      ></div>
+      <div className={`${styles.faintly} ${styles['faintly-right']}`}></div>
     </section>
   );
 };

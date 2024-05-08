@@ -17,7 +17,7 @@
 import { history, useIntl, useModel } from '@umijs/max';
 
 import { EMAIL_PATTERN, PASSWORD_PATTERN } from '@/constants';
-import { setupService } from '@/services';
+import { systemService } from '@/services';
 import {
   ContactsOutlined,
   LockOutlined,
@@ -32,14 +32,14 @@ const Login: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   const submitSetup = async (formData: any) => {
-    const { content } = await setupService.setup({
+    const { content } = await systemService.setup({
       name: formData.name,
       email: formData.email,
       password: formData.password,
     });
 
     if (content) {
-      history.push('/login');
+      window.location.href = '/login';
     } else {
       message.error('Init Error!');
     }

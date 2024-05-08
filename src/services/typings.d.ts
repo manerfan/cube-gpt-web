@@ -16,6 +16,8 @@
 
 import '@interface/typings';
 
+import {  FormFieldValueStatusEnum } from '@/services';
+
 /**
  * 请求
  */
@@ -61,4 +63,91 @@ declare namespace Response {
     page?: Request.PageRequest;
     content: T[];
   }>;
+}
+
+declare namespace Display {
+  type I18nOption = {
+    default: string;
+    enUs?: string;
+    zhCn?: string;
+  };
+
+  type Icon = {
+    default: string;
+    enUs?: string;
+    zhCn?: string;
+  };
+
+  type IconOption = {
+    small: Icon;
+    large: Icon;
+    background?: string;
+  };
+
+  type HelpOption = {
+    title: I18nOption;
+    url: string;
+  };
+
+  /**
+   * 表单元数据
+   * https://pro-components.antdigital.dev/components/schema-form
+   * https://pro-components.antdigital.dev/components/schema
+   */
+  type FormSchema = {
+    dataIndex: string;
+    valueType: string;
+    valueEnum: { [key: string]: FormFieldValueEnum };
+    fieldProps?: { [key: string]: any };
+    title?: I18nOption;
+    tooltip?: I18nOption;
+    rules?: FormFieldRule;
+  };
+
+  type FormFieldValueEnum = {
+    /**
+     * 值展示文本
+     */
+    text: I18nOption;
+
+    /**
+     * 状态
+     */
+    status?: FormFieldValueStatusEnum;
+
+    /**
+     * 是否禁用
+     */
+    disabled?: boolean;
+  };
+
+  /**
+   * 表单规则
+   */
+  type FormFieldRule = {
+    /**
+     * 是否必须
+     */
+    required?: boolean;
+
+    /**
+     * 最小值
+     */
+    min?: int;
+
+    /**
+     * 最大值
+     */
+    max?: int;
+
+    /**
+     * 正则规则
+     */
+    pattern?: string;
+
+    /**
+     * 规则消息
+     */
+    message?: I18nOption;
+  };
 }

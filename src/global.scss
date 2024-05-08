@@ -1,0 +1,44 @@
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+body,
+#root {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb)) !important;
+
+    margin: 0;
+    padding: 0;
+}
+
+/**
+ * 对 layout 的样式进行覆盖
+ */
+.ant-pro-layout {
+    .ant-layout-sider {
+        padding: .5rem !important;
+
+        .ant-layout-sider-children {
+            background: linear-gradient(to bottom,
+                    transparent,
+                    rgb(245, 245, 245)) rgb(245, 245, 245) !important;
+            border-radius: 1rem !important;
+            border: none;
+        }
+    }
+
+    .ant-pro-layout-container {
+        background: linear-gradient(to bottom,
+                transparent,
+                rgb(245, 245, 245)) rgb(245, 245, 245) !important;
+
+        .ant-layout-content {
+            padding: 1rem !important;
+            min-height: 100vh !important;
+        }
+    }
+}

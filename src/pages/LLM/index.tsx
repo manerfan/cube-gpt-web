@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import CubeContentWrapper from "@/wrappers/cube/CubeContentWrapper";
+
 const LLMConfig: React.FC = () => {
-    return <><span style={{height: '100vh'}}>1234</span></>
+    return <CubeContentWrapper header={<>header</>}>content</CubeContentWrapper>
+    
 }
 
 export default LLMConfig;

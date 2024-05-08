@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-.layout {
-    min-height: 100vh !important;
+import LogoInfo from "@/components/logo/LogoInfo";
 
-    main {
-        padding: 0 !important;
-        min-height: 100vh !important;
-    }
-}
+const Chat: React.FC = () => {
+    return (
+        <LogoInfo className='mt-24 lg:mt-32 '/>
+    );
+  };
+  
+  export default Chat;

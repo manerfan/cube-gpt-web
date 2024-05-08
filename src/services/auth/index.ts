@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import type { Response } from '@/services/typings';
 import type { AUTH } from './typings';
 import { request } from '@umijs/max';
 
@@ -26,8 +25,8 @@ import { request } from '@umijs/max';
 export async function login(
   auth: AUTH.LoginCmd,
   options?: Record<string, any>,
-) {
-  return request<Response.SingleResponse<AUTH.AuthEntity>>(`/api/login`, {
+): Promise<AUTH.AuthEntity> {
+  return request<AUTH.AuthEntity>(`/api/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',

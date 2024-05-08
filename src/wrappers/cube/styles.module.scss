@@ -1,4 +1,4 @@
-/**
+lea/**
  * Copyright 2024 Maner·Fan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-import '@interface/typings';
-
-declare namespace AUTH {
-  type LoginCmd = {
-    /**
-     * 用户名
-     */
-    username: string;
-
-    /**
-     * 密码
-     */
-    password: string;
-  };
-
-  type AuthEntity = {
-    accessToken: string;
-    tokenType: string;
-  };
+.layout {
+    min-height: 100vh !important;
 }

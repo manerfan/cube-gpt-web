@@ -16,21 +16,36 @@
 
 import '@interface/typings';
 
-declare namespace AUTH {
-  type LoginCmd = {
+declare namespace WORKSPACE {
+  type WorkspaceEntity = {
     /**
-     * 用户名
+     * uid
      */
-    username: string;
+    uid: string;
 
     /**
-     * 密码
+     * 创建者 uid
      */
-    password: string;
-  };
+    creatorUid: string;
 
-  type AuthEntity = {
-    accessToken: string;
-    tokenType: string;
-  };
+    /**
+     * 名称
+     */
+    name: string;
+
+    /**
+     * 描述
+     */
+    description?: string;
+
+    /**
+     * 类型
+     */
+    type: WorkspaceType;
+
+    /**
+     * 角色
+     */
+    memberRole: WorkspaceMemberRole;
+  }
 }

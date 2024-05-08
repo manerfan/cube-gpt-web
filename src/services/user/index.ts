@@ -22,7 +22,9 @@ import type { USER } from './typings';
  * 获取当前登录人信息
  * @returns User.UserEntity
  */
-export async function me(options?: Record<string, any>) {
+export async function me(
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<USER.UserEntity>> {
   return request<Response.SingleResponse<USER.UserEntity>>(`/api/user/me`, {
     method: 'GET',
     ...(options || {}),

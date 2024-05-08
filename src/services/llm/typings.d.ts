@@ -15,22 +15,45 @@
  */
 
 import '@interface/typings';
+import type { Display } from '@/services/typings';
+import { ModelType } from '@/services/llm';
 
-declare namespace AUTH {
-  type LoginCmd = {
+declare namespace LLM {
+  type ProviderSchema = {
     /**
-     * 用户名
+     * 标识
      */
-    username: string;
+    key: string;
 
     /**
-     * 密码
+     * 名称
      */
-    password: string;
-  };
+    name: Display.I18nOption;
 
-  type AuthEntity = {
-    accessToken: string;
-    tokenType: string;
+    /**
+     * 描述
+     */
+    discription?: Display.I18nOption;
+
+    /**
+     * 图标
+     */
+    icon?: Display.IconOption;
+
+    /**
+     * 帮助
+     */
+    help?: Display.HelpOption;
+
+    /**
+     * 凭证
+     */
+    credentialSchemas?: Display.FormSchema[];
+
+    /**
+     * 支持的模型类型
+     */
+    supportedModelTypes: ModelType[];
+
   };
 }

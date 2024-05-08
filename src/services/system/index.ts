@@ -22,8 +22,10 @@ import type { SYSTEM } from './typings';
  * 检查是否已经完成系统设置
  * @returns true / false
  */
-export async function isSetup(options?: Record<string, any>) {
-  return request<Response.SingleResponse<boolean>>(`/api/setup`, {
+export async function isSetup(
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<boolean>> {
+  return request<Response.SingleResponse<boolean>>(`/api/system/setup`, {
     method: 'GET',
     params: {},
     ...(options || {}),
@@ -38,10 +40,27 @@ export async function isSetup(options?: Record<string, any>) {
 export async function setup(
   auth: SYSTEM.SetupCmd,
   options?: Record<string, any>,
-) {
-  return request<Response.SingleResponse<boolean>>(`/api/setup`, {
+): Promise<Response.SingleResponse<boolean>> {
+  return request<Response.SingleResponse<boolean>>(`/api/system/setup`, {
     method: 'POST',
     data: auth,
     ...(options || {}),
   });
+}
+
+/**
+ * 获取系统设置
+ * @returns SYSTEM.AppInfo
+ */
+export async function profile(
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<{ appInfo: SYSTEM.AppInfo }>> {
+  return request<Response.SingleResponse<{ appInfo: SYSTEM.AppInfo }>>(
+    `/api/system/profile`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  );
 }

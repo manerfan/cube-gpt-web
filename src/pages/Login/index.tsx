@@ -16,12 +16,7 @@
 
 import { history, useIntl, useModel } from '@umijs/max';
 
-import {
-  ACCESS_TOKEN,
-  EMAIL_PATTERN,
-  PASSWORD_PATTERN,
-  TOKEN_TYPE,
-} from '@/constants';
+import { ACCESS_TOKEN, TOKEN_TYPE } from '@/constants';
 import { authService } from '@/services';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
@@ -37,19 +32,22 @@ const Login: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   const submitLogin = async (formData: any) => {
-    const { content: auth } = await authService.login({
+    const auth = await authService.login({
       username: formData.username,
       password: formData.password,
     });
 
-    window.localStorage.setItem(ACCESS_TOKEN, auth.access_token);
-    window.localStorage.setItem(TOKEN_TYPE, auth.token_type || 'bearer');
+    window.localStorage.setItem(ACCESS_TOKEN, auth.accessToken);
+    window.localStorage.setItem(TOKEN_TYPE, auth.tokenType || 'bearer');
     window.location.href = redirectUri();
   };
 
   useEffect(() => {
     if (!!initialState?.userMe) {
       history.push('/');
+    }
+    if (!initialState?.setupStatus) {
+      history.push('/setup');
     }
   }, [initialState]);
 
@@ -62,8 +60,6 @@ const Login: React.FC = () => {
             required: true,
             min: 5,
             max: 128,
-            pattern: EMAIL_PATTERN,
-            message: intl.formatMessage({ id: 'login.email.tip' }),
           },
         ]}
         placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
@@ -80,8 +76,6 @@ const Login: React.FC = () => {
             required: true,
             min: 6,
             max: 32,
-            pattern: PASSWORD_PATTERN,
-            message: intl.formatMessage({ id: 'login.password.tip' }),
           },
         ]}
         placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}

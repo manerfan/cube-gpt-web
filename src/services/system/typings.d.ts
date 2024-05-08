@@ -33,4 +33,46 @@ declare namespace SYSTEM {
      */
     password: string;
   };
+
+  type AppInfo = {
+    /**
+     * 项目名称
+     */
+    title: string;
+
+    /**
+     * 项目描述
+     */
+    description: string;
+
+    /**
+     * 版本
+     */
+    version: string;
+
+    /**
+     * 联系人
+     */
+    contact: {
+      name: string;
+      url: string;
+      email: string;
+    };
+
+    /**
+     * 项目地址
+     */
+    project: {
+      name: string;
+      url: string;
+    };
+
+    /**
+     * 许可证
+     */
+    licenseInfo: {
+      name: string;
+      url: string;
+    };
+  };
 }
