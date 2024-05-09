@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { Layout } from 'antd';
-import { Outlet } from '@umijs/max';
+import LogoInfo from '@/components/logo/LogoInfo';
+import { Flex } from 'antd';
 
-const CubeContentWrapper: React.FC = () => {
+const Chat: React.FC = () => {
   return (
-    <Layout className="min-h-screen z-10">
-      <Outlet />
-    </Layout>
+    <Flex justify="center" align="center" className="h-full w-full">
+      <LogoInfo />
+    </Flex>
   );
 };
 
-export default CubeContentWrapper;
+export default Chat;

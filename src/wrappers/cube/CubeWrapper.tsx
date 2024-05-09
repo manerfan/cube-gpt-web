@@ -27,6 +27,7 @@ import {
   FileTextOutlined,
   GithubOutlined,
   MailOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import { ProLayout } from '@ant-design/pro-components';
 import {
@@ -37,19 +38,22 @@ import {
   useCreateStore,
 } from '@lobehub/ui';
 import { Outlet, useModel } from '@umijs/max';
+import type { MenuProps } from 'antd';
 import {
   Avatar,
   Button,
   Divider,
   Flex,
   Layout,
+  Menu,
   Popover,
   Space,
   Tooltip,
   Typography,
 } from 'antd';
+import { Bot, Box, Home, Speech, User, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { WORKSPACE } from '@/services/workspace/typings';
+type MenuItem = Required<MenuProps>['items'][number];
 
 const CubeWrapper: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -69,7 +73,7 @@ const CubeWrapper: React.FC = () => {
   );
 
   const [collapsed, setCollapsed] = useState(true);
-
+  const [menuItems, setMenuItems] = useState<{ [key: string]: MenuItem[] }>({});
 
   useEffect(() => {
     // 查询空间列表
@@ -83,14 +87,30 @@ const CubeWrapper: React.FC = () => {
           (workspace) => workspace.type === WorkspaceType.PRIVATE,
         ),
       );
-      console.log(privateSpace)
-      
+      console.log(privateSpace);
+
       // 公共空间
-      const publicSpaces = _.filter(
-        workspaces,
-        (workspace) => workspace.type === WorkspaceType.PUBLIC,
-      ) || [];
-      console.log(publicSpaces)
+      const publicSpaces =
+        _.filter(
+          workspaces,
+          (workspace) => workspace.type === WorkspaceType.PUBLIC,
+        ) || [];
+      console.log(publicSpaces);
+
+      setMenuItems({
+        default: [
+          { key: 'menu-chat', icon: <Home />, label: 'Chat' },
+          { key: 'menu-personal', icon: <User />, label: 'Personal' },
+        ],
+        explore: [
+          { key: 'menu-bot-store', icon: <Bot />, label: 'Bot Store' },
+          { key: 'menu-plugin-store', icon: <Box />, label: 'Plugin Store' },
+        ],
+        teams: [
+          { key: 'menu-team-1', icon: <Users />, label: 'Team 1' },
+          { key: 'menu-team-2', icon: <Speech />, label: 'Team 2' },
+        ],
+      });
     });
   }, [initialState?.userMe]);
 
@@ -105,18 +125,75 @@ const CubeWrapper: React.FC = () => {
         onCollapse={(collapsed) => {
           setCollapsed(collapsed);
         }}
-        menuFooterRender={(props) => {
-          if (props?.collapsed) return undefined;
+        route={[]}
+        menuHeaderRender={(logo, title) => {
+          if (collapsed) return logo;
+          return (
+            <>
+              {logo}
+              <span className={`${styles.title} text-animation`}>{title}</span>
+            </>
+          );
+        }}
+        siderMenuType="group"
+        menuExtraRender={() => {
+          return (
+            <>
+              <Space direction="vertical">
+                {!collapsed && (
+                  <Button block type="primary">
+                    <PlusOutlined /> Create Bot
+                  </Button>
+                )}
+                <Menu mode="inline" items={menuItems.default} />
+              </Space>
+
+              <Divider />
+
+              <Space direction="vertical">
+                {!collapsed && (
+                  <Flex justify="space-between" align="center">
+                    <Typography.Text type="secondary">Explore</Typography.Text>
+                  </Flex>
+                )}
+                <Menu mode="inline" items={menuItems.explore} />
+              </Space>
+
+              <Divider />
+
+              <Space direction="vertical">
+                {!collapsed && (
+                  <>
+                    <Flex justify="space-between" align="center">
+                      <Typography.Text type="secondary">Teams</Typography.Text>
+                      <Tooltip title="Create Team" color="#E6E6E6">
+                        <Button
+                          className="text-gray-400"
+                          type="text"
+                          size="small"
+                          icon={<PlusOutlined />}
+                        />
+                      </Tooltip>
+                    </Flex>
+                  </>
+                )}
+                <Menu mode="inline" items={menuItems.teams} />
+              </Space>
+            </>
+          );
+        }}
+        menuFooterRender={() => {
+          if (collapsed) return undefined;
           return (
             <>
               <Divider style={{ margin: '1rem auto' }} />
               <Flex justify="space-between" align="center">
-                <Tooltip title="Document" color="#E6E6E6" key="#E6E6E6">
+                <Tooltip title="Document" color="#E6E6E6">
                   <Button className="text-gray-500" type="text">
                     <FileTextOutlined />
                   </Button>
                 </Tooltip>
-                <Tooltip title="Github" color="#E6E6E6" key="#E6E6E6">
+                <Tooltip title="Github" color="#E6E6E6">
                   <Button className="text-gray-500" type="text">
                     <Typography.Link
                       href="https://github.com/CubewiseBit/cube-chat-server"
@@ -127,7 +204,7 @@ const CubeWrapper: React.FC = () => {
                     </Typography.Link>
                   </Button>
                 </Tooltip>
-                <Tooltip title="Feedback" color="#E6E6E6" key="#E6E6E6">
+                <Tooltip title="Feedback" color="#E6E6E6">
                   <Button className="text-gray-500" type="text">
                     <Typography.Link
                       href="mailto:manerfan@163.com"

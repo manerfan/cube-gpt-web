@@ -15,6 +15,37 @@ body,
     padding: 0;
 }
 
+.text-animation {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    -webkit-background-size: 400% 400%;
+    background-size: 400% 400%;
+    border-radius: inherit;
+    -webkit-animation: 5s animation-text 5s ease infinite;
+    animation: 5s animation-text 5s ease infinite;
+    position: relative;
+    z-index: 5;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@keyframes animation-text {
+    0% {
+        -webkit-background-position: 0% 50%;
+        background-position: 0% 50%;
+    }
+
+    50% {
+        -webkit-background-position: 100% 50%;
+        background-position: 100% 50%;
+    }
+
+    100% {
+        -webkit-background-position: 0% 50%;
+        background-position: 0% 50%;
+    }
+}
+
 /**
  * 对 layout 的样式进行覆盖
  */
@@ -28,6 +59,28 @@ body,
                     rgb(245, 245, 245)) rgb(245, 245, 245) !important;
             border-radius: 1rem !important;
             border: none;
+        }
+
+        .ant-pro-sider-extra {
+            margin: 0;
+        }
+
+        .ant-space {
+            display: flex;
+        }
+
+        .ant-menu {
+            container-type: inline-size;
+
+            .ant-menu-item {
+                padding: 0 15px !important;
+            }
+
+            @container (max-width: 80px) {
+                .ant-menu-item {
+                    padding: 0 !important;
+                }
+            }
         }
     }
 

@@ -56,14 +56,15 @@ const routes: Routes = [
     path: '/cube',
     wrappers: ['@/wrappers/cube/CubeWrapper'],
     routes: [
-      // 聊天
       {
         path: '',
-        redirect: 'chat',
+        component: './Cube',
+        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
       },
+      // 聊天
       {
         path: 'chat',
-        component: './Chat',
+        component: './Cube/Chat',
         wrappers: ['@/wrappers/cube/CubeContentWrapper'],
       },
       // 空间

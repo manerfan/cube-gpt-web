@@ -33,7 +33,7 @@ const LogoInfo: React.FC<{
       text: 'Github',
     },
     {
-      link: '/',
+      link: '/cube/chat',
       text: intl.formatMessage({ id: 'home.header.start' }),
       type: 'primary',
     },
