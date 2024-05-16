@@ -37,7 +37,7 @@ import {
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { Outlet, useModel } from '@umijs/max';
+import { Outlet, history, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import {
   Avatar,
@@ -51,9 +51,16 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { Bot, Box, Home, Speech, User, Users } from 'lucide-react';
+import { Bot, Box, Home, Speech, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 type MenuItem = Required<MenuProps>['items'][number];
+
+type MenuPath = {
+  [key: string]: {
+    // 路径
+    path: string;
+  };
+};
 
 const CubeWrapper: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -72,8 +79,15 @@ const CubeWrapper: React.FC = () => {
     { store },
   );
 
+  // 侧边栏收起状态
   const [collapsed, setCollapsed] = useState(true);
+
+  // 菜单项
   const [menuItems, setMenuItems] = useState<{ [key: string]: MenuItem[] }>({});
+  // 选择的菜单KEY
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState<string[]>([]);
+  // 菜单KEY和跳转路径的映射
+  const [menuKeyPath, setMenuKeyPath] = useState<MenuPath>({});
 
   useEffect(() => {
     // 查询空间列表
@@ -87,7 +101,6 @@ const CubeWrapper: React.FC = () => {
           (workspace) => workspace.type === WorkspaceType.PRIVATE,
         ),
       );
-      console.log(privateSpace);
 
       // 公共空间
       const publicSpaces =
@@ -95,24 +108,77 @@ const CubeWrapper: React.FC = () => {
           workspaces,
           (workspace) => workspace.type === WorkspaceType.PUBLIC,
         ) || [];
-      console.log(publicSpaces);
+
+      const defaultMenuItems: MenuItem[] = [];
+      const exploreMenuItems: MenuItem[] = [];
+      const teamsMenuItems: MenuItem[] = [];
+
+      const keyPath: MenuPath = {};
+
+      defaultMenuItems.push({
+        key: 'menu-chat',
+        icon: <Home />,
+        label: 'Chat',
+      });
+      keyPath['menu-chat'] = {
+        path: `/cube/chat`,
+      };
+      defaultMenuItems.push({
+        key: 'menu-personal',
+        icon: <User />,
+        label: 'Personal',
+      });
+      keyPath['menu-personal'] = {
+        path: `/cube/space/${privateSpace!.uid}/bots`,
+      };
+
+      exploreMenuItems.push({
+        key: 'menu-store-bot',
+        icon: <Bot />,
+        label: 'Bot Store',
+      });
+      keyPath['menu-store-bot'] = {
+        path: `/cube/store/bot`,
+      };
+      exploreMenuItems.push({
+        key: 'menu-store-plugin',
+        icon: <Box />,
+        label: 'Plugin Store',
+      });
+      keyPath['menu-store-plugin'] = {
+        path: `/cube/store/plugin`,
+      };
+
+      if (!_.isEmpty(publicSpaces)) {
+        _.forEach(publicSpaces, (space) => {
+          teamsMenuItems.push({
+            key: `menu-team-${space.uid}`,
+            icon: <Speech />,
+            label: space.name,
+          });
+          keyPath[`menu-team-${space.uid}`] = {
+            path: `/cube/space/${space.uid}/bots`,
+          };
+        });
+      }
 
       setMenuItems({
-        default: [
-          { key: 'menu-chat', icon: <Home />, label: 'Chat' },
-          { key: 'menu-personal', icon: <User />, label: 'Personal' },
-        ],
-        explore: [
-          { key: 'menu-bot-store', icon: <Bot />, label: 'Bot Store' },
-          { key: 'menu-plugin-store', icon: <Box />, label: 'Plugin Store' },
-        ],
-        teams: [
-          { key: 'menu-team-1', icon: <Users />, label: 'Team 1' },
-          { key: 'menu-team-2', icon: <Speech />, label: 'Team 2' },
-        ],
+        default: defaultMenuItems,
+        explore: exploreMenuItems,
+        teams: teamsMenuItems,
       });
+
+      setMenuKeyPath(keyPath);
     });
   }, [initialState?.userMe]);
+
+  const onMenuClick = (menuItem: MenuItem) => {
+    const key = menuItem!.key! as string;
+    setMenuSelectedKeys([key]);
+    if (!!menuKeyPath[key]) {
+      history.push(menuKeyPath[key]!.path);
+    }
+  };
 
   return (
     <ThemeProvider>
@@ -139,13 +205,20 @@ const CubeWrapper: React.FC = () => {
         menuExtraRender={() => {
           return (
             <>
+              <div style={{ marginTop: 24 }} />
               <Space direction="vertical">
                 {!collapsed && (
                   <Button block type="primary">
                     <PlusOutlined /> Create Bot
                   </Button>
                 )}
-                <Menu mode="inline" items={menuItems.default} />
+                <Menu
+                  className="menu-height-30"
+                  mode="inline"
+                  items={menuItems.default}
+                  selectedKeys={menuSelectedKeys}
+                  onClick={onMenuClick}
+                />
               </Space>
 
               <Divider />
@@ -156,7 +229,13 @@ const CubeWrapper: React.FC = () => {
                     <Typography.Text type="secondary">Explore</Typography.Text>
                   </Flex>
                 )}
-                <Menu mode="inline" items={menuItems.explore} />
+                <Menu
+                  className="menu-height-30"
+                  mode="inline"
+                  items={menuItems.explore}
+                  selectedKeys={menuSelectedKeys}
+                  onClick={onMenuClick}
+                />
               </Space>
 
               <Divider />
@@ -177,7 +256,13 @@ const CubeWrapper: React.FC = () => {
                     </Flex>
                   </>
                 )}
-                <Menu mode="inline" items={menuItems.teams} />
+                <Menu
+                  className="menu-height-30"
+                  mode="inline"
+                  items={menuItems.teams}
+                  selectedKeys={menuSelectedKeys}
+                  onClick={onMenuClick}
+                />
               </Space>
             </>
           );

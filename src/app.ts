@@ -238,8 +238,8 @@ export const request: RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        if (!!error.response.data?.content) {
-          errorShow(error.response.data.content);
+        if (!!error.response.data) {
+          errorShow(error.response.data);
         } else {
           message.error(`Response status:${error.response.status}`);
         }
