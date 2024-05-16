@@ -32,6 +32,10 @@ const spaceRoutes: Routes = [
     path: '',
     redirect: '/space/:id/bot',
   },
+  {
+    path: 'bots',
+    component: './Cube/Chat',
+  }
 ];
 
 const routes: Routes = [
@@ -66,6 +70,21 @@ const routes: Routes = [
         path: 'chat',
         component: './Cube/Chat',
         wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+      },
+      // 市场
+      {
+        path: 'store',
+        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+        routes: [
+          {
+            path: 'bot',
+            component: './Cube/Store',
+          },
+          {
+            path: 'plugin',
+            component: './Cube/Store',
+          },
+        ],
       },
       // 空间
       {

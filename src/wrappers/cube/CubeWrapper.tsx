@@ -37,7 +37,7 @@ import {
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { Outlet, history, useModel } from '@umijs/max';
+import { Outlet, history, useLocation, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import {
   Avatar,
@@ -59,10 +59,12 @@ type MenuPath = {
   [key: string]: {
     // 路径
     path: string;
+    key: string;
   };
 };
 
 const CubeWrapper: React.FC = () => {
+  const location = useLocation();
   const { initialState } = useModel('@@initialState');
 
   const store = useCreateStore();
@@ -109,12 +111,11 @@ const CubeWrapper: React.FC = () => {
           (workspace) => workspace.type === WorkspaceType.PUBLIC,
         ) || [];
 
-      const defaultMenuItems: MenuItem[] = [];
-      const exploreMenuItems: MenuItem[] = [];
-      const teamsMenuItems: MenuItem[] = [];
-
+      // 构造菜单项
       const keyPath: MenuPath = {};
 
+      // 默认区域
+      const defaultMenuItems: MenuItem[] = [];
       defaultMenuItems.push({
         key: 'menu-chat',
         icon: <Home />,
@@ -122,6 +123,7 @@ const CubeWrapper: React.FC = () => {
       });
       keyPath['menu-chat'] = {
         path: `/cube/chat`,
+        key: `/cube/chat`,
       };
       defaultMenuItems.push({
         key: 'menu-personal',
@@ -130,8 +132,11 @@ const CubeWrapper: React.FC = () => {
       });
       keyPath['menu-personal'] = {
         path: `/cube/space/${privateSpace!.uid}/bots`,
+        key: `/cube/space/${privateSpace!.uid}`,
       };
 
+      // 市场区域
+      const exploreMenuItems: MenuItem[] = [];
       exploreMenuItems.push({
         key: 'menu-store-bot',
         icon: <Bot />,
@@ -139,6 +144,7 @@ const CubeWrapper: React.FC = () => {
       });
       keyPath['menu-store-bot'] = {
         path: `/cube/store/bot`,
+        key: `/cube/store/bot`,
       };
       exploreMenuItems.push({
         key: 'menu-store-plugin',
@@ -147,8 +153,11 @@ const CubeWrapper: React.FC = () => {
       });
       keyPath['menu-store-plugin'] = {
         path: `/cube/store/plugin`,
+        key: `/cube/store/plugin`,
       };
 
+      // 团队区域
+      const teamsMenuItems: MenuItem[] = [];
       if (!_.isEmpty(publicSpaces)) {
         _.forEach(publicSpaces, (space) => {
           teamsMenuItems.push({
@@ -158,6 +167,7 @@ const CubeWrapper: React.FC = () => {
           });
           keyPath[`menu-team-${space.uid}`] = {
             path: `/cube/space/${space.uid}/bots`,
+            key: `/cube/space/${space.uid}`,
           };
         });
       }
@@ -168,9 +178,17 @@ const CubeWrapper: React.FC = () => {
         teams: teamsMenuItems,
       });
 
+      // 记录菜单对应的跳转路径
       setMenuKeyPath(keyPath);
+
+      // 识别当前页面对应的菜单项
+      _.forEach(keyPath, (value, key) => {
+        if (_.startsWith(location.pathname, value.key)) {
+          setMenuSelectedKeys([key]);
+        }
+      });
     });
-  }, [initialState?.userMe]);
+  }, [location.pathname]);
 
   const onMenuClick = (menuItem: MenuItem) => {
     const key = menuItem!.key! as string;
