@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+import styles from './styles.content.module.scss';
+
 import { Layout } from 'antd';
 import { Outlet } from '@umijs/max';
 
 const CubeContentWrapper: React.FC = () => {
   return (
-    <Layout className="min-h-screen z-10">
+    <Layout className={`min-h-screen z-10 ${styles['layout-content']}`}>
       <Outlet />
     </Layout>
   );

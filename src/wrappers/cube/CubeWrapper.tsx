@@ -215,7 +215,7 @@ const CubeWrapper: React.FC = () => {
           return (
             <>
               {logo}
-              <span className={`${styles.title} text-animation`}>{title}</span>
+              <span className={`${styles.title} text-colorful`}>{title}</span>
             </>
           );
         }}

@@ -29,6 +29,12 @@ body,
     -webkit-text-fill-color: transparent;
 }
 
+.text-colorful {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 @keyframes animation-text {
     0% {
         -webkit-background-position: 0% 50%;
@@ -94,14 +100,46 @@ body,
                 rgb(245, 245, 245)) rgb(245, 245, 245) !important;
 
         .ant-layout-content {
-            padding: 1rem !important;
+            padding: 0 !important;
             min-height: 100vh !important;
+
+            .ant-tabs {
+                .ant-tabs-nav {
+                    .ant-tabs-nav-list {
+                        // 默认button样式
+                        .ant-tabs-tab-btn {
+                            font-size: 18px !important;
+                            font-weight: 500 !important;
+                            color: rgba(29, 28, 35, 0.6) !important;
+                            transition: color 0.3s ease-out;
+                        }
+
+                        // 选中button样式
+                        .ant-tabs-tab-active {
+                            .ant-tabs-tab-btn {
+                                color: rgb(77, 83, 232) !important;
+                            }
+                        }
+
+                        // 选中button底部线条样式
+                        .ant-tabs-ink-bar {
+                            background-color: rgb(77, 83, 232) !important;
+                        }
+                    }
+                }
+
+                .ant-tabs-content {
+                    margin: auto 1rem !important;
+                }
+            }
         }
     }
 }
 
 .menu-height-30 {
-    .ant-menu-inline, .ant-menu-item {
+
+    .ant-menu-inline,
+    .ant-menu-item {
         line-height: 30px !important;
         height: 30px !important;
     }

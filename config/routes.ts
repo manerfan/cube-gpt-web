@@ -30,11 +30,11 @@ type Routes = Array<
 const spaceRoutes: Routes = [
   {
     path: '',
-    redirect: '/space/:id/bot',
+    redirect: 'bots',
   },
   {
-    path: 'bots',
-    component: './Cube/Chat',
+    path: ':spaceModule',
+    component: './Cube/Workspace',
   }
 ];
 
@@ -88,7 +88,7 @@ const routes: Routes = [
       },
       // 空间
       {
-        path: 'space/:id',
+        path: 'space/:spaceId',
         wrappers: ['@/wrappers/cube/CubeContentWrapper'],
         routes: spaceRoutes,
       },

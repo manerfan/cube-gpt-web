@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { history, useIntl, useModel } from '@umijs/max';
+import { history, useIntl, useModel, useSearchParams } from '@umijs/max';
 
 import { ACCESS_TOKEN, TOKEN_TYPE } from '@/constants';
 import { authService } from '@/services';
@@ -22,14 +22,11 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEffect } from 'react';
 
-const redirectUri = () => {
-  const searchParams = new URLSearchParams(location.search);
-  return searchParams.get('redirectUri') || '/';
-};
-
 const Login: React.FC = () => {
   const intl = useIntl();
   const { initialState } = useModel('@@initialState');
+
+  const [searchParams] = useSearchParams();
 
   const submitLogin = async (formData: any) => {
     const auth = await authService.login({
@@ -39,7 +36,7 @@ const Login: React.FC = () => {
 
     window.localStorage.setItem(ACCESS_TOKEN, auth.accessToken);
     window.localStorage.setItem(TOKEN_TYPE, auth.tokenType || 'bearer');
-    window.location.href = redirectUri();
+    window.location.href = searchParams.get('redirectUri') || '/';
   };
 
   useEffect(() => {
