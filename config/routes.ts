@@ -33,9 +33,22 @@ const spaceRoutes: Routes = [
     redirect: 'bots',
   },
   {
+    path: 'setting',
+    routes: [
+      {
+        path: '',
+        redirect: 'providers',
+      },
+      {
+        path: ':settingModule',
+        component: './Cube/Workspace/Setting',
+      },
+    ],
+  },
+  {
     path: ':spaceModule',
     component: './Cube/Workspace',
-  }
+  },
 ];
 
 const routes: Routes = [
@@ -95,9 +108,9 @@ const routes: Routes = [
     ],
   },
   // 404
-  { 
-    path: '/*', 
-    redirect: '/', 
+  {
+    path: '/*',
+    redirect: '/',
   },
 ];
 

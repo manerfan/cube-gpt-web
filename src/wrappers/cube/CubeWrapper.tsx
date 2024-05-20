@@ -37,7 +37,7 @@ import {
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { Outlet, history, useLocation, useModel } from '@umijs/max';
+import { Outlet, history, useIntl, useLocation, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import {
   Avatar,
@@ -64,6 +64,8 @@ type MenuPath = {
 };
 
 const CubeWrapper: React.FC = () => {
+  const intl = useIntl();
+
   const location = useLocation();
   const { initialState } = useModel('@@initialState');
 
@@ -119,7 +121,7 @@ const CubeWrapper: React.FC = () => {
       defaultMenuItems.push({
         key: 'menu-chat',
         icon: <Home />,
-        label: 'Chat',
+        label: intl.formatMessage({ id: 'cube.menu.chat' }),
       });
       keyPath['menu-chat'] = {
         path: `/cube/chat`,
@@ -128,7 +130,7 @@ const CubeWrapper: React.FC = () => {
       defaultMenuItems.push({
         key: 'menu-personal',
         icon: <User />,
-        label: 'Personal',
+        label: intl.formatMessage({ id: 'cube.menu.personal' }),
       });
       keyPath['menu-personal'] = {
         path: `/cube/space/${privateSpace!.uid}/bots`,
@@ -140,7 +142,7 @@ const CubeWrapper: React.FC = () => {
       exploreMenuItems.push({
         key: 'menu-store-bot',
         icon: <Bot />,
-        label: 'Bot Store',
+        label: intl.formatMessage({ id: 'cube.menu.botStore' }),
       });
       keyPath['menu-store-bot'] = {
         path: `/cube/store/bot`,
@@ -149,7 +151,7 @@ const CubeWrapper: React.FC = () => {
       exploreMenuItems.push({
         key: 'menu-store-plugin',
         icon: <Box />,
-        label: 'Plugin Store',
+        label: intl.formatMessage({ id: 'cube.menu.pluginStore' }),
       });
       keyPath['menu-store-plugin'] = {
         path: `/cube/store/plugin`,
@@ -188,7 +190,7 @@ const CubeWrapper: React.FC = () => {
         }
       });
     });
-  }, [location.pathname]);
+  }, [location.pathname, intl.locale]);
 
   const onMenuClick = (menuItem: MenuItem) => {
     const key = menuItem!.key! as string;
@@ -227,7 +229,7 @@ const CubeWrapper: React.FC = () => {
               <Space direction="vertical">
                 {!collapsed && (
                   <Button block type="primary">
-                    <PlusOutlined /> Create Bot
+                    <PlusOutlined /> {intl.formatMessage({ id: 'cube.menu.createBot' })}
                   </Button>
                 )}
                 <Menu
@@ -244,7 +246,7 @@ const CubeWrapper: React.FC = () => {
               <Space direction="vertical">
                 {!collapsed && (
                   <Flex justify="space-between" align="center">
-                    <Typography.Text type="secondary">Explore</Typography.Text>
+                    <Typography.Text type="secondary">{intl.formatMessage({ id: 'cube.menu.explore' })}</Typography.Text>
                   </Flex>
                 )}
                 <Menu
@@ -262,8 +264,8 @@ const CubeWrapper: React.FC = () => {
                 {!collapsed && (
                   <>
                     <Flex justify="space-between" align="center">
-                      <Typography.Text type="secondary">Teams</Typography.Text>
-                      <Tooltip title="Create Team" color="#E6E6E6">
+                      <Typography.Text type="secondary">{intl.formatMessage({ id: 'cube.menu.teams' })}</Typography.Text>
+                      <Tooltip title={intl.formatMessage({ id: 'cube.menu.createTeam' })} color="#E6E6E6">
                         <Button
                           className="text-gray-400"
                           type="text"

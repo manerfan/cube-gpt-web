@@ -117,19 +117,47 @@ body,
                         // 选中button样式
                         .ant-tabs-tab-active {
                             .ant-tabs-tab-btn {
-                                color: rgb(77, 83, 232) !important;
+                                color: #589aF4 !important;
                             }
                         }
 
-                        // 选中button底部线条样式
+                        // 禁用的button样式
+                        .ant-tabs-tab-disabled {
+                            .ant-tabs-tab-btn {
+                                color: rgb(187, 187, 187) !important;
+                            }
+                        }
+
+                        // button底部线条样式
                         .ant-tabs-ink-bar {
-                            background-color: rgb(77, 83, 232) !important;
+                            background-color: #589aF4 !important;
                         }
                     }
                 }
 
                 .ant-tabs-content {
                     margin: auto 1rem !important;
+                }
+            }
+        }
+    }
+}
+
+.ant-dropdown {
+    .ant-dropdown-menu {
+        .ant-dropdown-menu-item {
+            .ant-typography {
+                color: #080808 !important;
+                &.ant-typography-danger {
+                    color: #ec5e41 !important;
+                }
+            }
+            &.ant-dropdown-menu-item-disabled {
+                .ant-typography {
+                    color: #a1a1a1 !important;
+                    &.ant-typography-danger {
+                        color: #ffbeb1 !important;
+                    }
                 }
             }
         }
