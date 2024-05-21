@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { LeftOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons';
+import { workspaceService } from '@/services';
+import { WorkspaceType } from '@/services/workspace';
+import { WORKSPACE } from '@/services/workspace/typings';
+import { EditOutlined, LeftOutlined, MoreOutlined } from '@ant-design/icons';
 import {
   FluentEmoji,
   FluentEmojiProps,
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { history, useIntl } from '@umijs/max';
+import { history, useIntl, useParams } from '@umijs/max';
 import {
   Avatar,
   Button,
@@ -29,13 +32,23 @@ import {
   MenuProps,
   Space,
   TabsProps,
-  Tag,
   Typography,
 } from 'antd';
+import { BrainCircuit, Contact } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import TabHeader from '../components/TabHeader';
+import Providers from './Providers';
+
+const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {
+  return space?.type === WorkspaceType.PUBLIC;
+};
 
 const Setting: React.FC = () => {
   const intl = useIntl();
+
+  const param = useParams();
+
+  const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
 
   const store = useCreateStore();
   const control: FluentEmojiProps = useControls(
@@ -51,18 +64,35 @@ const Setting: React.FC = () => {
     { store },
   );
 
+  useEffect(() => {
+    workspaceService.detail(param!.spaceId!).then((res) => {
+      const space = res.content;
+      setWorkspace(space);
+    });
+  }, [param.spaceId]);
+
   // tab内容
   const items: TabsProps['items'] = [
     {
       key: 'members',
-      label: intl.formatMessage({ id: 'cube.space.setting.tab.members' }),
+      label: (
+        <>
+          <Contact className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.setting.tab.members' })}
+        </>
+      ),
       children: 'Content of Tab Pane Providers',
       disabled: true,
     },
     {
       key: 'providers',
-      label: intl.formatMessage({ id: 'cube.space.setting.tab.providers' }),
-      children: 'Content of Tab Pane Providers',
+      label: (
+        <>
+          <BrainCircuit className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.setting.tab.providers' })}
+        </>
+      ),
+      children: <Providers />,
     },
   ];
 
@@ -103,11 +133,11 @@ const Setting: React.FC = () => {
           <FluentEmoji type={'anim'} {...control} className="-mt-6" />
         </Avatar>
         <Typography.Text className="hidden md:inline text-gray-500 font-bold">
-          Personal
+          {isPublicSpace(workspace)
+            ? workspace?.name
+            : intl.formatMessage({ id: 'cube.menu.personal' })}
         </Typography.Text>
-        <Tag icon={<SettingOutlined />} color="#bee3ff">
-          {intl.formatMessage({ id: 'cube.space.tab.setting' })}
-        </Tag>
+        {!isPublicSpace(workspace) && <Button type='text' icon={<EditOutlined />} className="hidden md:inline text-gray-500" />}
       </Space>
     ),
     right: (

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { getPathAndModule, workspaceService } from '@/services';
+import { WorkspaceType } from '@/services/workspace';
+import { WORKSPACE } from '@/services/workspace/typings';
 import { SettingOutlined } from '@ant-design/icons';
 import {
   FluentEmoji,
@@ -21,15 +24,29 @@ import {
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { history, useIntl, useLocation } from '@umijs/max';
+import { history, useIntl, useLocation, useParams } from '@umijs/max';
 import { Avatar, Button, Space, TabsProps, Typography } from 'antd';
+import {
+  Bot,
+  Box,
+  LibraryBig,
+  MessageSquareCode,
+  Workflow,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import TabHeader from './components/TabHeader';
-import { getPathAndModule } from '@/services';
+
+const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {
+  return space?.type === WorkspaceType.PUBLIC;
+};
 
 const Workspace: React.FC = () => {
   const intl = useIntl();
 
   const location = useLocation();
+  const param = useParams();
+
+  const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
 
   const store = useCreateStore();
   const control: FluentEmojiProps = useControls(
@@ -45,31 +62,63 @@ const Workspace: React.FC = () => {
     { store },
   );
 
+  useEffect(() => {
+    workspaceService.detail(param!.spaceId!).then((res) => {
+      const space = res.content;
+      setWorkspace(space);
+    });
+  }, [param.spaceId]);
+
   // tab内容
   const items: TabsProps['items'] = [
     {
       key: 'bots',
-      label: intl.formatMessage({ id: 'cube.space.tab.bots' }),
+      label: (
+        <>
+          <Bot className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.tab.bots' })}
+        </>
+      ),
       children: 'Content of Tab Pane Bots',
     },
     {
       key: 'plugins',
-      label: intl.formatMessage({ id: 'cube.space.tab.plugins' }),
+      label: (
+        <>
+          <Box className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.tab.plugins' })}
+        </>
+      ),
       children: 'Content of Tab Pane Plugins',
     },
     {
       key: 'workflows',
-      label: intl.formatMessage({ id: 'cube.space.tab.workflows' }),
+      label: (
+        <>
+          <Workflow className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.tab.workflows' })}
+        </>
+      ),
       children: 'Content of Tab Pane Workflows',
     },
     {
       key: 'knowledges',
-      label: intl.formatMessage({ id: 'cube.space.tab.knowledge' }),
+      label: (
+        <>
+          <LibraryBig className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.tab.knowledge' })}
+        </>
+      ),
       children: 'Content of Tab Pane Knowledges',
     },
     {
       key: 'cards',
-      label: intl.formatMessage({ id: 'cube.space.tab.cards' }),
+      label: (
+        <>
+          <MessageSquareCode className="ant-tabs-tab-btn-icon" />
+          {intl.formatMessage({ id: 'cube.space.tab.cards' })}
+        </>
+      ),
       children: 'Content of Tab Pane Cards',
     },
   ];
@@ -82,7 +131,9 @@ const Workspace: React.FC = () => {
           <FluentEmoji type={'anim'} {...control} className="-mt-6" />
         </Avatar>
         <Typography.Text className="hidden md:inline text-gray-500 font-bold">
-          Personal
+          {isPublicSpace(workspace)
+            ? workspace?.name
+            : intl.formatMessage({ id: 'cube.menu.personal' })}
         </Typography.Text>
       </Space>
     ),

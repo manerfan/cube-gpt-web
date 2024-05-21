@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import '@interface/typings';
-import type { Display } from '@/services/typings';
 import { ModelType } from '@/services/llm';
+import type { Display } from '@/services/typings';
+import '@interface/typings';
+import React from 'react';
 
 declare namespace LLM {
   type ProviderSchema = {
@@ -28,7 +29,7 @@ declare namespace LLM {
     /**
      * 名称
      */
-    name: Display.I18nOption;
+    name: string;
 
     /**
      * 描述
@@ -54,6 +55,13 @@ declare namespace LLM {
      * 支持的模型类型
      */
     supportedModelTypes: ModelType[];
+  };
 
+  type ProviderIcon = {
+    icon: React.ReactNode;
+    text: React.ReactNode;
+    combine: React.ReactNode;
+    avatar: React.ReactNode;
+    color: string;
   };
 }

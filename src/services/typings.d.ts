@@ -72,16 +72,11 @@ declare namespace Display {
     zhCn?: string;
   };
 
-  type Icon = {
-    default: string;
-    enUs?: string;
-    zhCn?: string;
-  };
-
   type IconOption = {
-    small: Icon;
-    large: Icon;
-    background?: string;
+    icon?: string;
+    avatar?: string;
+    combine?: string;
+    color?: string;
   };
 
   type HelpOption = {

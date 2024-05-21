@@ -106,12 +106,18 @@ body,
             .ant-tabs {
                 .ant-tabs-nav {
                     .ant-tabs-nav-list {
+
                         // 默认button样式
                         .ant-tabs-tab-btn {
                             font-size: 18px !important;
                             font-weight: 500 !important;
                             color: rgba(29, 28, 35, 0.6) !important;
                             transition: color 0.3s ease-out;
+
+                            .ant-tabs-tab-btn-icon {
+                                position: relative;
+                                margin: 0px 5px -6px 0px;
+                            }
                         }
 
                         // 选中button样式
@@ -136,7 +142,7 @@ body,
                 }
 
                 .ant-tabs-content {
-                    margin: auto 1rem !important;
+                    padding: 0 1rem 1rem !important;
                 }
             }
         }
@@ -148,13 +154,16 @@ body,
         .ant-dropdown-menu-item {
             .ant-typography {
                 color: #080808 !important;
+
                 &.ant-typography-danger {
                     color: #ec5e41 !important;
                 }
             }
+
             &.ant-dropdown-menu-item-disabled {
                 .ant-typography {
                     color: #a1a1a1 !important;
+
                     &.ant-typography-danger {
                         color: #ffbeb1 !important;
                     }
