@@ -64,4 +64,14 @@ declare namespace LLM {
     avatar: React.ReactNode;
     color: string;
   };
+
+  /**
+   * Provider配置
+   */
+  type ProviderConfig = {
+    uid?: string;
+    workspaceUid: string;
+    providerKey: string;
+    providerCredential: Record<string, string | number>;
+  }
 }

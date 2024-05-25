@@ -92,7 +92,7 @@ const Setting: React.FC = () => {
           {intl.formatMessage({ id: 'cube.space.setting.tab.providers' })}
         </>
       ),
-      children: <Providers />,
+      children: <Providers workspace={workspace!} />,
     },
   ];
 

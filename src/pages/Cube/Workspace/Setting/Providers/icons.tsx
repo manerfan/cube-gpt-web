@@ -16,35 +16,35 @@
 
 import { LLM } from '@/services/llm/typings';
 import { Moonshot, OpenAI, Wenxin, Zhipu } from '@lobehub/icons';
-import { Image, Typography } from 'antd';
+import { Avatar, Image, Typography } from 'antd';
 
 const providerIcon: { [key: string]: LLM.ProviderIcon } = {
   openai: {
     icon: <OpenAI />,
     text: <OpenAI.Text />,
     combine: <OpenAI.Combine />,
-    avatar: <OpenAI.Avatar size={64} />,
+    avatar: <OpenAI.Avatar size={18} />,
     color: OpenAI.colorPrimary,
   },
   moonshot: {
     icon: <Moonshot />,
     text: <Moonshot.Text />,
     combine: <Moonshot.Combine />,
-    avatar: <Moonshot.Avatar size={64} />,
+    avatar: <Moonshot.Avatar size={18} />,
     color: Moonshot.colorPrimary,
   },
   zhipu: {
     icon: <Zhipu.Color />,
     text: <Zhipu.Text />,
     combine: <Zhipu.Combine type={'color'} />,
-    avatar: <Zhipu.Avatar size={64} />,
+    avatar: <Zhipu.Avatar size={18} />,
     color: Zhipu.colorPrimary,
   },
   wenxin: {
     icon: <Wenxin.Color />,
     text: <Wenxin.Text />,
     combine: <Wenxin.Combine type={'color'} extra={'一言'} />,
-    avatar: <Wenxin.Avatar size={64} />,
+    avatar: <Wenxin.Avatar size={18} />,
     color: Wenxin.colorPrimary,
   },
 };
@@ -78,7 +78,11 @@ export const getProviderIconBySchema = (
     ) : (
       <Typography.Text>{provider.name}</Typography.Text>
     ),
-    avatar: provider.icon?.avatar || <span />,
+    avatar: provider.icon?.avatar ? (
+      <Avatar size={20} src={provider.icon.avatar} />
+    ) : (
+      <Typography.Text>{provider.name}</Typography.Text>
+    ),
     color: provider.icon?.color || '#000000',
   });
 };
@@ -94,17 +98,22 @@ const hexToRgb = (hex: string) => {
 
 // 将 RGB 数组转换为 HEX 颜色
 const rgbToHex = (r: number, g: number, b: number) => {
-  return '#' + [r, g, b].map(x => {
-      const hex = x.toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-  }).join('');
+  return (
+    '#' +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      })
+      .join('')
+  );
 };
 
 // 减淡颜色函数
 export const lightenColor = (color: string, percent: number) => {
   let [r, g, b] = hexToRgb(color);
-  r = Math.min(255, Math.floor(r + (255 - r) * percent / 100));
-  g = Math.min(255, Math.floor(g + (255 - g) * percent / 100));
-  b = Math.min(255, Math.floor(b + (255 - b) * percent / 100));
+  r = Math.min(255, Math.floor(r + ((255 - r) * percent) / 100));
+  g = Math.min(255, Math.floor(g + ((255 - g) * percent) / 100));
+  b = Math.min(255, Math.floor(b + ((255 - b) * percent) / 100));
   return rgbToHex(r, g, b);
 };

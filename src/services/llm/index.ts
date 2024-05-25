@@ -66,3 +66,53 @@ export async function providers(
     },
   );
 }
+
+/**
+ * 新增Provider配置
+ * @param workspaceUid  空间UID
+ * @param providerKey Provider Key
+ */
+export async function addProviderConfig(providerConfig: LLM.ProviderConfig, options?: Record<string, any>): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
+  return request<Response.SingleResponse<LLM.ProviderConfig>>(
+    `/api/workspace/${providerConfig.workspaceUid}/provider`,
+    {
+      method: 'POST',
+      data: providerConfig,
+      ...(options || {}),
+    },
+  );
+}
+
+/**
+ * 所有已配置的Provider Key
+ * @param workspaceUid 空间UID
+ */
+export async function allConfiguredProviderKeys(
+  workspaceUid: string,
+  options?: Record<string, any>,
+): Promise<Response.MultiResponse<string>> {
+  return request<Response.MultiResponse<string>>(
+    `/api/workspace/${workspaceUid}/provider/all_key`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  );
+}
+
+/**
+ * Provider配置详情
+ * @param workspaceUid  空间UID
+ * @param providerKey Provider Key
+ */
+export async function providerConfigDetail(workspaceUid: string, providerKey: string, options?: Record<string, any>): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
+  return request<Response.SingleResponse<LLM.ProviderConfig>>(
+    `/api/workspace/${workspaceUid}/provider/${providerKey}`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  );
+}

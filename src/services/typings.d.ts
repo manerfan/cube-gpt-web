@@ -92,7 +92,7 @@ declare namespace Display {
   type FormSchema = {
     dataIndex: string;
     valueType: string;
-    valueEnum: { [key: string]: FormFieldValueEnum };
+    valueEnum?: { [key: string]: FormFieldValueEnum };
     fieldProps?: { [key: string]: any };
     title?: I18nOption;
     tooltip?: I18nOption;
@@ -109,6 +109,11 @@ declare namespace Display {
      * 状态
      */
     status?: FormFieldValueStatusEnum;
+
+    /**
+     * 自定义的颜色
+     */
+    color?: string;
 
     /**
      * 是否禁用

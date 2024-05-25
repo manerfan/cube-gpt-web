@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * 彩虹色条背景
+ */
 const BackgroundBanderole: React.FC = () => {
   return (
     <div className="absolute z-1 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none">

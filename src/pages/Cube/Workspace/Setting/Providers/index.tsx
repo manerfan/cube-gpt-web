@@ -14,22 +14,42 @@
  * limitations under the License.
  */
 
+import { getLocaleContent } from '@/locales';
+import * as llmService from '@/services/llm';
+import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
-import { SettingOutlined } from '@ant-design/icons';
+import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { useIntl, useModel } from '@umijs/max';
-import { Button, Layout, Space, Tag, Typography } from 'antd';
+import { Button, Flex, Layout, Space, Tag, Typography } from 'antd';
 import _ from 'lodash';
-import { useEffect } from 'react';
+import { PackageCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import ProviderSettingDrawer from './components/ProviderSettingDrawer';
 import * as icons from './icons';
 
-const Providers: React.FC<{ workspace?: WORKSPACE.WorkspaceEntity }> = ({
+const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
   workspace,
 }) => {
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
 
-  useEffect(() => {}, [workspace]);
+  const [providerSettingDrawerOpen, setProviderSettingDrawerOpen] =
+    useState<boolean>(false);
+  const [providerSchema, setProviderSchema] = useState<LLM.ProviderSchema>();
+
+  const [configuredProviderKeys, setConfiguredProviderKeys] =
+    useState<string[]>();
+
+  useEffect(() => {
+    console.log(workspace);
+    // 所有已配置的Provider Keys
+    if (workspace && workspace.uid) {
+      llmService.allConfiguredProviderKeys(workspace.uid).then((res) => {
+        setConfiguredProviderKeys(res.content);
+      });
+    }
+  }, [workspace]);
 
   return (
     <>
@@ -56,7 +76,7 @@ const Providers: React.FC<{ workspace?: WORKSPACE.WorkspaceEntity }> = ({
               key={provider.key}
               bordered
               hoverable
-              style={{ height: 180 }}
+              style={{ height: 200 }}
               colSpan={{
                 xs: 24,
                 sm: 12,
@@ -65,22 +85,61 @@ const Providers: React.FC<{ workspace?: WORKSPACE.WorkspaceEntity }> = ({
                 xl: 8,
                 xxl: 6,
               }}
-              bodyStyle={{ backgroundColor: icons.lightenColor(icon.color, 85) }}
+              bodyStyle={{
+                backgroundColor: icons.lightenColor(icon.color, 85),
+              }}
+              actions={[
+                <Button
+                  key="setting"
+                  type="text"
+                  block
+                  icon={<SettingOutlined />}
+                  onClick={() => {
+                    setProviderSchema(provider);
+                    setProviderSettingDrawerOpen(true);
+                  }}
+                >
+                  设置
+                </Button>,
+                <Button
+                  key="setting"
+                  type="text"
+                  block
+                  icon={<PlusOutlined />}
+                  disabled
+                >
+                  添加模型
+                </Button>,
+              ]}
             >
-              <Layout className="h-full max-h-full overflow-scroll">
-                <header>{icon.combine}</header>
+              <Layout
+                className="overflow-scroll"
+                style={{ height: 124, position: 'relative' }}
+              >
+                <header>
+                  <Flex gap="middle" align="center" justify="space-between">
+                    {icon.combine}
+                    {_.includes(configuredProviderKeys, provider.key) && (
+                      <PackageCheck size={16} color="#369eff" />
+                    )}
+                  </Flex>
+                </header>
                 <div className="grow py-4">
                   <Typography.Text>
-                    {provider.discription?.[intl.locale] ||
-                      provider.discription?.default ||
-                      provider.name}
+                    {getLocaleContent(
+                      provider.discription,
+                      intl.locale,
+                      provider.name,
+                    )}
                   </Typography.Text>
                 </div>
-                <footer>
+                <footer style={{ position: 'relative', bottom: 0 }}>
                   <Space wrap align="start" size={2}>
                     {_.map(provider.supportedModelTypes, (modelType) => {
                       return (
-                        <Tag key={modelType} className="text-xs text-gray-500">{modelType}</Tag>
+                        <Tag key={modelType} className="text-xs text-gray-500">
+                          {modelType}
+                        </Tag>
                       );
                     })}
                   </Space>
@@ -90,6 +149,13 @@ const Providers: React.FC<{ workspace?: WORKSPACE.WorkspaceEntity }> = ({
           );
         })}
       </ProCard>
+
+      <ProviderSettingDrawer
+        workspace={workspace}
+        providerSchema={providerSchema}
+        open={providerSettingDrawerOpen}
+        onClose={() => setProviderSettingDrawerOpen(false)}
+      />
     </>
   );
 };
