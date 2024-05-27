@@ -72,9 +72,14 @@ export async function providers(
  * @param workspaceUid  空间UID
  * @param providerKey Provider Key
  */
-export async function addProviderConfig(providerConfig: LLM.ProviderConfig, options?: Record<string, any>): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
+export async function addProviderConfig(
+  workspaceUid: string,
+  providerKey: string,
+  providerConfig: any,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
   return request<Response.SingleResponse<LLM.ProviderConfig>>(
-    `/api/workspace/${providerConfig.workspaceUid}/provider`,
+    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
     {
       method: 'POST',
       data: providerConfig,
@@ -84,18 +89,19 @@ export async function addProviderConfig(providerConfig: LLM.ProviderConfig, opti
 }
 
 /**
- * 所有已配置的Provider Key
- * @param workspaceUid 空间UID
+ * 删除Provider配置
+ * @param workspaceUid  空间UID
+ * @param providerKey Provider Key
  */
-export async function allConfiguredProviderKeys(
+export async function removeProviderConfig(
   workspaceUid: string,
+  providerKey: string,
   options?: Record<string, any>,
-): Promise<Response.MultiResponse<string>> {
-  return request<Response.MultiResponse<string>>(
-    `/api/workspace/${workspaceUid}/provider/all_key`,
+): Promise<Response.SingleResponse<boolean | string>> {
+  return request<Response.SingleResponse<boolean | string>>(
+    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
     {
-      method: 'GET',
-      params: {},
+      method: 'DELETE',
       ...(options || {}),
     },
   );
@@ -106,9 +112,31 @@ export async function allConfiguredProviderKeys(
  * @param workspaceUid  空间UID
  * @param providerKey Provider Key
  */
-export async function providerConfigDetail(workspaceUid: string, providerKey: string, options?: Record<string, any>): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
+export async function providerConfigDetail(
+  workspaceUid: string,
+  providerKey: string,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
   return request<Response.SingleResponse<LLM.ProviderConfig>>(
-    `/api/workspace/${workspaceUid}/provider/${providerKey}`,
+    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  );
+}
+
+/**
+ * 所有已配置的Provider
+ * @param workspaceUid  空间UID
+ */
+export async function allConfiguredProviderConfigs(
+  workspaceUid: string,
+  options?: Record<string, any>,
+): Promise<Response.MultiResponse<LLM.ProviderConfig>> {
+  return request<Response.MultiResponse<LLM.ProviderConfig>>(
+    `/api/workspace/${workspaceUid}/provider/all/config`,
     {
       method: 'GET',
       params: {},

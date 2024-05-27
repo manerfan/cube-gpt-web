@@ -16,6 +16,7 @@
 
 import { convertFormSchema2AntdFormSchema } from '@/components/form';
 import { getLocaleContent } from '@/locales';
+import * as llmService from '@/services/llm';
 import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { LinkOutlined, LockFilled } from '@ant-design/icons';
@@ -25,7 +26,7 @@ import {
   ProSkeleton,
   useIntl,
 } from '@ant-design/pro-components';
-import { Drawer, Flex, Space, Typography } from 'antd';
+import { Drawer, Flex, Space, Typography, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import * as icons from '../icons';
 
@@ -38,13 +39,19 @@ const ProviderSettingDrawer: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
   providerSchema?: LLM.ProviderSchema;
   open: boolean;
-  onClose?: () => void;
+  onClose?: (providerConfig?: LLM.ProviderConfig) => void;
 }> = ({ workspace, providerSchema, open, onClose }) => {
   const intl = useIntl();
   const [providerIcon, setProviderIcon] = useState<LLM.ProviderIcon>();
   const [formColumns, setFormColumns] = useState<
     ProFormColumnsType<DataItem>[]
   >([]);
+
+  const [adding, setAdding] = useState<boolean>(false);
+  const [formColumnsLoading, setFormColumnsLoading] = useState<boolean>(false);
+
+  const [notificationApi, notificationContextHolder] =
+    notification.useNotification();
 
   useEffect(() => {
     if (!providerSchema) {
@@ -54,15 +61,32 @@ const ProviderSettingDrawer: React.FC<{
     // 获取LLM的图标相关
     setProviderIcon(icons.getProviderIconBySchema(providerSchema));
 
-    // 解析 Form Columns
-    // https://pro-components.antdigital.dev/components/schema-form
-    // https://pro-components.antdigital.dev/components/schema
-    setFormColumns(
-      convertFormSchema2AntdFormSchema(
-        providerSchema.credentialSchemas,
-        intl.locale,
-      ),
-    );
+    if (workspace && providerSchema) {
+      // 获取已配置详情
+      setFormColumnsLoading(true);
+      llmService
+        .providerConfigDetail(workspace.uid, providerSchema.key)
+        .then((resp) => {
+          setFormColumns(
+            convertFormSchema2AntdFormSchema(
+              providerSchema.credentialSchemas,
+              intl.locale,
+              resp.content?.providerCredential,
+            ),
+          );
+        })
+        .finally(() => setFormColumnsLoading(false));
+    } else {
+      // 解析 Form Columns
+      // https://pro-components.antdigital.dev/components/schema-form
+      // https://pro-components.antdigital.dev/components/schema
+      setFormColumns(
+        convertFormSchema2AntdFormSchema(
+          providerSchema.credentialSchemas,
+          intl.locale,
+        ),
+      );
+    }
   }, [intl.locale, workspace, providerSchema]);
 
   const getDrawerWidth = () => {
@@ -75,18 +99,18 @@ const ProviderSettingDrawer: React.FC<{
         title={
           <>
             <Space>
-              {providerIcon?.avatar && providerIcon?.avatar}
+              {providerIcon?.avatar()}
               <Typography.Text>
                 {providerSchema?.name || '模型设置'}
               </Typography.Text>
             </Space>
           </>
         }
-        extra={providerIcon?.combine}
+        extra={providerIcon?.combine()}
         placement="right"
         closeIcon={false}
         open={open}
-        onClose={onClose}
+        onClose={() => onClose?.()}
         width={getDrawerWidth()}
         destroyOnClose
         autoFocus
@@ -105,22 +129,40 @@ const ProviderSettingDrawer: React.FC<{
           </Flex>
         }
       >
-        <ProSkeleton type="list" />
-        <BetaSchemaForm<DataItem>
-          layoutType="Form"
-          rowProps={{
-            gutter: [16, 16],
-          }}
-          colProps={{
-            span: 24,
-          }}
-          grid
-          columns={formColumns}
-          isKeyPressSubmit
-          onFinish={async (values) => {
-            console.log(values);
-          }}
-        />
+        {formColumnsLoading ? (
+          <ProSkeleton type="list" />
+        ) : (
+          <BetaSchemaForm<DataItem>
+            layoutType="Form"
+            rowProps={{
+              gutter: [16, 16],
+            }}
+            colProps={{
+              span: 24,
+            }}
+            grid
+            columns={formColumns}
+            isKeyPressSubmit
+            loading={adding}
+            onFinish={async (values) => {
+              setAdding(true);
+              llmService
+                .addProviderConfig(workspace.uid, providerSchema!.key, {
+                  workspace_uid: workspace.uid,
+                  provider_key: providerSchema!.key,
+                  provider_credential: values,
+                })
+                .then((resp) => {
+                  notificationApi.success({
+                    message: `配置 ${providerSchema?.name} 成功`,
+                    description: `配置成功，现在您可以使用 ${providerSchema?.name} 提供的模型`,
+                  });
+                  onClose?.(resp.content);
+                })
+                .finally(() => setAdding(false));
+            }}
+          />
+        )}
         {!!providerSchema?.help && (
           <Typography.Link
             href={providerSchema.help.url}
@@ -136,6 +178,7 @@ const ProviderSettingDrawer: React.FC<{
           </Typography.Link>
         )}
       </Drawer>
+      {notificationContextHolder}
     </>
   );
 };

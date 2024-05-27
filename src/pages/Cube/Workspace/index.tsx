@@ -75,8 +75,10 @@ const Workspace: React.FC = () => {
       key: 'bots',
       label: (
         <>
-          <Bot className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.tab.bots' })}
+          <Space align='center' size={0}>
+            <Bot size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.tab.bots' })}
+          </Space>
         </>
       ),
       children: 'Content of Tab Pane Bots',
@@ -85,8 +87,10 @@ const Workspace: React.FC = () => {
       key: 'plugins',
       label: (
         <>
-          <Box className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.tab.plugins' })}
+          <Space align='center' size={0}>
+            <Box size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.tab.plugins' })}
+          </Space>
         </>
       ),
       children: 'Content of Tab Pane Plugins',
@@ -95,8 +99,10 @@ const Workspace: React.FC = () => {
       key: 'workflows',
       label: (
         <>
-          <Workflow className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.tab.workflows' })}
+          <Space align='center' size={0}>
+            <Workflow size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.tab.workflows' })}
+          </Space>
         </>
       ),
       children: 'Content of Tab Pane Workflows',
@@ -105,8 +111,10 @@ const Workspace: React.FC = () => {
       key: 'knowledges',
       label: (
         <>
-          <LibraryBig className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.tab.knowledge' })}
+          <Space align='center' size={0}>
+            <LibraryBig size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.tab.knowledge' })}
+          </Space>
         </>
       ),
       children: 'Content of Tab Pane Knowledges',
@@ -115,8 +123,10 @@ const Workspace: React.FC = () => {
       key: 'cards',
       label: (
         <>
-          <MessageSquareCode className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.tab.cards' })}
+          <Space align='center' size={0}>
+            <MessageSquareCode size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.tab.cards' })}
+          </Space>
         </>
       ),
       children: 'Content of Tab Pane Cards',

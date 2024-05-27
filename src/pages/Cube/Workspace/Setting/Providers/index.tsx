@@ -14,148 +14,108 @@
  * limitations under the License.
  */
 
-import { getLocaleContent } from '@/locales';
 import * as llmService from '@/services/llm';
 import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
-import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
-import { ProCard } from '@ant-design/pro-components';
-import { useIntl, useModel } from '@umijs/max';
-import { Button, Flex, Layout, Space, Tag, Typography } from 'antd';
+import { useModel } from '@umijs/max';
 import _ from 'lodash';
-import { PackageCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import ProviderSettingDrawer from './components/ProviderSettingDrawer';
-import * as icons from './icons';
+import ProviderCard from './components/ProviderCard';
 
 const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
   workspace,
 }) => {
   const { initialState } = useModel('@@initialState');
-  const intl = useIntl();
 
-  const [providerSettingDrawerOpen, setProviderSettingDrawerOpen] =
-    useState<boolean>(false);
-  const [providerSchema, setProviderSchema] = useState<LLM.ProviderSchema>();
+  // 所有已配置的Provider配置
+  const [configuredProviderConfigs, setConfiguredProviderConfigs] =
+    useState<LLM.ProviderConfig[]>();
 
-  const [configuredProviderKeys, setConfiguredProviderKeys] =
-    useState<string[]>();
+  // 所有已配置的ProviderSchema
+  const [configuredProviderSchemas, setConfiguredProviderSchemas] = useState<
+    LLM.ProviderSchema[]
+  >(initialState?.providers || []);
+
+  // 所有未配置的ProviderSchema
+  const [unConfiguredProviderSchemas, setUnConfiguredProviderSchemas] =
+    useState<LLM.ProviderSchema[]>([]);
+
+  const handleProviderSchemaConfigs = (
+    _configuredProviderConfigs: LLM.ProviderConfig[],
+  ) => {
+    // 已配置的Provider配置
+    setConfiguredProviderConfigs(_configuredProviderConfigs);
+
+    // 过滤出已配置的
+    const _configuredProviderSchemas = _.filter(
+      initialState?.providers || [],
+      (provider) =>
+        _.includes(
+          _.map(_configuredProviderConfigs, (config) => config.providerKey),
+          provider.key,
+        ),
+    );
+    setConfiguredProviderSchemas(_configuredProviderSchemas);
+
+    // 过滤出未配置的
+    const _unConfiguredProviderSchemas = _.filter(
+      initialState?.providers || [],
+      (provider) =>
+        !_.includes(
+          _.map(_configuredProviderConfigs, (config) => config.providerKey),
+          provider.key,
+        ),
+    );
+    setUnConfiguredProviderSchemas(_unConfiguredProviderSchemas);
+  };
 
   useEffect(() => {
-    console.log(workspace);
-    // 所有已配置的Provider Keys
+    // 所有已配置的Provider
     if (workspace && workspace.uid) {
-      llmService.allConfiguredProviderKeys(workspace.uid).then((res) => {
-        setConfiguredProviderKeys(res.content);
+      llmService.allConfiguredProviderConfigs(workspace.uid).then((res) => {
+        handleProviderSchemaConfigs(res.content || []);
       });
     }
   }, [workspace]);
 
   return (
     <>
-      <ProCard
-        direction="row"
-        wrap
-        ghost
-        gutter={[8, 16]}
-        title="模型列表"
-        extra={
-          <Button
-            size="small"
-            icon={<SettingOutlined />}
-            className="text-gray-500 font-bold"
-          >
-            系统模型设置
-          </Button>
-        }
-      >
-        {_.map(initialState?.providers || [], (provider) => {
-          const icon = icons.getProviderIconBySchema(provider);
-          return (
-            <ProCard
-              key={provider.key}
-              bordered
-              hoverable
-              style={{ height: 200 }}
-              colSpan={{
-                xs: 24,
-                sm: 12,
-                md: 12,
-                lg: 8,
-                xl: 8,
-                xxl: 6,
-              }}
-              bodyStyle={{
-                backgroundColor: icons.lightenColor(icon.color, 85),
-              }}
-              actions={[
-                <Button
-                  key="setting"
-                  type="text"
-                  block
-                  icon={<SettingOutlined />}
-                  onClick={() => {
-                    setProviderSchema(provider);
-                    setProviderSettingDrawerOpen(true);
-                  }}
-                >
-                  设置
-                </Button>,
-                <Button
-                  key="setting"
-                  type="text"
-                  block
-                  icon={<PlusOutlined />}
-                  disabled
-                >
-                  添加模型
-                </Button>,
-              ]}
-            >
-              <Layout
-                className="overflow-scroll"
-                style={{ height: 124, position: 'relative' }}
-              >
-                <header>
-                  <Flex gap="middle" align="center" justify="space-between">
-                    {icon.combine}
-                    {_.includes(configuredProviderKeys, provider.key) && (
-                      <PackageCheck size={16} color="#369eff" />
-                    )}
-                  </Flex>
-                </header>
-                <div className="grow py-4">
-                  <Typography.Text>
-                    {getLocaleContent(
-                      provider.discription,
-                      intl.locale,
-                      provider.name,
-                    )}
-                  </Typography.Text>
-                </div>
-                <footer style={{ position: 'relative', bottom: 0 }}>
-                  <Space wrap align="start" size={2}>
-                    {_.map(provider.supportedModelTypes, (modelType) => {
-                      return (
-                        <Tag key={modelType} className="text-xs text-gray-500">
-                          {modelType}
-                        </Tag>
-                      );
-                    })}
-                  </Space>
-                </footer>
-              </Layout>
-            </ProCard>
-          );
-        })}
-      </ProCard>
+      {/* 已配置的Provider列表 */}
+      {!_.isEmpty(configuredProviderSchemas) && (
+        <ProviderCard
+          workspace={workspace}
+          configuredProviderSchemas={configuredProviderSchemas}
+          unConfiguredProviderSchemas={unConfiguredProviderSchemas}
+          configured
+          onProviderConfigRemove={(providerKey) => {
+            // 移除Provider配置后，重新计算已配置/未配置列表
+            handleProviderSchemaConfigs(
+              _.filter(
+                configuredProviderConfigs || [],
+                (providerConfig) => providerConfig.providerKey !== providerKey,
+              ),
+            );
+          }}
+        />
+      )}
 
-      <ProviderSettingDrawer
-        workspace={workspace}
-        providerSchema={providerSchema}
-        open={providerSettingDrawerOpen}
-        onClose={() => setProviderSettingDrawerOpen(false)}
-      />
+      {/* 未配置的Provider列表 */}
+      {!_.isEmpty(unConfiguredProviderSchemas) && (
+        <ProviderCard
+          workspace={workspace}
+          configuredProviderSchemas={configuredProviderSchemas}
+          unConfiguredProviderSchemas={unConfiguredProviderSchemas}
+          onProviderConfigAdd={(providerConfig) => {
+            // 添加Provider配置后，重新计算已配置/未配置列表
+            const _configuredProviderConfigs = _.filter(
+              configuredProviderConfigs || [],
+              (config) => config.providerKey !== providerConfig.providerKey,
+            );
+            _configuredProviderConfigs.push(providerConfig);
+            handleProviderSchemaConfigs(_configuredProviderConfigs);
+          }}
+        />
+      )}
     </>
   );
 };

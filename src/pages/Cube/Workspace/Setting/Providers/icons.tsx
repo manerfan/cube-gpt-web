@@ -20,31 +20,31 @@ import { Avatar, Image, Typography } from 'antd';
 
 const providerIcon: { [key: string]: LLM.ProviderIcon } = {
   openai: {
-    icon: <OpenAI />,
-    text: <OpenAI.Text />,
-    combine: <OpenAI.Combine />,
-    avatar: <OpenAI.Avatar size={18} />,
+    icon: (size?: number) => <OpenAI size={size} />,
+    text: (size?: number) => <OpenAI.Text size={size} />,
+    combine: (size?: number) => <OpenAI.Combine size={size} />,
+    avatar: (size?: number) => <OpenAI.Avatar size={size || 18} />,
     color: OpenAI.colorPrimary,
   },
   moonshot: {
-    icon: <Moonshot />,
-    text: <Moonshot.Text />,
-    combine: <Moonshot.Combine />,
-    avatar: <Moonshot.Avatar size={18} />,
+    icon: (size?: number) => <Moonshot size={size}/>,
+    text: (size?: number) => <Moonshot.Text size={size}/>,
+    combine: (size?: number) => <Moonshot.Combine size={size}/>,
+    avatar: (size?: number) => <Moonshot.Avatar size={size || 18}/>,
     color: Moonshot.colorPrimary,
   },
   zhipu: {
-    icon: <Zhipu.Color />,
-    text: <Zhipu.Text />,
-    combine: <Zhipu.Combine type={'color'} />,
-    avatar: <Zhipu.Avatar size={18} />,
+    icon: (size?: number) => <Zhipu.Color size={size}/>,
+    text: (size?: number) => <Zhipu.Text size={size}/>,
+    combine: (size?: number) => <Zhipu.Combine type={'color'} size={size}/>,
+    avatar: (size?: number) => <Zhipu.Avatar size={size || 18}/>,
     color: Zhipu.colorPrimary,
   },
   wenxin: {
-    icon: <Wenxin.Color />,
-    text: <Wenxin.Text />,
-    combine: <Wenxin.Combine type={'color'} extra={'一言'} />,
-    avatar: <Wenxin.Avatar size={18} />,
+    icon: (size?: number) => <Wenxin.Color size={size}/>,
+    text: (size?: number) => <Wenxin.Text size={size}/>,
+    combine: (size?: number) => <Wenxin.Combine type={'color'} extra={'一言'} size={size}/>,
+    avatar: (size?: number) => <Wenxin.Avatar size={size || 18}/>,
     color: Wenxin.colorPrimary,
   },
 };
@@ -71,15 +71,19 @@ export const getProviderIconBySchema = (
   provider: LLM.ProviderSchema,
 ): LLM.ProviderIcon => {
   return getProviderIcon(provider.key, {
-    icon: provider.icon?.icon || <span />,
-    text: provider.name,
-    combine: provider.icon?.combine ? (
-      <Image preview={false} src={provider.icon.combine} height={24} />
+    icon: (size?: number) => provider.icon?.icon ? (
+      <Avatar size={(size || 18) + 2} src={provider.icon.icon} />
     ) : (
       <Typography.Text>{provider.name}</Typography.Text>
     ),
-    avatar: provider.icon?.avatar ? (
-      <Avatar size={20} src={provider.icon.avatar} />
+    text: (size?: number) => <Typography.Text>{provider.name}</Typography.Text>,
+    combine: (size?: number) => provider.icon?.combine ? (
+      <Image preview={false} src={provider.icon.combine} height={(size || 18) + 6} />
+    ) : (
+      <Typography.Text>{provider.name}</Typography.Text>
+    ),
+    avatar: (size?: number) => provider.icon?.avatar ? (
+      <Avatar size={(size || 18) + 2} src={provider.icon.avatar} />
     ) : (
       <Typography.Text>{provider.name}</Typography.Text>
     ),

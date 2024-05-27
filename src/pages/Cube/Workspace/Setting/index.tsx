@@ -74,27 +74,34 @@ const Setting: React.FC = () => {
   // tab内容
   const items: TabsProps['items'] = [
     {
-      key: 'members',
-      label: (
-        <>
-          <Contact className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.setting.tab.members' })}
-        </>
-      ),
-      children: 'Content of Tab Pane Providers',
-      disabled: true,
-    },
-    {
       key: 'providers',
       label: (
         <>
-          <BrainCircuit className="ant-tabs-tab-btn-icon" />
-          {intl.formatMessage({ id: 'cube.space.setting.tab.providers' })}
+          <Space align="center" size={0}>
+            <BrainCircuit size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.setting.tab.providers' })}
+          </Space>
         </>
       ),
       children: <Providers workspace={workspace!} />,
     },
   ];
+  if (isPublicSpace(workspace)) {
+    // 非个人空间的功能
+    items.unshift({
+      key: 'members',
+      label: (
+        <>
+          <Space align="center" size={0}>
+            <Contact size={22} className="ant-tabs-tab-btn-icon" />
+            {intl.formatMessage({ id: 'cube.space.setting.tab.members' })}
+          </Space>
+        </>
+      ),
+      children: 'Content of Tab Pane Providers',
+      disabled: true,
+    });
+  }
 
   const moreItems: MenuProps['items'] = [
     {
@@ -137,7 +144,13 @@ const Setting: React.FC = () => {
             ? workspace?.name
             : intl.formatMessage({ id: 'cube.menu.personal' })}
         </Typography.Text>
-        {!isPublicSpace(workspace) && <Button type='text' icon={<EditOutlined />} className="hidden md:inline text-gray-500" />}
+        {isPublicSpace(workspace) && (
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            className="hidden md:inline text-gray-500"
+          />
+        )}
       </Space>
     ),
     right: (

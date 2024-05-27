@@ -47,14 +47,14 @@ const ProviderSettingDrawer: React.FC<{
         title={
           <>
             <Space>
-              {providerIcon?.avatar && providerIcon?.avatar}
+              {providerIcon?.avatar()}
               <Typography.Text>
                 {providerSchema?.name || '模型设置'}
               </Typography.Text>
             </Space>
           </>
         }
-        extra={providerIcon?.combine}
+        extra={providerIcon?.combine()}
         placement="right"
         closeIcon={false}
         open={open}

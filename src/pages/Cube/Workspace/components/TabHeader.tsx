@@ -58,7 +58,6 @@ const TabHeader: React.FC<{
         onChange={(activeKey: string) => {
           setActiveKey(activeKey);
           const [path] = getPathAndModule(location.pathname);
-          console.log(path, activeKey, `goto - ${path}/${activeKey}`)
           history.push(`${path}/${activeKey}`);
         }}
         renderTabBar={!!tabBarRender ? renderTabBar : undefined}

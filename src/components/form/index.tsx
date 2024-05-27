@@ -31,6 +31,7 @@ import _ from 'lodash';
 export function convertFormSchema2AntdFormSchema<T>(
   formSchemas?: Display.FormSchema[],
   locale?: string,
+  initialValues?: Record<string, string | number>
 ): ProFormColumnsType<T>[] {
   if (!formSchemas) {
     return [];
@@ -46,6 +47,7 @@ export function convertFormSchema2AntdFormSchema<T>(
       valueType: formSchema.valueType,
       // 字段提示
       tooltip: getLocaleContent<string>(formSchema.tooltip, locale),
+      initialValue: initialValues?.[formSchema.dataIndex],
     } as ProFormColumnsType<T>;
 
     // 字段属性

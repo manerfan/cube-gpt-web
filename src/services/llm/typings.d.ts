@@ -58,10 +58,10 @@ declare namespace LLM {
   };
 
   type ProviderIcon = {
-    icon: React.ReactNode;
-    text: React.ReactNode;
-    combine: React.ReactNode;
-    avatar: React.ReactNode;
+    icon: (size?: number) => React.ReactNode;
+    text: (size?: number) => React.ReactNode;
+    combine: (size?: number) => React.ReactNode;
+    avatar: (size?: number) => React.ReactNode;
     color: string;
   };
 
