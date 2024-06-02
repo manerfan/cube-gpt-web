@@ -79,8 +79,8 @@ export async function models(
   workspaceUid: string,
   providerName: string,
   options?: Record<string, any>,
-): Promise<Response.MultiResponse<LLM.ModelSchema>> {
-  return request<Response.MultiResponse<LLM.ModelSchema>>(
+): Promise<Response.SingleResponse<{[key: string]: LLM.ModelSchema[]}>> {
+  return request<Response.SingleResponse<{[key: string]: LLM.ModelSchema[]}>>(
     `/api/workspace/${workspaceUid}/provider/${providerName}/model`,
     {
       method: 'GET',

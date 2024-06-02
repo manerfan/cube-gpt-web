@@ -16,12 +16,11 @@
 
 import { getLocaleContent } from '@/locales';
 import { llmProviderService } from '@/services';
-import { LLM } from '@/services/llm/provider/typings';
+import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import {
   DeleteOutlined,
   ExclamationCircleFilled,
-  PlusCircleFilled,
   PlusOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
@@ -30,7 +29,6 @@ import { useIntl } from '@umijs/max';
 import {
   Button,
   Card,
-  Collapse,
   Flex,
   Layout,
   Modal,
@@ -42,7 +40,9 @@ import {
 import _ from 'lodash';
 import { useState } from 'react';
 import * as icons from '../icons';
+import ProviderModelList from './ProviderModelList';
 import ProviderSettingDrawer from './ProviderSettingDrawer';
+import StatusLight from '@/components/status/StatusLight';
 
 const ProviderCard: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
@@ -216,14 +216,16 @@ const ProviderCard: React.FC<{
                               size="small"
                               danger
                               block
-                              icon={<DeleteOutlined className="text-orange-400" />}
+                              icon={
+                                <DeleteOutlined className="text-orange-400" />
+                              }
                               onClick={() => {
                                 setSelectedDeleteProviderSchema(providerSchema);
                                 setProviderDeleteConfirmOpen(true);
                               }}
                             />
                           </Space>
-                          <div className="h-3 w-3 rounded-full border border-solid border-green-500 bg-gradient-to-br from-green-300 to-green-400"></div>
+                          <StatusLight />
                         </Flex>
                         <Button
                           key="setting"
@@ -245,32 +247,9 @@ const ProviderCard: React.FC<{
 
                 {/** 模型列表 */}
                 {configured && (
-                  <Collapse
-                    className="mt-4"
-                    style={{
-                      backgroundColor: icons.lightenColor(icon.color, 90),
-                    }}
-                    items={[
-                      {
-                        key: 'default',
-                        label: (
-                          <Flex justify="space-between" align="flex-start">
-                            <Typography.Text>模型列表</Typography.Text>
-                            <Button
-                              key="add-model"
-                              type="default"
-                              size="small"
-                              icon={<PlusCircleFilled />}
-                              disabled
-                            >
-                              添加模型
-                            </Button>
-                          </Flex>
-                        ),
-                        children: '吼吼',
-                      },
-                    ]}
-                    bordered={false}
+                  <ProviderModelList
+                    workspace={workspace}
+                    providerSchema={providerSchema}
                   />
                 )}
               </ProCard>
@@ -318,7 +297,9 @@ const ProviderCard: React.FC<{
                 message.warning(
                   `配置已删除，请关注 ${selectedDeleteProviderSchema?.name} 的模型使用场景`,
                 );
-                onProviderConfigRemove?.(selectedDeleteProviderSchema!.provider);
+                onProviderConfigRemove?.(
+                  selectedDeleteProviderSchema!.provider,
+                );
               } else {
                 message.error(
                   `配置 ${selectedDeleteProviderSchema?.name} 删除异常 ${resp.content}`,

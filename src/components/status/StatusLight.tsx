@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
+const StatusLight: React.FC<{ type?: 'enabled' | 'disabled' }> = ({
+  type = 'enabled',
+}) => {
+  return (
+    <div
+      className={`h-3 w-3 rounded-full border border-solid bg-gradient-to-br 
+      ${
+        type === 'enabled' ? 'border-green-500 from-green-300 to-green-400' : ''
+      }
+      ${type === 'disabled' ? 'border-orange-500 from-orange-300 to-orange-400' : ''}
+      `}
+    ></div>
+  );
+};
 
-export const formatBytes = (bytes: number) => {
-    if (bytes === 0) {
-        return '0 B';
-    }
-
-    const sizes = ['B', 'K', 'M', 'G', 'T'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    const formattedBytes = _.round(bytes / Math.pow(1024, i), 2);
-
-    return `${formattedBytes} ${sizes[i]}`;
-}
+export default StatusLight;
