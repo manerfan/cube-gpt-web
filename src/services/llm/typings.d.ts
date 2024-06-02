@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ModelType } from '@/services/llm';
+import { FetchFrom, ModelFeature, ModelType } from '@/services/llm/model';
 import type { Display } from '@/services/typings';
 import '@interface/typings';
 import React from 'react';
@@ -24,7 +24,7 @@ declare namespace LLM {
     /**
      * 标识
      */
-    key: string;
+    provider: string;
 
     /**
      * 名称
@@ -71,7 +71,54 @@ declare namespace LLM {
   type ProviderConfig = {
     uid?: string;
     workspaceUid: string;
-    providerKey: string;
+    providerName: string;
     providerCredential: Record<string, string | number>;
-  }
+  };
+
+  type ModelSchema = {
+    /**
+     * 模型
+     */
+    model: string;
+
+    /**
+     * 名称
+     */
+    name: string;
+
+    /**
+     * 类型
+     */
+    type: ModelType;
+
+    /**
+     * 模型来源
+     */
+    fetch_from: FetchFrom;
+
+    /**
+     * 描述
+     */
+    discription?: Display.I18nOption;
+
+    /**
+     * 特性
+     */
+    features: ModelFeature[];
+
+    /**
+     * 属性
+     */
+    properties: { [key: string]: any };
+
+    /**
+     * 参数
+     */
+    parameters: Display.FormSchema[];
+
+    /**
+     * 是否已过期不再可用
+     */
+    deprecated: boolean;
+  };
 }

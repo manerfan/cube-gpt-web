@@ -15,8 +15,8 @@
  */
 
 import { getLocaleContent } from '@/locales';
-import { llmService } from '@/services';
-import { LLM } from '@/services/llm/typings';
+import { llmProviderService } from '@/services';
+import { LLM } from '@/services/llm/provider/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import {
   DeleteOutlined,
@@ -50,7 +50,7 @@ const ProviderCard: React.FC<{
   unConfiguredProviderSchemas: LLM.ProviderSchema[]; // 未配置的
   configured?: boolean; // 是否已配置的
   onProviderConfigAdd?: (providerConfig: LLM.ProviderConfig) => void; // 当添加 Provider Schema 时
-  onProviderConfigRemove?: (providerKey: string) => void; // 当移除 Provider Schema 时
+  onProviderConfigRemove?: (providerName: string) => void; // 当移除 Provider Schema 时
 }> = ({
   workspace,
   configuredProviderSchemas,
@@ -107,7 +107,7 @@ const ProviderCard: React.FC<{
             const icon = icons.getProviderIconBySchema(providerSchema);
             return (
               <ProCard
-                key={providerSchema.key}
+                key={providerSchema.provider}
                 bordered
                 hoverable
                 style={configured ? { minHeight: 128 } : { height: 200 }}
@@ -308,17 +308,17 @@ const ProviderCard: React.FC<{
         okType="danger"
         onOk={() => {
           setDeleteConfirmLoading(true);
-          llmService
+          llmProviderService
             .removeProviderConfig(
               workspace.uid,
-              selectedDeleteProviderSchema!.key,
+              selectedDeleteProviderSchema!.provider,
             )
             .then((resp) => {
               if (resp.content === true) {
                 message.warning(
                   `配置已删除，请关注 ${selectedDeleteProviderSchema?.name} 的模型使用场景`,
                 );
-                onProviderConfigRemove?.(selectedDeleteProviderSchema!.key);
+                onProviderConfigRemove?.(selectedDeleteProviderSchema!.provider);
               } else {
                 message.error(
                   `配置 ${selectedDeleteProviderSchema?.name} 删除异常 ${resp.content}`,

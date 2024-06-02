@@ -16,7 +16,7 @@
 
 import {
   ErrorShowType,
-  llmService,
+  llmProviderService,
   systemService,
   userService,
 } from '@/services';
@@ -30,7 +30,7 @@ import {
 import { message, notification } from 'antd';
 import _ from 'lodash';
 import { ACCESS_TOKEN, TOKEN_TYPE } from './constants';
-import { LLM } from './services/llm/typings';
+import { LLM } from './services/llm/provider/typings';
 import { SYSTEM } from './services/system/typings';
 import { USER } from './services/user/typings';
 
@@ -111,7 +111,7 @@ export async function getInitialState(): Promise<{
 
   const fetchProviders = async () => {
     try {
-      const result = await llmService.providers();
+      const result = await llmProviderService.providers();
       return result.content;
     } catch (ex) {
       return undefined;

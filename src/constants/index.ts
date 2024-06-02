@@ -21,3 +21,5 @@ export const PASSWORD_PATTERN = /^[a-zA-Z][a-zA-Z0-9_!@#$%&*]{5,31}$/;
 
 export const ACCESS_TOKEN = "access_token";
 export const TOKEN_TYPE = "token_type";
+
+export const HIDDEN_PREFIX = '[:hidden:]';

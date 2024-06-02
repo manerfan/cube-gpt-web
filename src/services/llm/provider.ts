@@ -18,38 +18,6 @@ import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { LLM } from './typings';
 
-export enum ModelType {
-  /**
-   * 文本生成
-   */
-  TEXT_GENERATION = 'TEXT_GENERATION',
-
-  /**
-   * 图像生成
-   */
-  IMAGE_GENERATION = 'IMAGE_GENERATION',
-
-  /**
-   * 视觉识别
-   */
-  VISION = 'VISION',
-
-  /**
-   * 嵌入
-   */
-  EMBEDDING = 'EMBEDDING',
-
-  /**
-   * 文本转语音
-   */
-  TEXT_TO_SPEECH = 'TEXT_TO_SPEECH',
-
-  /**
-   * 语音转文本
-   */
-  SPEECH_TO_TEXT = 'SPEECH_TO_TEXT',
-}
-
 /**
  * 获取所有支持的模型
  * @returns LLM.ProviderSchema
@@ -70,16 +38,16 @@ export async function providers(
 /**
  * 新增Provider配置
  * @param workspaceUid  空间UID
- * @param providerKey Provider Key
+ * @param providerName Provider Key
  */
 export async function addProviderConfig(
   workspaceUid: string,
-  providerKey: string,
+  providerName: string,
   providerConfig: any,
   options?: Record<string, any>,
 ): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
   return request<Response.SingleResponse<LLM.ProviderConfig>>(
-    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
+    `/api/workspace/${workspaceUid}/provider/${providerName}/config`,
     {
       method: 'POST',
       data: providerConfig,
@@ -91,15 +59,15 @@ export async function addProviderConfig(
 /**
  * 删除Provider配置
  * @param workspaceUid  空间UID
- * @param providerKey Provider Key
+ * @param providerName Provider Key
  */
 export async function removeProviderConfig(
   workspaceUid: string,
-  providerKey: string,
+  providerName: string,
   options?: Record<string, any>,
 ): Promise<Response.SingleResponse<boolean | string>> {
   return request<Response.SingleResponse<boolean | string>>(
-    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
+    `/api/workspace/${workspaceUid}/provider/${providerName}/config`,
     {
       method: 'DELETE',
       ...(options || {}),
@@ -110,15 +78,15 @@ export async function removeProviderConfig(
 /**
  * Provider配置详情
  * @param workspaceUid  空间UID
- * @param providerKey Provider Key
+ * @param providerName Provider Key
  */
 export async function providerConfigDetail(
   workspaceUid: string,
-  providerKey: string,
+  providerName: string,
   options?: Record<string, any>,
 ): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
   return request<Response.SingleResponse<LLM.ProviderConfig>>(
-    `/api/workspace/${workspaceUid}/provider/${providerKey}/config`,
+    `/api/workspace/${workspaceUid}/provider/${providerName}/config`,
     {
       method: 'GET',
       params: {},

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { LLM } from '@/services/llm/typings';
+import { LLM } from '@/services/llm/provider/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { LockFilled } from '@ant-design/icons';
 import { Button, Drawer, Flex, Result, Space, Typography } from 'antd';

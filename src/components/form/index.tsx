@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { HIDDEN_PREFIX } from '@/constants';
 import { getLocaleContent } from '@/locales';
 import type { Display } from '@/services/typings';
 import {
@@ -31,7 +32,7 @@ import _ from 'lodash';
 export function convertFormSchema2AntdFormSchema<T>(
   formSchemas?: Display.FormSchema[],
   locale?: string,
-  initialValues?: Record<string, string | number>
+  initialValues?: Record<string, string | number>,
 ): ProFormColumnsType<T>[] {
   if (!formSchemas) {
     return [];
@@ -39,15 +40,33 @@ export function convertFormSchema2AntdFormSchema<T>(
 
   return _.map(formSchemas, (formSchema) => {
     const jsonSchema = {
-      key: formSchema.dataIndex,
-      dataIndex: formSchema.dataIndex,
+      key: formSchema.name,
+      dataIndex: formSchema.name,
       // 字段标题
       title: getLocaleContent(formSchema.title, locale, ''),
       // 字段类型
       valueType: formSchema.valueType,
       // 字段提示
       tooltip: getLocaleContent<string>(formSchema.tooltip, locale),
-      initialValue: initialValues?.[formSchema.dataIndex],
+      // 初始值
+      initialValue: initialValues?.[_.camelCase(formSchema.name)],
+      // 对脱敏字段进行处理 - server → form
+      convertValue: (value, field) => {
+        if (_.startsWith(value, HIDDEN_PREFIX)) {
+          // 如果是脱敏字段值，则移除脱敏标进行展示
+          return _.replace(value, HIDDEN_PREFIX, '');
+        }
+
+        return value;
+      },
+      // 对脱敏字段进行处理 - form → server
+      transform: (value, namePath, allValues) => {
+        if (_.isEqual(HIDDEN_PREFIX + value, initialValues?.[namePath])) {
+          // 脱敏字段值如果没有修改，则带上脱敏标给服务端处理
+          return HIDDEN_PREFIX + value;
+        }
+        return value;
+      },
     } as ProFormColumnsType<T>;
 
     // 字段属性

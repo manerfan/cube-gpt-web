@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { LLM } from '@/services/llm/typings';
+import { LLM } from '@/services/llm/provider/typings';
 import { Moonshot, OpenAI, Wenxin, Zhipu } from '@lobehub/icons';
 import { Avatar, Image, Typography } from 'antd';
 
@@ -70,7 +70,7 @@ export const getProviderIcon = (
 export const getProviderIconBySchema = (
   provider: LLM.ProviderSchema,
 ): LLM.ProviderIcon => {
-  return getProviderIcon(provider.key, {
+  return getProviderIcon(provider.provider, {
     icon: (size?: number) => provider.icon?.icon ? (
       <Avatar size={(size || 18) + 2} src={provider.icon.icon} />
     ) : (

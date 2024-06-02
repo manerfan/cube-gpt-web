@@ -19,7 +19,8 @@ import _ from 'lodash';
 export * as authService from './auth';
 export * as systemService from './system';
 export * as userService from './user';
-export * as llmService from './llm';
+export * as llmProviderService from './llm/provider';
+export * as llmModelService from './llm/model';
 export * as workspaceService from './workspace';
 
 export enum ErrorShowType {

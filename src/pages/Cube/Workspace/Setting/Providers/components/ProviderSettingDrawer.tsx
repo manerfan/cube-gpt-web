@@ -16,7 +16,7 @@
 
 import { convertFormSchema2AntdFormSchema } from '@/components/form';
 import { getLocaleContent } from '@/locales';
-import * as llmService from '@/services/llm';
+import * as llmService from '@/services/llm/provider';
 import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { LinkOutlined, LockFilled } from '@ant-design/icons';
@@ -54,7 +54,7 @@ const ProviderSettingDrawer: React.FC<{
     notification.useNotification();
 
   useEffect(() => {
-    if (!providerSchema) {
+    if (!providerSchema || !open) {
       return;
     }
 
@@ -65,7 +65,7 @@ const ProviderSettingDrawer: React.FC<{
       // 获取已配置详情
       setFormColumnsLoading(true);
       llmService
-        .providerConfigDetail(workspace.uid, providerSchema.key)
+        .providerConfigDetail(workspace.uid, providerSchema.provider)
         .then((resp) => {
           setFormColumns(
             convertFormSchema2AntdFormSchema(
@@ -87,7 +87,7 @@ const ProviderSettingDrawer: React.FC<{
         ),
       );
     }
-  }, [intl.locale, workspace, providerSchema]);
+  }, [intl.locale, workspace, providerSchema, open]);
 
   const getDrawerWidth = () => {
     return window.innerWidth < 576 ? '100%' : 520;
@@ -147,9 +147,9 @@ const ProviderSettingDrawer: React.FC<{
             onFinish={async (values) => {
               setAdding(true);
               llmService
-                .addProviderConfig(workspace.uid, providerSchema!.key, {
+                .addProviderConfig(workspace.uid, providerSchema!.provider, {
                   workspace_uid: workspace.uid,
-                  provider_key: providerSchema!.key,
+                  provider_name: providerSchema!.provider,
                   provider_credential: values,
                 })
                 .then((resp) => {

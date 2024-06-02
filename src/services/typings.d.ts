@@ -90,7 +90,7 @@ declare namespace Display {
    * https://pro-components.antdigital.dev/components/schema
    */
   type FormSchema = {
-    dataIndex: string;
+    name: string;
     valueType: string;
     valueEnum?: { [key: string]: FormFieldValueEnum };
     fieldProps?: { [key: string]: any };
