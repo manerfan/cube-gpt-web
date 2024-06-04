@@ -19,16 +19,16 @@ import { getLocaleContent } from '@/locales';
 import * as llmService from '@/services/llm/provider';
 import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
-import { LinkOutlined, LockFilled } from '@ant-design/icons';
+import { LeftOutlined, LinkOutlined, LockFilled } from '@ant-design/icons';
 import {
   BetaSchemaForm,
   ProFormColumnsType,
   ProSkeleton,
   useIntl,
 } from '@ant-design/pro-components';
-import { Drawer, Flex, Space, Typography, notification } from 'antd';
+import { Button, Drawer, Flex, Space, Typography, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import * as icons from '../icons';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 
 type DataItem = {
   name: string;
@@ -99,6 +99,12 @@ const ProviderSettingDrawer: React.FC<{
         title={
           <>
             <Space>
+              <Button
+                type="text"
+                icon={<LeftOutlined />}
+                className="text-gray-500 font-bold w-5 md:hidden"
+                onClick={() => onClose?.()}
+              />
               {providerIcon?.avatar()}
               <Typography.Text>
                 {providerSchema?.name || '模型设置'}

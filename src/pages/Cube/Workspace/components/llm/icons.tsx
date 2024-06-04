@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { LLM } from '@/services/llm/provider/typings';
+import { LLM } from '@/services/llm/typings';
 import { Moonshot, OpenAI, Wenxin, Zhipu } from '@lobehub/icons';
 import { Avatar, Image, Typography } from 'antd';
 

@@ -18,6 +18,18 @@ import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { LLM } from './typings';
 
+export enum ProviderStatus {
+  /**
+   * 已激活可用
+   */
+  ACTIVE = 'ACTIVE',
+
+  /**
+   * 未配置不可用
+   */
+  UN_CONFIGURED = 'UN_CONFIGURED',
+}
+
 /**
  * 获取所有支持的模型
  * @returns LLM.ProviderSchema

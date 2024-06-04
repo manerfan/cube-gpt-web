@@ -75,13 +75,34 @@ export enum ModelFeature {
  * @param providerName Provider Name
  * @returns LLM.ProviderSchema
  */
-export async function models(
+export async function allModelsOnProvider(
   workspaceUid: string,
   providerName: string,
   options?: Record<string, any>,
-): Promise<Response.SingleResponse<{[key: string]: LLM.ModelSchema[]}>> {
-  return request<Response.SingleResponse<{[key: string]: LLM.ModelSchema[]}>>(
+): Promise<Response.SingleResponse<{ [key: string]: LLM.ModelSchema[] }>> {
+  return request<Response.SingleResponse<{ [key: string]: LLM.ModelSchema[] }>>(
     `/api/workspace/${workspaceUid}/provider/${providerName}/model`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  );
+}
+
+/**
+ * 获取空间下某类型的所有模型
+ * @param workspaceUid 工作空间Uid
+ * @param modelType 模型类型
+ * @returns LLM.ProviderWithModelsSchema
+ */
+export async function allModelsOnType(
+  workspaceUid: string,
+  modelType: ModelType,
+  options?: Record<string, any>,
+): Promise<Response.MultiResponse<LLM.ProviderWithModelsSchema>> {
+  return request<Response.MultiResponse<LLM.ProviderWithModelsSchema>>(
+    `/api/workspace/${workspaceUid}/model/type/${modelType}`,
     {
       method: 'GET',
       params: {},

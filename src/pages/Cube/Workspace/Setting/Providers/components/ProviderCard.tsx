@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import StatusLight from '@/components/status/StatusLight';
 import { getLocaleContent } from '@/locales';
 import { llmProviderService } from '@/services';
 import { LLM } from '@/services/llm/typings';
@@ -39,10 +40,10 @@ import {
 } from 'antd';
 import _ from 'lodash';
 import { useState } from 'react';
-import * as icons from '../icons';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import ProviderModelList from './ProviderModelList';
 import ProviderSettingDrawer from './ProviderSettingDrawer';
-import StatusLight from '@/components/status/StatusLight';
+import SystemModelSettingDrawer from './SystemModelSettingDrawer';
 
 const ProviderCard: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
@@ -73,6 +74,9 @@ const ProviderCard: React.FC<{
   const [deleteConfirmLoading, setDeleteConfirmLoading] =
     useState<boolean>(false);
 
+  const [systemModelSettingDrawerOpen, setSystemModelSettingDrawerOpen] =
+    useState<boolean>(false);
+
   return (
     <>
       <ProCard
@@ -95,6 +99,9 @@ const ProviderCard: React.FC<{
               size="small"
               icon={<SettingOutlined />}
               className="text-gray-500 font-bold"
+              onClick={() => {
+                setSystemModelSettingDrawerOpen(true);
+              }}
             >
               系统模型设置
             </Button>
@@ -321,6 +328,15 @@ const ProviderCard: React.FC<{
           selectedDeleteProviderSchema?.name || '供应商'
         } 相关的所有模型`}</Typography.Text>
       </Modal>
+
+      {/** 系统模型设置抽屉 */}
+      <SystemModelSettingDrawer
+        workspace={workspace}
+        open={systemModelSettingDrawerOpen}
+        onClose={() => {
+          setSystemModelSettingDrawerOpen(false);
+        }}
+      />
     </>
   );
 };

@@ -15,6 +15,7 @@
  */
 
 import { FetchFrom, ModelFeature, ModelType } from '@/services/llm/model';
+import { ProviderStatus } from '@/services/llm/provider';
 import type { Display } from '@/services/typings';
 import '@interface/typings';
 import React from 'react';
@@ -120,5 +121,22 @@ declare namespace LLM {
      * 是否已过期不再可用
      */
     deprecated: boolean;
+  };
+
+  type ProviderWithModelsSchema = {
+    /**
+     * provider
+     */
+    provider: ProviderSchema;
+
+    /**
+     * models
+     */
+    models: ModelSchema[];
+
+    /**
+     * 状态
+     */
+    status: ProviderStatus;
   };
 }

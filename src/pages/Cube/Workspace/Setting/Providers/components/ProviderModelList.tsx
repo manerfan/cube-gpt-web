@@ -36,7 +36,7 @@ import {
 } from 'antd';
 import _ from 'lodash';
 import { useState } from 'react';
-import * as icons from '../icons';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import { getLocaleContent } from '@/locales';
 
 const ProviderModelList: React.FC<{
@@ -62,7 +62,7 @@ const ProviderModelList: React.FC<{
           if (_.includes(keys, 'default') && !modelSchemas) {
             setSchemaLoading(true);
             modelService
-              .models(workspace.uid, providerSchema.provider)
+              .allModelsOnProvider(workspace.uid, providerSchema.provider)
               .then((resp) => {
                 const schemas = resp.content;
                 setModelSchemas(schemas || []);
@@ -111,7 +111,7 @@ const ProviderModelList: React.FC<{
                           itemLayout="horizontal"
                           dataSource={schemas}
                           rowKey={(schema) => schema.model}
-                          renderItem={(schema, index) => (
+                          renderItem={(schema) => (
                             <List.Item style={{ border: 'none' }}>
                               <Space>
                                 <div className="relative top-1">

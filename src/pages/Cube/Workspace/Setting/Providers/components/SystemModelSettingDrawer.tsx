@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-import { LLM } from '@/services/llm/provider/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
-import { LockFilled } from '@ant-design/icons';
+import { LeftOutlined, LockFilled, SettingOutlined } from '@ant-design/icons';
 import { Button, Drawer, Flex, Result, Space, Typography } from 'antd';
-import { useEffect, useState } from 'react';
-import * as icons from '../icons';
 
-const ProviderSettingDrawer: React.FC<{
+const SystemModelSettingDrawer: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
-  providerSchema?: LLM.ProviderSchema;
   open: boolean;
   onClose?: () => void;
-}> = ({ workspace, providerSchema, open, onClose }) => {
-  const [providerIcon, setProviderIcon] = useState<LLM.ProviderIcon>();
-
-  useEffect(() => {
-    if (!providerSchema) {
-      return;
-    }
-
-    setProviderIcon(icons.getProviderIconBySchema(providerSchema));
-  }, [workspace, providerSchema]);
-
+}> = ({ workspace, open, onClose }) => {
   const getDrawerWidth = () => {
     return window.innerWidth < 576 ? '100%' : 520;
   };
@@ -45,20 +31,22 @@ const ProviderSettingDrawer: React.FC<{
     <>
       <Drawer
         title={
-          <>
-            <Space>
-              {providerIcon?.avatar()}
-              <Typography.Text>
-                {providerSchema?.name || '模型设置'}
-              </Typography.Text>
-            </Space>
-          </>
+          <Space>
+            <Button
+              type="text"
+              icon={<LeftOutlined />}
+              className="text-gray-500 font-bold w-5 md:hidden"
+              onClick={() => onClose?.()}
+            />
+            <SettingOutlined />
+            系统模型设置
+          </Space>
         }
-        extra={providerIcon?.combine()}
+        extra
         placement="right"
         closeIcon={false}
         open={open}
-        onClose={onClose}
+        onClose={() => onClose?.()}
         width={getDrawerWidth()}
         destroyOnClose
         footer={
@@ -76,10 +64,13 @@ const ProviderSettingDrawer: React.FC<{
           </Flex>
         }
       >
-        <Result title="敬请期待" extra={<Button onClick={onClose}>返回</Button>} />
+        <Result
+          title="敬请期待"
+          extra={<Button onClick={onClose}>返回</Button>}
+        />
       </Drawer>
     </>
   );
 };
 
-export default ProviderSettingDrawer;
+export default SystemModelSettingDrawer;
