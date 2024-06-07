@@ -173,6 +173,15 @@ body,
     }
 }
 
+.ant-select {
+    &.ant-select-sm {
+        .ant-select-selection-item,
+        .ant-select-selection-item-content {
+            font-size: 12px !important;
+        }
+    }
+}
+
 .menu-height-30 {
 
     .ant-menu-inline,

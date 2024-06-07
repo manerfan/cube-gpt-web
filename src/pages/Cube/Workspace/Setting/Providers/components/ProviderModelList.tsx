@@ -15,13 +15,11 @@
  */
 
 import StatusLight from '@/components/status/StatusLight';
-import { formatBytes } from '@/services/common';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import * as modelService from '@/services/llm/model';
-import { ModelFeature } from '@/services/llm/model';
 import type { LLM } from '@/services/llm/typings';
 import type { WORKSPACE } from '@/services/workspace/typings';
-import { EyeOutlined, PlusCircleFilled } from '@ant-design/icons';
-import { useIntl } from '@umijs/max';
+import { PlusCircleFilled } from '@ant-design/icons';
 import {
   Button,
   Collapse,
@@ -29,21 +27,16 @@ import {
   Flex,
   List,
   Skeleton,
-  Space,
-  Tag,
-  Tooltip,
   Typography,
 } from 'antd';
 import _ from 'lodash';
 import { useState } from 'react';
-import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
-import { getLocaleContent } from '@/locales';
+import ModelItem from '../../../components/llm/ModelItem';
 
 const ProviderModelList: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
   providerSchema: LLM.ProviderSchema;
 }> = ({ workspace, providerSchema }) => {
-  const intl = useIntl();
   const icon = icons.getProviderIconBySchema(providerSchema);
 
   const [schemaLoading, setSchemaLoading] = useState(false);
@@ -113,92 +106,11 @@ const ProviderModelList: React.FC<{
                           rowKey={(schema) => schema.model}
                           renderItem={(schema) => (
                             <List.Item style={{ border: 'none' }}>
-                              <Space>
-                                <div className="relative top-1">
-                                  {icon.icon(18)}
-                                </div>
-                                <Tooltip
-                                  title={
-                                    <Typography.Text className="text-slate-100 text-xs">
-                                      {getLocaleContent(
-                                        schema.discription,
-                                        intl.locale,
-                                        schema.name,
-                                      )}
-                                    </Typography.Text>
-                                  }
-                                  color={icons.lightenColor(icon.color, 90)}
-                                >
-                                  <Typography.Text type="secondary">
-                                    {schema.name}
-                                  </Typography.Text>
-                                </Tooltip>
-
-                                {/** 模式 */}
-                                {!!schema.properties.mode && (
-                                  <Tag bordered={false} className="m-0">
-                                    <Typography.Text
-                                      type="secondary"
-                                      className="text-xs"
-                                    >
-                                      {_.upperCase(schema.properties.mode)}
-                                    </Typography.Text>
-                                  </Tag>
-                                )}
-                                {/** 上下文 */}
-                                {!!schema.properties.contextSize &&
-                                  _.isNumber(schema.properties.contextSize) && (
-                                    <Tag bordered={false} className="m-0">
-                                      <Typography.Text
-                                        type="secondary"
-                                        className="text-xs"
-                                      >
-                                        {formatBytes(
-                                          schema.properties.contextSize,
-                                        )}
-                                      </Typography.Text>
-                                    </Tag>
-                                  )}
-
-                                {/** 特性 */}
-                                {_.map(
-                                  _.filter(
-                                    schema.features,
-                                    (feature) =>
-                                      feature !== ModelFeature.VISION,
-                                  ),
-                                  (feature) => (
-                                    <Tag bordered={false} className="m-0">
-                                      <Typography.Text
-                                        type="secondary"
-                                        className="text-xs"
-                                      >
-                                        {feature}
-                                      </Typography.Text>
-                                    </Tag>
-                                  ),
-                                )}
-                                {_.includes(
-                                  schema.features,
-                                  ModelFeature.VISION,
-                                ) && (
-                                  <Tooltip
-                                    title={
-                                      <Typography.Text className="text-slate-100 text-xs">
-                                        {ModelFeature.VISION}
-                                      </Typography.Text>
-                                    }
-                                    color={icons.lightenColor(icon.color, 90)}
-                                  >
-                                    <Typography.Text
-                                      type="secondary"
-                                      className="text-xs"
-                                    >
-                                      <EyeOutlined />
-                                    </Typography.Text>
-                                  </Tooltip>
-                                )}
-                              </Space>
+                              <ModelItem
+                                providerSchema={providerSchema}
+                                modelSchema={schema}
+                                disable={schema.deprecated}
+                              />
                               <StatusLight
                                 type={
                                   schema.deprecated ? 'disabled' : 'enabled'

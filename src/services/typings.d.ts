@@ -92,7 +92,8 @@ declare namespace Display {
   type FormSchema = {
     name: string;
     valueType: string;
-    valueEnum?: { [key: string]: FormFieldValueEnum };
+    valueEnum?: FormFieldValueEnum[];
+    initialValue?: any,
     fieldProps?: { [key: string]: any };
     title?: I18nOption;
     tooltip?: I18nOption;
@@ -100,6 +101,11 @@ declare namespace Display {
   };
 
   type FormFieldValueEnum = {
+    /**
+     * 值
+     */
+    value: string;
+
     /**
      * 值展示文本
      */

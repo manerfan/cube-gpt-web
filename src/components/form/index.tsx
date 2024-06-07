@@ -82,14 +82,22 @@ export function convertFormSchema2AntdFormSchema<T>(
 
     // 多值类型字段内容
     if (!!formSchema.valueEnum) {
-      jsonSchema.valueEnum = _.mapValues(formSchema.valueEnum, (value) => {
+      const valueEnums = _.map(formSchema.valueEnum, (value) => {
         return {
+          value: value.value,
           text: getLocaleContent<string>(value.text, locale, ''),
           status: value.status,
           color: value.color,
           disabled: value.disabled,
-        } as ProSchemaValueEnumType;
+        };
       });
+
+      const valueEnum = {} as { [key: string]: ProSchemaValueEnumType };
+      _.forEach(valueEnums, (value) => {
+        valueEnum[value.value] = value as ProSchemaValueEnumType;
+      });
+
+      jsonSchema.valueEnum = valueEnum;
     }
 
     // 字段规则
