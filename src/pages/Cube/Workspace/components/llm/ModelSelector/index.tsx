@@ -18,8 +18,9 @@ import type { LLM } from '@/services/llm/typings';
 
 import { Divider } from 'antd';
 import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import ModelPopoverWrapper from './ModelPopoverWrapper';
 import ModelSelect from './ModelSelect';
-import ModelSelectorWrapper from './ModelSelectorWrapper';
 import ModelSetting from './ModelSetting';
 
 /**
@@ -29,37 +30,71 @@ const ModelSelector: React.FC<{
   providerWithModels: LLM.ProviderWithModelsSchema[];
   defaultProvider?: string;
   defaultModel?: string;
-}> = ({ providerWithModels, defaultProvider, defaultModel }) => {
-  const defaultProviderWithModel = _.find(
-    providerWithModels,
-    (pm) => pm.provider.provider === defaultProvider,
-  );
-  const defaultProviderSchema = defaultProviderWithModel?.provider;
-  const defaultModelSchema = _.find(
-    defaultProviderWithModel?.models,
-    (m) => m.model === defaultModel,
-  );
+  loading?: boolean;
+  onSelect?: (provider: string, model: string, parameters: Record<string, any>) => void;
+}> = ({ providerWithModels, defaultProvider, defaultModel, loading, onSelect }) => {
+  const [selectedProvider, setSelectedProvider] = useState(defaultProvider);
+  const [selectedModel, setSelectedModel] = useState(defaultModel);
+
+  const [selectedProviderWithModel, setSelectedProviderWithModel] =
+    useState<LLM.ProviderWithModelsSchema>();
+  const [selectedModelSchema, setSelectedModelSchema] =
+    useState<LLM.ModelSchema>();
+
+  const [selectedModelParameters, setSelectedModelParameters] = useState<{
+    [key: string]: any;
+  }>({});
+
+  useEffect(() => {
+    const defaultProviderWithModel = _.find(
+      providerWithModels,
+      (pm) => pm.provider.provider === selectedProvider,
+    );
+    setSelectedProviderWithModel(defaultProviderWithModel);
+
+    const defaultModelSchema = _.find(
+      defaultProviderWithModel?.models,
+      (m) => m.model === selectedModel,
+    );
+    setSelectedModelSchema(defaultModelSchema);
+  }, [providerWithModels, selectedProvider, selectedModel]);
 
   return (
     <>
-      <ModelSelectorWrapper
-        provider={defaultProviderSchema}
-        model={defaultModelSchema}
-        providerStatus={defaultProviderWithModel?.status}
+      <ModelPopoverWrapper
+        provider={selectedProviderWithModel?.provider}
+        model={selectedModelSchema}
+        providerStatus={selectedProviderWithModel?.status}
         block
         popover={
-          <div style={{ minWidth: 450, maxHeight: 560, overflowY: 'scroll' }} className="p-2">
+          <div
+            style={{ minWidth: 450, maxHeight: 560, overflowY: 'scroll' }}
+            className="p-2"
+          >
             {/** 模型选择 */}
             <ModelSelect
               providerWithModels={providerWithModels}
-              defaultProvider={defaultProvider}
-              defaultModel={defaultModel}
+              defaultProvider={selectedProvider}
+              defaultModel={selectedModel}
+              loading={loading}
+              onSelect={(provider, model) => {
+                setSelectedProvider(provider);
+                setSelectedModel(model);
+
+                onSelect?.(provider, model, selectedModelParameters);
+              }}
             />
 
             <Divider />
 
             {/** 模型参数设置 */}
-            <ModelSetting modelSchema={defaultModelSchema} />
+            <ModelSetting
+              modelSchema={selectedModelSchema}
+              onChange={(parameters) => {
+                setSelectedModelParameters(parameters);
+                onSelect?.(selectedProvider!, selectedModel!, parameters);
+              }}
+            />
           </div>
         }
       />

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, LinkOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Empty, Flex, Space, Typography } from 'antd';
 import { Brain, Goal, Scale, SlidersHorizontal } from 'lucide-react';
 
+import { getLocaleContent } from '@/locales';
 import type { LLM } from '@/services/llm/typings';
+import { useIntl } from '@umijs/max';
 import _ from 'lodash';
+import { useState } from 'react';
 import ModelSettingItem from './ModelSettingItem';
 
 const preSettingItems: MenuProps['items'] = [
@@ -62,13 +65,30 @@ const preSettingItems: MenuProps['items'] = [
 /**
  * 模型设置
  */
-const ModelSetting: React.FC<{ modelSchema?: LLM.ModelSchema }> = ({
-  modelSchema,
-}) => {
+const ModelSetting: React.FC<{
+  modelSchema?: LLM.ModelSchema;
+  onChange?: (parameters: Record<string, any>) => void;
+}> = ({ modelSchema, onChange }) => {
+  const intl = useIntl();
+
+  const [parameters, setParameters] = useState<{ [key: string]: any }>({});
+
   return (
     <>
       <Flex justify="space-between" align="center" className="mb-6">
-        <Typography.Text strong>参数</Typography.Text>
+        <Space>
+          <Typography.Text strong>参数</Typography.Text>
+          {!!modelSchema?.help && (
+            <Typography.Link href={modelSchema.help.url} target="_blank">
+              <LinkOutlined />{' '}
+              {getLocaleContent(
+                modelSchema.help.title,
+                intl.locale,
+                '帮助文档',
+              )}
+            </Typography.Link>
+          )}
+        </Space>
 
         {modelSchema && (
           <Dropdown
@@ -94,10 +114,27 @@ const ModelSetting: React.FC<{ modelSchema?: LLM.ModelSchema }> = ({
       </Flex>
 
       {modelSchema ? (
-        <Flex vertical gap={12}>
+        <Flex vertical gap={16}>
           {_.map(modelSchema.parameters, (parameter) => {
             return (
-              <ModelSettingItem key={parameter.name} itemSchema={parameter} />
+              <ModelSettingItem
+                key={parameter.name}
+                itemSchema={parameter}
+                onChange={(value) => {
+                  const newParameters = _.cloneDeep(parameters);
+
+                  if (value === undefined || value === null) {
+                    if (_.hasIn(newParameters, parameter.name)) {
+                      delete newParameters[parameter.name];
+                    }
+                  } else {
+                    newParameters[parameter.name] = value;
+                  }
+
+                  setParameters(newParameters);
+                  onChange?.(newParameters);
+                }}
+              />
             );
           })}
         </Flex>

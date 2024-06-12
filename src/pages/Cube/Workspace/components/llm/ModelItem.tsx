@@ -32,7 +32,8 @@ const ModelItem: React.FC<{
   disable?: boolean;
   slider?: boolean;
   empty?: React.ReactNode;
-}> = ({ providerSchema, modelSchema, textType, disable, slider, empty }) => {
+  onClick?: () => void;
+}> = ({ providerSchema, modelSchema, textType, disable, slider, empty, onClick}) => {
   const intl = useIntl();
 
   if (!providerSchema || !modelSchema) {
@@ -43,7 +44,7 @@ const ModelItem: React.FC<{
 
   return (
     <>
-      <Space align="center" className={disable ? 'opacity-40' : ''}>
+      <Space align="center" className={disable ? 'opacity-40' : ''} onClick={() => onClick?.()}>
         {/** 图标 */}
         <div className="relative top-1">{icon.icon(18)}</div>
 

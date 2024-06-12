@@ -93,6 +93,11 @@ declare namespace LLM {
     type: ModelType;
 
     /**
+     * 帮助
+     */
+    help?: Display.HelpOption;
+
+    /**
      * 模型来源
      */
     fetch_from: FetchFrom;

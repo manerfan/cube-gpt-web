@@ -16,7 +16,10 @@
 
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
+import _ from 'lodash';
 import type { LLM } from './typings';
+import { message } from 'antd';
+import { getLocaleContent } from '@/locales';
 
 export enum ModelType {
   /**
@@ -109,4 +112,100 @@ export async function allModelsOnType(
       ...(options || {}),
     },
   );
+}
+
+export function modelParameterCheck(
+  providerWithModels: LLM.ProviderWithModelsSchema[],
+  modelSetting?: {
+    provider: string;
+    model: string;
+    parameters: Record<string, any>;
+  },
+  locale?: string,
+): {
+  provider: string;
+  model: string;
+  parameters: Record<string, any>;
+} | null | undefined {
+  // 参数校验
+  if (
+    _.isEmpty(modelSetting) ||
+    _.isEmpty(modelSetting.provider) ||
+    _.isEmpty(modelSetting.model)
+  ) {
+    message.error('请选择模型');
+    return null;
+  }
+
+  // 设置的Provider
+  const settingProviderWithModelSchema = _.findLast(
+    providerWithModels,
+    (providerWithModel) =>
+      providerWithModel.provider.provider === modelSetting?.provider,
+  );
+  if (_.isEmpty(settingProviderWithModelSchema)) {
+    message.error('请选择合适的模型');
+    return null;
+  }
+
+  // 设置的Model
+  const settingModelSchema = _.findLast(
+    settingProviderWithModelSchema.models,
+    (model) => model.model === modelSetting?.model,
+  );
+  if (_.isEmpty(settingModelSchema)) {
+    message.error('请选择合适的模型');
+    return null;
+  }
+
+  // 只取有效的参数
+  const modelParameters = _.pick(
+    modelSetting.parameters,
+    _.map(settingModelSchema.parameters, (parameter) => parameter.name),
+  );
+
+  // 校验必须参数
+  const requiredParameters = _.filter(
+    settingModelSchema.parameters,
+    (parameter) => parameter.rules?.required || false,
+  );
+  for (const parameter of requiredParameters) {
+    if (!_.hasIn(modelParameters, parameter.name)) {
+      const parameterName = getLocaleContent(
+        parameter.title,
+        locale,
+        parameter.name,
+      )
+      message.error(`请设置参数 [${parameterName}]`);
+      return null;
+    }
+  }
+
+  // 校验数字范围
+  const digitParameters = _.filter(
+    settingModelSchema.parameters,
+    (parameter) => parameter.valueType === 'digit',
+  );
+  for (const parameter of digitParameters) {
+    if (
+      (!!parameter.fieldProps?.min &&
+        modelParameters[parameter.name] < parameter.fieldProps.min) ||
+      (!!parameter.fieldProps?.max &&
+        modelParameters[parameter.name] > parameter.fieldProps.max)
+    ) {
+      const parameterName = getLocaleContent(
+        parameter.title,
+        locale,
+        parameter.name,
+      )
+      message.error(`参数 [${parameterName}] 不在有效范围内`);
+      return null;
+    }
+  }
+
+  return {
+    provider: modelSetting.provider,
+    model: modelSetting.model,
+    parameters: modelParameters
+  };
 }

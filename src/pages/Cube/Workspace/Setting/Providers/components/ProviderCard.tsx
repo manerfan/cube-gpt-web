@@ -16,6 +16,7 @@
 
 import StatusLight from '@/components/status/StatusLight';
 import { getLocaleContent } from '@/locales';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import { llmProviderService } from '@/services';
 import { LLM } from '@/services/llm/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
@@ -40,7 +41,6 @@ import {
 } from 'antd';
 import _ from 'lodash';
 import { useState } from 'react';
-import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import ProviderModelList from './ProviderModelList';
 import ProviderSettingDrawer from './ProviderSettingDrawer';
 import SystemModelSettingDrawer from './SystemModelSettingDrawer';
@@ -96,6 +96,7 @@ const ProviderCard: React.FC<{
         extra={
           (_.isEmpty(configuredProviderSchemas) || configured) && (
             <Button
+              type="primary"
               size="small"
               icon={<SettingOutlined />}
               className="text-gray-500 font-bold"
@@ -257,6 +258,7 @@ const ProviderCard: React.FC<{
                   <ProviderModelList
                     workspace={workspace}
                     providerSchema={providerSchema}
+                    key={providerSchema.provider}
                   />
                 )}
               </ProCard>

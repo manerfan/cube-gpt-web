@@ -25,17 +25,30 @@ import ModelItem from '../ModelItem';
 
 import { ProviderStatus } from '@/services/llm/provider';
 import { Box } from 'lucide-react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+
+export interface ModelPopoverWrapperRefProperty {
+  closePopover: () => void;
+}
 
 /**
- * 模型选择的包装器
+ * 模型弹出菜单的包装器
  */
-const ModelSelectorWrapper: React.FC<{
+const ModelPopoverWrapper: React.FC<{
   popover: React.ReactNode;
   provider?: LLM.ProviderSchema;
   model?: LLM.ModelSchema;
   providerStatus?: ProviderStatus;
   block?: boolean;
-}> = ({ popover, provider, model, providerStatus, block }) => {
+}> = forwardRef(({ popover, provider, model, providerStatus, block }, ref) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    closePopover() {
+      setPopoverOpen(false);
+    },
+  }));
+
   return (
     <>
       <Popover
@@ -43,6 +56,10 @@ const ModelSelectorWrapper: React.FC<{
         trigger="click"
         arrow={false}
         content={popover}
+        open={popoverOpen}
+        onOpenChange={(open) => {
+          setPopoverOpen(open);
+        }}
       >
         <div
           className={`min-h-8 rounded-md px-2 py-1 cursor-pointer ${
@@ -64,6 +81,7 @@ const ModelSelectorWrapper: React.FC<{
                   <Typography.Text type="secondary">选择模型</Typography.Text>
                 </Space>
               }
+              onClick={() => setPopoverOpen(true)}
             />
 
             <Space className="ml-3">
@@ -92,6 +110,6 @@ const ModelSelectorWrapper: React.FC<{
       </Popover>
     </>
   );
-};
+});
 
-export default ModelSelectorWrapper;
+export default ModelPopoverWrapper;
