@@ -95,7 +95,7 @@ const ProviderModelList: React.FC<{
                       <>
                         <Divider orientation="left" plain>
                           <Typography.Text type="secondary">
-                            {_.upperCase(_.snakeCase(type))}
+                            {type}
                           </Typography.Text>
                         </Divider>
                         <List

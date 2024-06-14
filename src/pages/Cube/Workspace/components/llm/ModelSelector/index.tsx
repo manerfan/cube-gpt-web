@@ -28,36 +28,66 @@ import ModelSetting from './ModelSetting';
  */
 const ModelSelector: React.FC<{
   providerWithModels: LLM.ProviderWithModelsSchema[];
-  defaultProvider?: string;
-  defaultModel?: string;
+  providerName?: string;
+  modelName?: string;
+  modelParameters?: Record<string, any>;
   loading?: boolean;
-  onSelect?: (provider: string, model: string, parameters: Record<string, any>) => void;
-}> = ({ providerWithModels, defaultProvider, defaultModel, loading, onSelect }) => {
-  const [selectedProvider, setSelectedProvider] = useState(defaultProvider);
-  const [selectedModel, setSelectedModel] = useState(defaultModel);
-
+  onSelect?: (
+    providerName: string,
+    modelName: string,
+    modelParameters: Record<string, any>,
+  ) => void;
+}> = ({
+  providerWithModels,
+  providerName,
+  modelName,
+  modelParameters,
+  loading,
+  onSelect,
+}) => {
   const [selectedProviderWithModel, setSelectedProviderWithModel] =
     useState<LLM.ProviderWithModelsSchema>();
   const [selectedModelSchema, setSelectedModelSchema] =
     useState<LLM.ModelSchema>();
 
+  const [selectedProviderName, setSelectedProviderName] =
+    useState(providerName);
+  const [selectedModelName, setSelectedModelName] = useState(modelName);
   const [selectedModelParameters, setSelectedModelParameters] = useState<{
     [key: string]: any;
-  }>({});
+  }>(modelParameters || {});
 
   useEffect(() => {
+    if (!!providerName) {
+      setSelectedProviderName(providerName);
+    }
+    if (!!modelName) {
+      setSelectedModelName(modelName);
+    }
+    if (!!modelParameters) {
+      setSelectedModelParameters(modelParameters);
+    }
+
     const defaultProviderWithModel = _.find(
       providerWithModels,
-      (pm) => pm.provider.provider === selectedProvider,
+      (pm) => pm.provider.provider === (providerName || selectedProviderName),
     );
     setSelectedProviderWithModel(defaultProviderWithModel);
 
     const defaultModelSchema = _.find(
       defaultProviderWithModel?.models,
-      (m) => m.model === selectedModel,
+      (m) => m.model === (modelName || selectedModelName),
     );
     setSelectedModelSchema(defaultModelSchema);
-  }, [providerWithModels, selectedProvider, selectedModel]);
+  }, [
+    providerWithModels,
+    providerName,
+    modelName,
+    modelParameters,
+    selectedProviderName,
+    selectedModelName,
+    selectedModelParameters,
+  ]);
 
   return (
     <>
@@ -74,14 +104,13 @@ const ModelSelector: React.FC<{
             {/** 模型选择 */}
             <ModelSelect
               providerWithModels={providerWithModels}
-              defaultProvider={selectedProvider}
-              defaultModel={selectedModel}
+              providerName={selectedProviderName}
+              modelName={selectedModelName}
               loading={loading}
-              onSelect={(provider, model) => {
-                setSelectedProvider(provider);
-                setSelectedModel(model);
-
-                onSelect?.(provider, model, selectedModelParameters);
+              onSelect={(providerName, modelName) => {
+                setSelectedProviderName(providerName);
+                setSelectedModelName(modelName);
+                onSelect?.(providerName, modelName, selectedModelParameters);
               }}
             />
 
@@ -90,9 +119,14 @@ const ModelSelector: React.FC<{
             {/** 模型参数设置 */}
             <ModelSetting
               modelSchema={selectedModelSchema}
-              onChange={(parameters) => {
-                setSelectedModelParameters(parameters);
-                onSelect?.(selectedProvider!, selectedModel!, parameters);
+              modelParameters={selectedModelParameters}
+              onChange={(modelParameters) => {
+                setSelectedModelParameters(modelParameters);
+                onSelect?.(
+                  selectedProviderName!,
+                  selectedModelName!,
+                  modelParameters,
+                );
               }}
             />
           </div>

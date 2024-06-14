@@ -35,7 +35,7 @@ import {
 } from 'antd';
 
 import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 /**
  * 自动判断步长
@@ -71,14 +71,14 @@ const judgeStep = (min?: number, max?: number, def?: number) => {
  */
 const ModelSettingItem: React.FC<{
   itemSchema: Display.FormSchema;
-  defaultValue?: any;
+  itemValue?: any;
   onChange?: (value: any) => void;
-}> = ({ itemSchema, defaultValue, onChange }) => {
+}> = ({ itemSchema, itemValue, onChange }) => {
   const intl = useIntl();
 
   const [currentValue, setCurrentValue] = useState<any>(() => {
-    if (defaultValue !== undefined) {
-      return defaultValue;
+    if (itemValue !== undefined) {
+      return itemValue;
     }
 
     if (itemSchema.initialValue !== undefined) {
@@ -91,7 +91,11 @@ const ModelSettingItem: React.FC<{
 
     return undefined;
   });
-  const [enabeld, setEnabeld] = useState<boolean>(false);
+  const [enabeld, setEnabeld] = useState<boolean>(
+    (itemValue !== undefined && itemValue !== null) ||
+      itemSchema.rules?.required ||
+      false,
+  );
 
   let itemCol = <></>;
   switch (itemSchema.valueType) {
@@ -198,41 +202,44 @@ const ModelSettingItem: React.FC<{
 
   return (
     <Row gutter={16}>
-      <Col span={10}>
-        <Space align="center" size="middle">
-          <Space align="center" size={6} className="relative top-0.5">
-            <Tooltip
-              title={getLocaleContent(itemSchema.title, intl.locale, '参数')}
-            >
-              <Typography.Text strong className="text-gray-700" ellipsis>
-                {getLocaleContent(itemSchema.title, intl.locale, '参数')}
-              </Typography.Text>
-            </Tooltip>
+      <Col span={6}>
+        <Space align="center" size={6} className="relative top-0.5">
+          <Tooltip
+            title={getLocaleContent(itemSchema.title, intl.locale, '参数')}
+          >
+            <Typography.Text strong className="text-gray-700" ellipsis>
+              {getLocaleContent(itemSchema.title, intl.locale, '参数')}
+            </Typography.Text>
+          </Tooltip>
 
-            <Tooltip
-              title={
-                <pre className="whitespace-pre-wrap text-pretty">
-                  {getLocaleContent(itemSchema.tooltip, intl.locale, '')}
-                </pre>
-              }
-            >
-              <QuestionCircleOutlined className="text-gray-500" />
-            </Tooltip>
-          </Space>
-
-          <Switch
-            size="small"
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<EyeInvisibleOutlined />}
-            defaultChecked={defaultValue !== undefined || itemSchema.rules?.required}
-            disabled={itemSchema.rules?.required}
-            onChange={(checked) => {
-              setEnabeld(checked);
-              onChange?.(checked ? currentValue : undefined);
-            }}
-          />
+          <Tooltip
+            title={
+              <pre className="whitespace-pre-wrap text-pretty">
+                {getLocaleContent(itemSchema.tooltip, intl.locale, '')}
+              </pre>
+            }
+          >
+            <QuestionCircleOutlined className="text-gray-500" />
+          </Tooltip>
         </Space>
+      </Col> 
+      <Col span={3}>
+        <Switch
+          size="small"
+          checkedChildren={<CheckOutlined />}
+          unCheckedChildren={<EyeInvisibleOutlined />}
+          defaultChecked={
+            (itemValue !== undefined && itemValue !== null) ||
+            itemSchema.rules?.required
+          }
+          disabled={itemSchema.rules?.required}
+          onChange={(checked) => {
+            setEnabeld(checked);
+            onChange?.(checked ? currentValue : undefined);
+          }}
+        />
       </Col>
+      <Col span={1}></Col>
 
       {itemCol}
     </Row>

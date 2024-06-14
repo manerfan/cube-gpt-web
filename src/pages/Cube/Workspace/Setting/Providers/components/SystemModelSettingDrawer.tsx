@@ -23,11 +23,16 @@ import {
   QuestionCircleOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Button, Drawer, Flex, Form, Space, Tooltip, Typography } from 'antd';
+import { Button, Drawer, Flex, Form, Space, Tooltip, Typography, message } from 'antd';
 
 import * as modelService from '@/services/llm/model';
-import { useEffect, useState } from 'react';
+import { ModelType } from '@/services/llm/model';
 import { useIntl } from '@umijs/max';
+import { useEffect, useState } from 'react';
+
+import _ from 'lodash';
+
+type ModelSetting = Record<ModelType, LLM.ModelConfig>;
 
 const SystemModelSettingDrawer: React.FC<{
   workspace: WORKSPACE.WorkspaceEntity;
@@ -50,43 +55,72 @@ const SystemModelSettingDrawer: React.FC<{
     setProviderWithTextGenerationModelLoading,
   ] = useState<boolean>(false);
 
+  const providerWithModelMap: Record<
+    ModelType,
+    LLM.ProviderWithModelsSchema[]
+  > = {
+    [ModelType.TEXT_GENERATION]: providerWithTextGenerationModels,
+  };
+
+  const [modelSetting, setModelSetting] = useState<ModelSetting>(
+    {} as ModelSetting,
+  );
+  const [saving, setSaving] = useState<boolean>(false);
+
   useEffect(() => {
     if (!open) {
       return;
     }
 
+    // TEXT_GENERATION model schemas
     setProviderWithTextGenerationModelLoading(true);
     modelService
-      .allModelsOnType(workspace.uid, modelService.ModelType.TEXT_GENERATION)
+      .allModelsOnType(workspace.uid, ModelType.TEXT_GENERATION)
       .then((res) => {
         setProviderWithTextGenerationModels(res.content);
       })
       .finally(() => setProviderWithTextGenerationModelLoading(false));
+
+    // 已保存的系统模型配置
+    modelService.getSystemModelConfig(workspace.uid).then((res) => {
+      const systemModelConfig = {} as ModelSetting;
+      _.forIn(res.content, (modelConfig, modelType) => {
+        systemModelConfig[modelType as ModelType] = modelConfig;
+      })
+      setModelSetting(systemModelConfig);
+    });
   }, [workspace, open]);
 
-  const [modelSetting, setModelSetting] = useState<{
-    provider: string;
-    model: string;
-    parameters: Record<string, any>;
-  }>();
-  const [saving, setSaving] = useState<boolean>(false);
   const saveSettings = async () => {
     setSaving(true);
 
     // 参数校验
-    const modelParameters = modelService.modelParameterCheck(
-      providerWithTextGenerationModels,
-      modelSetting,
-      intl.locale,
-    );
-    if (!modelParameters) {
-      setSaving(false);
-      return;
+    const modelConfig = {} as ModelSetting;
+    for (const modelType in modelSetting) {
+      if (!modelSetting.hasOwnProperty(modelType)) {
+        continue;
+      }
+
+      const modelConf = modelService.modelParameterCheck(
+        providerWithModelMap[modelType as ModelType],
+        modelSetting[modelType as ModelType],
+        intl.locale,
+      );
+      if (!modelConf) {
+        setSaving(false);
+        return;
+      }
+
+      // 更新到 modelConfig
+      modelConfig[modelType as ModelType] = modelConf;
     }
 
     // 提交模型参数
-    console.log(modelParameters);
-    setSaving(false);
+    modelService.addSystemConfig(workspace.uid, modelConfig).then(() => {
+      setModelSetting(modelConfig);
+      message.success('保存成功');
+      onClose?.();
+    }).finally(() => setSaving(false));
   };
 
   return (
@@ -140,11 +174,18 @@ const SystemModelSettingDrawer: React.FC<{
           >
             <ModelSelector
               providerWithModels={providerWithTextGenerationModels}
-              defaultProvider="openai"
-              defaultModel="gpt-4o"
+              providerName={modelSetting[ModelType.TEXT_GENERATION]?.providerName}
+              modelName={modelSetting[ModelType.TEXT_GENERATION]?.modelName}
+              modelParameters={modelSetting[ModelType.TEXT_GENERATION]?.modelParameters}
               loading={providerWithTextGenerationModelLoading}
-              onSelect={(provider, model, parameters) => {
-                setModelSetting({ provider, model, parameters });
+              onSelect={(providerName, modelName, modelParameters) => {
+                const setting = _.cloneDeep(modelSetting);
+                setting[ModelType.TEXT_GENERATION] = {
+                  providerName,
+                  modelName,
+                  modelParameters,
+                };
+                setModelSetting(setting);
               }}
             />
           </Form.Item>

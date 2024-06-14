@@ -137,7 +137,7 @@ const Setting: React.FC = () => {
           onClick={() => history.back()}
         />
         <Avatar>
-          <FluentEmoji type={'anim'} {...control} className="-mt-6" />
+          <FluentEmoji type={'anim'} {...control} />
         </Avatar>
         <Typography.Text className="hidden md:inline text-gray-500 font-bold">
           {isPublicSpace(workspace)

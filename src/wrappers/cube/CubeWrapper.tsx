@@ -229,7 +229,8 @@ const CubeWrapper: React.FC = () => {
               <Space direction="vertical">
                 {!collapsed && (
                   <Button block type="primary">
-                    <PlusOutlined /> {intl.formatMessage({ id: 'cube.menu.createBot' })}
+                    <PlusOutlined />{' '}
+                    {intl.formatMessage({ id: 'cube.menu.createBot' })}
                   </Button>
                 )}
                 <Menu
@@ -246,7 +247,9 @@ const CubeWrapper: React.FC = () => {
               <Space direction="vertical">
                 {!collapsed && (
                   <Flex justify="space-between" align="center">
-                    <Typography.Text type="secondary">{intl.formatMessage({ id: 'cube.menu.explore' })}</Typography.Text>
+                    <Typography.Text type="secondary">
+                      {intl.formatMessage({ id: 'cube.menu.explore' })}
+                    </Typography.Text>
                   </Flex>
                 )}
                 <Menu
@@ -264,8 +267,15 @@ const CubeWrapper: React.FC = () => {
                 {!collapsed && (
                   <>
                     <Flex justify="space-between" align="center">
-                      <Typography.Text type="secondary">{intl.formatMessage({ id: 'cube.menu.teams' })}</Typography.Text>
-                      <Tooltip title={intl.formatMessage({ id: 'cube.menu.createTeam' })} color="#E6E6E6">
+                      <Typography.Text type="secondary">
+                        {intl.formatMessage({ id: 'cube.menu.teams' })}
+                      </Typography.Text>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: 'cube.menu.createTeam',
+                        })}
+                        color="#E6E6E6"
+                      >
                         <Button
                           className="text-gray-400"
                           type="text"
@@ -347,11 +357,7 @@ const CubeWrapper: React.FC = () => {
                   <Button type="text" style={{ height: 50 }}>
                     <Space>
                       <Avatar>
-                        <FluentEmoji
-                          type={'anim'}
-                          {...control}
-                          className="-mt-6"
-                        />
+                        <FluentEmoji type={'anim'} {...control} />
                       </Avatar>
                       {!collapsed && (
                         <Typography.Text className="hidden md:inline">

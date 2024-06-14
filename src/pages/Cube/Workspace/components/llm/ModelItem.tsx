@@ -66,7 +66,7 @@ const ModelItem: React.FC<{
 
         {/** 模式 */}
         {!!modelSchema.properties.mode && (
-          <Tag bordered={false} className="m-0">
+          <Tag bordered={false} className="m-0 text-gray-500 bg-gray-50/50">
             <Typography.Text type={textType} className="text-xs text-slate-500">
               {_.upperCase(modelSchema.properties.mode)}
             </Typography.Text>
@@ -76,7 +76,7 @@ const ModelItem: React.FC<{
         {/** 上下文 */}
         {!!modelSchema.properties.contextSize &&
           _.isNumber(modelSchema.properties.contextSize) && (
-            <Tag bordered={false} className="m-0">
+            <Tag bordered={false} className="m-0 text-gray-500 bg-gray-50/50">
               <Typography.Text
                 type={textType}
                 className="text-xs text-slate-500"
@@ -93,7 +93,7 @@ const ModelItem: React.FC<{
             (feature) => feature !== ModelFeature.VISION,
           ),
           (feature) => (
-            <Tag bordered={false} className="m-0">
+            <Tag bordered={false} className="m-0 text-gray-500 bg-gray-50/50">
               <Typography.Text
                 type={textType}
                 className="text-xs text-slate-500"
@@ -112,7 +112,7 @@ const ModelItem: React.FC<{
             }
             color={icons.lightenColor(icon.color, 90)}
           >
-            <Tag bordered={false} className="m-0">
+            <Tag bordered={false} className="m-0 text-gray-500 bg-gray-50/50">
               <Typography.Text
                 type={textType}
                 className="text-xs text-slate-500"

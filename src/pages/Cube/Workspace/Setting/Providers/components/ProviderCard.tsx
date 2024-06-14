@@ -187,7 +187,8 @@ const ProviderCard: React.FC<{
                             return (
                               <Tag
                                 key={modelType}
-                                className="text-xs text-gray-500"
+                                bordered={false}
+                                className="text-xs text-gray-500 bg-gray-50/50"
                               >
                                 {modelType}
                               </Tag>

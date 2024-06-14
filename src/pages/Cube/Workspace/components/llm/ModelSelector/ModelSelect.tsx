@@ -40,14 +40,14 @@ import ModelPopoverWrapper, {
  */
 const ModelSelect: React.FC<{
   providerWithModels: LLM.ProviderWithModelsSchema[];
-  defaultProvider?: string;
-  defaultModel?: string;
+  providerName?: string;
+  modelName?: string;
   loading?: boolean;
   onSelect?: (provider: string, model: string) => void;
 }> = ({
   providerWithModels,
-  defaultProvider,
-  defaultModel,
+  providerName,
+  modelName,
   loading,
   onSelect,
 }) => {
@@ -61,16 +61,16 @@ const ModelSelect: React.FC<{
   useEffect(() => {
     const defaultProviderWithModel = _.find(
       providerWithModels,
-      (pm) => pm.provider.provider === defaultProvider,
+      (pm) => pm.provider.provider === providerName,
     );
     setSelectedProviderWithModel(defaultProviderWithModel);
 
     const defaultModelSchema = _.find(
       defaultProviderWithModel?.models,
-      (m) => m.model === defaultModel,
+      (m) => m.model === modelName,
     );
     setSelectedModelSchema(defaultModelSchema);
-  }, [providerWithModels, defaultProvider, defaultModel]);
+  }, [providerWithModels, providerName, modelName]);
 
   const modelPopoverRef = useRef<ModelPopoverWrapperRefProperty>();
 

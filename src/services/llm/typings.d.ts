@@ -128,6 +128,12 @@ declare namespace LLM {
     deprecated: boolean;
   };
 
+  type ModelConfig = {
+    providerName: string;
+    modelName: string;
+    modelParameters: Record<string, any>;
+  };
+
   type ProviderWithModelsSchema = {
     /**
      * provider

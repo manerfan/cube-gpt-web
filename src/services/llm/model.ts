@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { getLocaleContent } from '@/locales';
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
+import { message } from 'antd';
 import _ from 'lodash';
 import type { LLM } from './typings';
-import { message } from 'antd';
-import { getLocaleContent } from '@/locales';
 
 export enum ModelType {
   /**
@@ -90,7 +90,13 @@ export async function allModelsOnProvider(
       params: {},
       ...(options || {}),
     },
-  );
+  ).then((resp) => {
+    // textGenerator -> TEXT_GENERATION
+    resp.content = _.mapKeys(resp.content, (modelSchema, modelType) => {
+      return _.snakeCase(modelType).toUpperCase();
+    });
+    return resp;
+  });
 }
 
 /**
@@ -114,24 +120,88 @@ export async function allModelsOnType(
   );
 }
 
+/**
+ * 获取 工作空间 系统默认模型配置
+ * @param workspaceUid 工作空间UID
+ * @param options
+ * @returns Record<ModelType, LLM.ModelConfig>
+ */
+export async function getSystemModelConfig(
+  workspaceUid: string,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<Record<ModelType, LLM.ModelConfig>>> {
+  return request<Response.SingleResponse<Record<ModelType, LLM.ModelConfig>>>(
+    `/api/workspace/${workspaceUid}/model/system/config`,
+    {
+      method: 'GET',
+      params: {},
+      ...(options || {}),
+    },
+  ).then((resp) => {
+    resp.content = _.mapKeys(resp.content, (modelConfig, modelType) => {
+      // e.g. textGeneration [string] → TEXT_GENERATION [ModelType]
+      return _.snakeCase(modelType).toUpperCase() as ModelType;
+    });
+
+    resp.content = _.mapValues(resp.content, (modelConfig) => {
+      // e.g. {"modelParameters": {"topP": 0.2}} → {"modelParameters": {"top_p": 0.2}}
+      modelConfig.modelParameters = _.mapKeys(modelConfig.modelParameters, (value, key) => {
+        return _.snakeCase(key);
+      });
+
+      return modelConfig;
+    });
+
+    return resp;
+  });
+}
+
+/**
+ * 添加 工作空间 系统默认模型配置
+ * @param workspaceUid 工作空间UID
+ * @returns Record<ModelType, LLM.ModelConfig>
+ */
+export async function addSystemConfig(
+  workspaceUid: string,
+  modelConfig: Record<ModelType, LLM.ModelConfig>,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<Record<ModelType, LLM.ModelConfig>>> {
+  return request<Response.SingleResponse<Record<ModelType, LLM.ModelConfig>>>(
+    `/api/workspace/${workspaceUid}/model/system/config`,
+    {
+      method: 'POST',
+      data: _.mapValues(modelConfig, (config) => {
+        // 驼峰转下划线
+        return _.mapKeys(config, (value, key) => {
+          return _.snakeCase(key);
+        });
+      }),
+      ...(options || {}),
+    },
+  );
+}
+
 export function modelParameterCheck(
   providerWithModels: LLM.ProviderWithModelsSchema[],
   modelSetting?: {
-    provider: string;
-    model: string;
-    parameters: Record<string, any>;
+    providerName: string;
+    modelName: string;
+    modelParameters: Record<string, any>;
   },
   locale?: string,
-): {
-  provider: string;
-  model: string;
-  parameters: Record<string, any>;
-} | null | undefined {
+):
+  | {
+      providerName: string;
+      modelName: string;
+      modelParameters: Record<string, any>;
+    }
+  | null
+  | undefined {
   // 参数校验
   if (
     _.isEmpty(modelSetting) ||
-    _.isEmpty(modelSetting.provider) ||
-    _.isEmpty(modelSetting.model)
+    _.isEmpty(modelSetting.providerName) ||
+    _.isEmpty(modelSetting.modelName)
   ) {
     message.error('请选择模型');
     return null;
@@ -141,7 +211,7 @@ export function modelParameterCheck(
   const settingProviderWithModelSchema = _.findLast(
     providerWithModels,
     (providerWithModel) =>
-      providerWithModel.provider.provider === modelSetting?.provider,
+      providerWithModel.provider.provider === modelSetting?.providerName,
   );
   if (_.isEmpty(settingProviderWithModelSchema)) {
     message.error('请选择合适的模型');
@@ -151,7 +221,7 @@ export function modelParameterCheck(
   // 设置的Model
   const settingModelSchema = _.findLast(
     settingProviderWithModelSchema.models,
-    (model) => model.model === modelSetting?.model,
+    (model) => model.model === modelSetting?.modelName,
   );
   if (_.isEmpty(settingModelSchema)) {
     message.error('请选择合适的模型');
@@ -160,7 +230,7 @@ export function modelParameterCheck(
 
   // 只取有效的参数
   const modelParameters = _.pick(
-    modelSetting.parameters,
+    modelSetting.modelParameters,
     _.map(settingModelSchema.parameters, (parameter) => parameter.name),
   );
 
@@ -175,8 +245,10 @@ export function modelParameterCheck(
         parameter.title,
         locale,
         parameter.name,
-      )
-      message.error(`请设置参数 [${parameterName}]`);
+      );
+      message.error(
+        `请设置参数 [${parameterName}] (${modelSetting.providerName}:${modelSetting.modelName})`,
+      );
       return null;
     }
   }
@@ -197,15 +269,17 @@ export function modelParameterCheck(
         parameter.title,
         locale,
         parameter.name,
-      )
-      message.error(`参数 [${parameterName}] 不在有效范围内`);
+      );
+      message.error(
+        `参数 [${parameterName}] (${modelSetting.providerName}:${modelSetting.modelName}) 不在有效范围内`,
+      );
       return null;
     }
   }
 
   return {
-    provider: modelSetting.provider,
-    model: modelSetting.model,
-    parameters: modelParameters
+    providerName: modelSetting.providerName,
+    modelName: modelSetting.modelName,
+    modelParameters: modelParameters,
   };
 }

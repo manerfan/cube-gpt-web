@@ -23,7 +23,7 @@ import { getLocaleContent } from '@/locales';
 import type { LLM } from '@/services/llm/typings';
 import { useIntl } from '@umijs/max';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModelSettingItem from './ModelSettingItem';
 
 const preSettingItems: MenuProps['items'] = [
@@ -67,11 +67,20 @@ const preSettingItems: MenuProps['items'] = [
  */
 const ModelSetting: React.FC<{
   modelSchema?: LLM.ModelSchema;
+  modelParameters?: Record<string, any>;
   onChange?: (parameters: Record<string, any>) => void;
-}> = ({ modelSchema, onChange }) => {
+}> = ({ modelSchema, modelParameters, onChange }) => {
   const intl = useIntl();
 
-  const [parameters, setParameters] = useState<{ [key: string]: any }>({});
+  const [parameters, setParameters] = useState<{ [key: string]: any }>(
+    modelParameters || {},
+  );
+
+  useEffect(() => {
+    if (!!modelParameters) {
+      setParameters(modelParameters);
+    }
+  }, [modelSchema, modelParameters]);
 
   return (
     <>
@@ -120,6 +129,7 @@ const ModelSetting: React.FC<{
               <ModelSettingItem
                 key={parameter.name}
                 itemSchema={parameter}
+                itemValue={parameters?.[parameter.name]}
                 onChange={(value) => {
                   const newParameters = _.cloneDeep(parameters);
 
