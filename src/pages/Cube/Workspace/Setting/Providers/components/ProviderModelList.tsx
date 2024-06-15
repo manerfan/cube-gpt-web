@@ -34,9 +34,9 @@ import { useState } from 'react';
 import ModelItem from '../../../components/llm/ModelItem';
 
 const ProviderModelList: React.FC<{
-  workspace: WORKSPACE.WorkspaceEntity;
+  workspaceUid: string;
   providerSchema: LLM.ProviderSchema;
-}> = ({ workspace, providerSchema }) => {
+}> = ({ workspaceUid, providerSchema }) => {
   const icon = icons.getProviderIconBySchema(providerSchema);
 
   const [schemaLoading, setSchemaLoading] = useState(false);
@@ -55,7 +55,7 @@ const ProviderModelList: React.FC<{
           if (_.includes(keys, 'default') && !modelSchemas) {
             setSchemaLoading(true);
             modelService
-              .allModelsOnProvider(workspace.uid, providerSchema.provider)
+              .allModelsOnProvider(workspaceUid, providerSchema.provider)
               .then((resp) => {
                 const schemas = resp.content;
                 setModelSchemas(schemas || []);

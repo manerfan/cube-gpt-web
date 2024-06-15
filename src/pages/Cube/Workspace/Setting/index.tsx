@@ -83,7 +83,7 @@ const Setting: React.FC = () => {
           </Space>
         </>
       ),
-      children: <Providers workspace={workspace!} />,
+      children: <Providers workspaceUid={param!.spaceId!} />,
     },
   ];
   if (isPublicSpace(workspace)) {

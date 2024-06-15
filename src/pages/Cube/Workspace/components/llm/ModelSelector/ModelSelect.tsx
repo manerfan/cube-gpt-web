@@ -16,6 +16,7 @@
 
 import type { LLM } from '@/services/llm/typings';
 
+import ProviderSettingDrawer from '@/pages/Cube/Workspace/Setting/Providers/components/ProviderSettingDrawer';
 import { ProviderStatus } from '@/services/llm/provider';
 import { SearchOutlined } from '@ant-design/icons';
 import {
@@ -39,22 +40,33 @@ import ModelPopoverWrapper, {
  * 模型选择
  */
 const ModelSelect: React.FC<{
+  workspaceUid: string;
   providerWithModels: LLM.ProviderWithModelsSchema[];
   providerName?: string;
   modelName?: string;
   loading?: boolean;
   onSelect?: (provider: string, model: string) => void;
+  onProviderConfigAdd?: (providerConfig: LLM.ProviderConfig) => void; // 当添加 Provider Schema 时
 }> = ({
+  workspaceUid,
   providerWithModels,
   providerName,
   modelName,
   loading,
   onSelect,
+  onProviderConfigAdd
 }) => {
+  // 选中的模型信息
   const [selectedProviderWithModel, setSelectedProviderWithModel] =
     useState<LLM.ProviderWithModelsSchema>();
   const [selectedModelSchema, setSelectedModelSchema] =
     useState<LLM.ModelSchema>();
+
+  // 待添加Provider信息
+  const [providerSettingDrawerOpen, setProviderSettingDrawerOpen] =
+    useState(false);
+  const [selectedSettingProviderSchema, setSelectedSettingProviderSchema] =
+    useState<LLM.ProviderSchema>();
 
   const [searchKey, setSearchKey] = useState<string>();
 
@@ -196,7 +208,16 @@ const ModelSelect: React.FC<{
                                         align="center"
                                         className="w-full absolute right-0 hidden group-hover:flex"
                                       >
-                                        <Button size="small" type="primary">
+                                        <Button
+                                          size="small"
+                                          type="primary"
+                                          onClick={() => {
+                                            setSelectedSettingProviderSchema(
+                                              providerWithModel.provider,
+                                            );
+                                            setProviderSettingDrawerOpen(true);
+                                          }}
+                                        >
                                           添加
                                         </Button>
                                       </Flex>
@@ -215,6 +236,19 @@ const ModelSelect: React.FC<{
           }
         />
       </Flex>
+
+      {/** Provider设置抽屉 */}
+      <ProviderSettingDrawer
+        workspaceUid={workspaceUid}
+        providerSchema={selectedSettingProviderSchema}
+        open={providerSettingDrawerOpen}
+        onClose={(providerConfig) => {
+          setProviderSettingDrawerOpen(false);
+          if (providerConfig) {
+            onProviderConfigAdd?.(providerConfig);
+          }
+        }}
+      />
     </>
   );
 };

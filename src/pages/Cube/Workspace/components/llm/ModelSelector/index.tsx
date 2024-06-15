@@ -27,6 +27,7 @@ import ModelSetting from './ModelSetting';
  * 模型选择及模型设置
  */
 const ModelSelector: React.FC<{
+  workspaceUid: string;
   providerWithModels: LLM.ProviderWithModelsSchema[];
   providerName?: string;
   modelName?: string;
@@ -37,13 +38,16 @@ const ModelSelector: React.FC<{
     modelName: string,
     modelParameters: Record<string, any>,
   ) => void;
+  onProviderConfigAdd?: (providerConfig: LLM.ProviderConfig) => void; // 当添加 Provider Schema 时
 }> = ({
+  workspaceUid,
   providerWithModels,
   providerName,
   modelName,
   modelParameters,
   loading,
   onSelect,
+  onProviderConfigAdd,
 }) => {
   const [selectedProviderWithModel, setSelectedProviderWithModel] =
     useState<LLM.ProviderWithModelsSchema>();
@@ -103,6 +107,7 @@ const ModelSelector: React.FC<{
           >
             {/** 模型选择 */}
             <ModelSelect
+              workspaceUid={workspaceUid}
               providerWithModels={providerWithModels}
               providerName={selectedProviderName}
               modelName={selectedModelName}
@@ -111,6 +116,9 @@ const ModelSelector: React.FC<{
                 setSelectedProviderName(providerName);
                 setSelectedModelName(modelName);
                 onSelect?.(providerName, modelName, selectedModelParameters);
+              }}
+              onProviderConfigAdd={(providerConfig) => {
+                onProviderConfigAdd?.(providerConfig);
               }}
             />
 

@@ -16,15 +16,12 @@
 
 import { llmProviderService } from '@/services';
 import { LLM } from '@/services/llm/typings';
-import { WORKSPACE } from '@/services/workspace/typings';
 import { useModel } from '@umijs/max';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import ProviderCard from './components/ProviderCard';
 
-const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
-  workspace,
-}) => {
+const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
   const { initialState } = useModel('@@initialState');
 
   // 所有已配置的Provider配置
@@ -71,19 +68,21 @@ const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
 
   useEffect(() => {
     // 所有已配置的Provider
-    if (workspace && workspace.uid) {
-      llmProviderService.allConfiguredProviderConfigs(workspace.uid).then((res) => {
-        handleProviderSchemaConfigs(res.content || []);
-      });
+    if (workspaceUid) {
+      llmProviderService
+        .allConfiguredProviderConfigs(workspaceUid)
+        .then((res) => {
+          handleProviderSchemaConfigs(res.content || []);
+        });
     }
-  }, [workspace]);
+  }, [workspaceUid]);
 
   return (
     <>
       {/* 已配置的Provider列表 */}
       {!_.isEmpty(configuredProviderSchemas) && (
         <ProviderCard
-          workspace={workspace}
+          workspaceUid={workspaceUid}
           configuredProviderSchemas={configuredProviderSchemas}
           unConfiguredProviderSchemas={unConfiguredProviderSchemas}
           configured
@@ -92,9 +91,19 @@ const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
             handleProviderSchemaConfigs(
               _.filter(
                 configuredProviderConfigs || [],
-                (providerConfig) => providerConfig.providerName !== providerName,
+                (providerConfig) =>
+                  providerConfig.providerName !== providerName,
               ),
             );
+          }}
+          onProviderConfigAdd={(providerConfig) => {
+            // 添加Provider配置后，重新计算已配置/未配置列表
+            const _configuredProviderConfigs = _.filter(
+              configuredProviderConfigs || [],
+              (config) => config.providerName !== providerConfig.providerName,
+            );
+            _configuredProviderConfigs.push(providerConfig);
+            handleProviderSchemaConfigs(_configuredProviderConfigs);
           }}
         />
       )}
@@ -102,7 +111,7 @@ const Providers: React.FC<{ workspace: WORKSPACE.WorkspaceEntity }> = ({
       {/* 未配置的Provider列表 */}
       {!_.isEmpty(unConfiguredProviderSchemas) && (
         <ProviderCard
-          workspace={workspace}
+          workspaceUid={workspaceUid}
           configuredProviderSchemas={configuredProviderSchemas}
           unConfiguredProviderSchemas={unConfiguredProviderSchemas}
           onProviderConfigAdd={(providerConfig) => {

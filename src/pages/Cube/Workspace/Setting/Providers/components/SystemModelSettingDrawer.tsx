@@ -16,29 +16,39 @@
 
 import ModelSelector from '@/pages/Cube/Workspace/components/llm/ModelSelector';
 import type { LLM } from '@/services/llm/typings';
-import { WORKSPACE } from '@/services/workspace/typings';
 import {
   LeftOutlined,
   LockFilled,
   QuestionCircleOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Button, Drawer, Flex, Form, Space, Tooltip, Typography, message } from 'antd';
+import {
+  Button,
+  Drawer,
+  Flex,
+  Form,
+  Space,
+  Tooltip,
+  Typography,
+  message,
+} from 'antd';
 
 import * as modelService from '@/services/llm/model';
 import { ModelType } from '@/services/llm/model';
 import { useIntl } from '@umijs/max';
 import { useEffect, useState } from 'react';
 
+import { ProviderStatus } from '@/services/llm/provider';
 import _ from 'lodash';
 
 type ModelSetting = Record<ModelType, LLM.ModelConfig>;
 
 const SystemModelSettingDrawer: React.FC<{
-  workspace: WORKSPACE.WorkspaceEntity;
+  workspaceUid: string;
   open: boolean;
   onClose?: () => void;
-}> = ({ workspace, open, onClose }) => {
+  onProviderConfigAdd?: (providerConfig: LLM.ProviderConfig) => void; // 当添加 Provider Schema 时
+}> = ({ workspaceUid, open, onClose, onProviderConfigAdd }) => {
   const intl = useIntl();
 
   const getDrawerWidth = () => {
@@ -62,6 +72,22 @@ const SystemModelSettingDrawer: React.FC<{
     [ModelType.TEXT_GENERATION]: providerWithTextGenerationModels,
   };
 
+  const handleProviderConfig = (
+    providerConfig: LLM.ProviderConfig,
+    providerWithModels: LLM.ProviderWithModelsSchema[],
+    setProviderWithModels: (
+      providerWithModels: LLM.ProviderWithModelsSchema[],
+    ) => void,
+  ) => {
+    const newProviderWithModels = _.cloneDeep(providerWithModels);
+    _.forEach(newProviderWithModels, (providerWithModel) => {
+      if (providerWithModel.provider.provider === providerConfig.providerName) {
+        providerWithModel.status = ProviderStatus.ACTIVE;
+      }
+    });
+    setProviderWithModels(newProviderWithModels);
+  };
+
   const [modelSetting, setModelSetting] = useState<ModelSetting>(
     {} as ModelSetting,
   );
@@ -75,21 +101,21 @@ const SystemModelSettingDrawer: React.FC<{
     // TEXT_GENERATION model schemas
     setProviderWithTextGenerationModelLoading(true);
     modelService
-      .allModelsOnType(workspace.uid, ModelType.TEXT_GENERATION)
+      .allModelsOnType(workspaceUid, ModelType.TEXT_GENERATION)
       .then((res) => {
         setProviderWithTextGenerationModels(res.content);
       })
       .finally(() => setProviderWithTextGenerationModelLoading(false));
 
     // 已保存的系统模型配置
-    modelService.getSystemModelConfig(workspace.uid).then((res) => {
+    modelService.getSystemModelConfig(workspaceUid).then((res) => {
       const systemModelConfig = {} as ModelSetting;
       _.forIn(res.content, (modelConfig, modelType) => {
         systemModelConfig[modelType as ModelType] = modelConfig;
-      })
+      });
       setModelSetting(systemModelConfig);
     });
-  }, [workspace, open]);
+  }, [workspaceUid, open]);
 
   const saveSettings = async () => {
     setSaving(true);
@@ -116,11 +142,14 @@ const SystemModelSettingDrawer: React.FC<{
     }
 
     // 提交模型参数
-    modelService.addSystemConfig(workspace.uid, modelConfig).then(() => {
-      setModelSetting(modelConfig);
-      message.success('保存成功');
-      onClose?.();
-    }).finally(() => setSaving(false));
+    modelService
+      .addSystemConfig(workspaceUid, modelConfig)
+      .then(() => {
+        setModelSetting(modelConfig);
+        message.success('保存成功');
+        onClose?.();
+      })
+      .finally(() => setSaving(false));
   };
 
   return (
@@ -173,10 +202,15 @@ const SystemModelSettingDrawer: React.FC<{
             }
           >
             <ModelSelector
+              workspaceUid={workspaceUid}
               providerWithModels={providerWithTextGenerationModels}
-              providerName={modelSetting[ModelType.TEXT_GENERATION]?.providerName}
+              providerName={
+                modelSetting[ModelType.TEXT_GENERATION]?.providerName
+              }
               modelName={modelSetting[ModelType.TEXT_GENERATION]?.modelName}
-              modelParameters={modelSetting[ModelType.TEXT_GENERATION]?.modelParameters}
+              modelParameters={
+                modelSetting[ModelType.TEXT_GENERATION]?.modelParameters
+              }
               loading={providerWithTextGenerationModelLoading}
               onSelect={(providerName, modelName, modelParameters) => {
                 const setting = _.cloneDeep(modelSetting);
@@ -187,15 +221,28 @@ const SystemModelSettingDrawer: React.FC<{
                 };
                 setModelSetting(setting);
               }}
+              onProviderConfigAdd={(providerConfig) => {
+                // 保证下拉列表中的Provider正常
+                if (!!providerConfig) {
+                  handleProviderConfig(
+                    providerConfig,
+                    providerWithTextGenerationModels,
+                    setProviderWithTextGenerationModels,
+                  );
+                }
+
+                // 保证父级Provider列表可以更新
+                onProviderConfigAdd?.(providerConfig);
+              }}
             />
           </Form.Item>
           <Form.Item key="btn">
             <Space>
-              <Button type="primary" loading={saving} onClick={saveSettings}>
-                保存
-              </Button>
               <Button loading={saving} onClick={() => onClose?.()}>
                 取消
+              </Button>
+              <Button type="primary" loading={saving} onClick={saveSettings}>
+                保存
               </Button>
             </Space>
           </Form.Item>

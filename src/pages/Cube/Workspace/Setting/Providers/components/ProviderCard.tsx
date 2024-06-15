@@ -19,7 +19,6 @@ import { getLocaleContent } from '@/locales';
 import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import { llmProviderService } from '@/services';
 import { LLM } from '@/services/llm/typings';
-import { WORKSPACE } from '@/services/workspace/typings';
 import {
   DeleteOutlined,
   ExclamationCircleFilled,
@@ -46,14 +45,14 @@ import ProviderSettingDrawer from './ProviderSettingDrawer';
 import SystemModelSettingDrawer from './SystemModelSettingDrawer';
 
 const ProviderCard: React.FC<{
-  workspace: WORKSPACE.WorkspaceEntity;
+  workspaceUid: string;
   configuredProviderSchemas: LLM.ProviderSchema[]; // 已配置的
   unConfiguredProviderSchemas: LLM.ProviderSchema[]; // 未配置的
   configured?: boolean; // 是否已配置的
   onProviderConfigAdd?: (providerConfig: LLM.ProviderConfig) => void; // 当添加 Provider Schema 时
   onProviderConfigRemove?: (providerName: string) => void; // 当移除 Provider Schema 时
 }> = ({
-  workspace,
+  workspaceUid,
   configuredProviderSchemas,
   unConfiguredProviderSchemas,
   configured,
@@ -257,7 +256,7 @@ const ProviderCard: React.FC<{
                 {/** 模型列表 */}
                 {configured && (
                   <ProviderModelList
-                    workspace={workspace}
+                    workspaceUid={workspaceUid}
                     providerSchema={providerSchema}
                     key={providerSchema.provider}
                   />
@@ -270,7 +269,7 @@ const ProviderCard: React.FC<{
 
       {/** Provider设置抽屉 */}
       <ProviderSettingDrawer
-        workspace={workspace}
+        workspaceUid={workspaceUid}
         providerSchema={selectedSettingProviderSchema}
         open={providerSettingDrawerOpen}
         onClose={(providerConfig) => {
@@ -299,7 +298,7 @@ const ProviderCard: React.FC<{
           setDeleteConfirmLoading(true);
           llmProviderService
             .removeProviderConfig(
-              workspace.uid,
+              workspaceUid,
               selectedDeleteProviderSchema!.provider,
             )
             .then((resp) => {
@@ -334,10 +333,16 @@ const ProviderCard: React.FC<{
 
       {/** 系统模型设置抽屉 */}
       <SystemModelSettingDrawer
-        workspace={workspace}
+        workspaceUid={workspaceUid}
         open={systemModelSettingDrawerOpen}
         onClose={() => {
           setSystemModelSettingDrawerOpen(false);
+        }}
+        onProviderConfigAdd={(providerConfig) => {
+          setProviderSettingDrawerOpen(false);
+          if (providerConfig) {
+            onProviderConfigAdd?.(providerConfig);
+          }
         }}
       />
     </>

@@ -16,9 +16,9 @@
 
 import { convertFormSchema2AntdFormSchema } from '@/components/form';
 import { getLocaleContent } from '@/locales';
+import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 import * as llmService from '@/services/llm/provider';
 import { LLM } from '@/services/llm/typings';
-import { WORKSPACE } from '@/services/workspace/typings';
 import { LeftOutlined, LinkOutlined, LockFilled } from '@ant-design/icons';
 import {
   BetaSchemaForm,
@@ -28,7 +28,6 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Drawer, Flex, Space, Typography, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import * as icons from '@/pages/Cube/Workspace/components/llm/icons';
 
 type DataItem = {
   name: string;
@@ -36,11 +35,11 @@ type DataItem = {
 };
 
 const ProviderSettingDrawer: React.FC<{
-  workspace: WORKSPACE.WorkspaceEntity;
+  workspaceUid: string;
   providerSchema?: LLM.ProviderSchema;
   open: boolean;
   onClose?: (providerConfig?: LLM.ProviderConfig) => void;
-}> = ({ workspace, providerSchema, open, onClose }) => {
+}> = ({ workspaceUid, providerSchema, open, onClose }) => {
   const intl = useIntl();
   const [providerIcon, setProviderIcon] = useState<LLM.ProviderIcon>();
   const [formColumns, setFormColumns] = useState<
@@ -61,11 +60,11 @@ const ProviderSettingDrawer: React.FC<{
     // 获取LLM的图标相关
     setProviderIcon(icons.getProviderIconBySchema(providerSchema));
 
-    if (workspace && providerSchema) {
+    if (workspaceUid && providerSchema) {
       // 获取已配置详情
       setFormColumnsLoading(true);
       llmService
-        .providerConfigDetail(workspace.uid, providerSchema.provider)
+        .providerConfigDetail(workspaceUid, providerSchema.provider)
         .then((resp) => {
           setFormColumns(
             convertFormSchema2AntdFormSchema(
@@ -87,7 +86,7 @@ const ProviderSettingDrawer: React.FC<{
         ),
       );
     }
-  }, [intl.locale, workspace, providerSchema, open]);
+  }, [intl.locale, workspaceUid, providerSchema, open]);
 
   const getDrawerWidth = () => {
     return window.innerWidth < 576 ? '100%' : 520;
@@ -153,8 +152,8 @@ const ProviderSettingDrawer: React.FC<{
             onFinish={async (values) => {
               setAdding(true);
               llmService
-                .addProviderConfig(workspace.uid, providerSchema!.provider, {
-                  workspace_uid: workspace.uid,
+                .addProviderConfig(workspaceUid, providerSchema!.provider, {
+                  workspace_uid: workspaceUid,
                   provider_name: providerSchema!.provider,
                   provider_credential: values,
                 })
