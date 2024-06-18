@@ -147,7 +147,7 @@ const errorShow = (error: any) => {
     message: errorMessage,
     show_type: errorShowType,
     target,
-  } = error;
+  } = error.content || error;
   switch (errorShowType) {
     case ErrorShowType.SILENT:
       // Do Nothing
@@ -207,7 +207,7 @@ const responseHandler = (
 
 // 请求配置：https://umijs.org/docs/max/request
 export const request: RequestConfig = {
-  timeout: 1000,
+  timeout: 10000,
   errorConfig: {
     errorThrower(res: Response.Response<any>) {
       const { success, code, content } = res;
