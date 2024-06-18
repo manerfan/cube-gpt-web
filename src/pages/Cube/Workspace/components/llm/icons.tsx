@@ -15,7 +15,7 @@
  */
 
 import { LLM } from '@/services/llm/typings';
-import { Moonshot, OpenAI, Wenxin, Zhipu } from '@lobehub/icons';
+import { Moonshot, OpenAI, Zhipu } from '@lobehub/icons';
 import { Avatar, Image, Typography } from 'antd';
 
 const providerIcon: { [key: string]: LLM.ProviderIcon } = {
@@ -39,14 +39,7 @@ const providerIcon: { [key: string]: LLM.ProviderIcon } = {
     combine: (size?: number) => <Zhipu.Combine type={'color'} size={size}/>,
     avatar: (size?: number) => <Zhipu.Avatar size={size || 18}/>,
     color: Zhipu.colorPrimary,
-  },
-  wenxin: {
-    icon: (size?: number) => <Wenxin.Color size={size}/>,
-    text: (size?: number) => <Wenxin.Text size={size}/>,
-    combine: (size?: number) => <Wenxin.Combine type={'color'} extra={'一言'} size={size}/>,
-    avatar: (size?: number) => <Wenxin.Avatar size={size || 18}/>,
-    color: Wenxin.colorPrimary,
-  },
+  }
 };
 
 /**

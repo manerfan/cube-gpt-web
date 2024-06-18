@@ -175,9 +175,13 @@ const errorShow = (error: any) => {
 };
 
 const responseHandler = (
-  response: AxiosResponse<any>,
+  response?: AxiosResponse<any>,
   opts: any | undefined = undefined,
 ) => {
+  if (!response) {
+    return undefined;
+  }
+  
   // 处理401，跳转到登录
   if (response.status === 401) {
     // 首页和登录页不需要
@@ -207,7 +211,7 @@ const responseHandler = (
 
 // 请求配置：https://umijs.org/docs/max/request
 export const request: RequestConfig = {
-  timeout: 10000,
+  timeout: 10_000,
   errorConfig: {
     errorThrower(res: Response.Response<any>) {
       const { success, code, content } = res;
@@ -243,6 +247,8 @@ export const request: RequestConfig = {
         } else {
           message.error(`Response status:${error.response.status}`);
         }
+      } else if (error.name === 'AxiosError') {
+        message.warning(error.message);
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
         // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
