@@ -33,7 +33,13 @@ const proxyConfig: ProxyConfig = {
     '/api': {
       // 要代理的地址
       target: 'http://127.0.0.1:8080/',
-      changeOrigin: true
+      changeOrigin: true,
+      onProxyReq: (proxyReq, req, res) => {
+        // 如果请求头中有 Accept-Encoding: gzip，移除它，会影响 event-stream
+        if (req.headers['accept-encoding']) {
+          delete req.headers['accept-encoding'];
+        }
+      },
     },
   },
 };

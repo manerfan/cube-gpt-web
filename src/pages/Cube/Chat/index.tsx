@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
-import LogoInfo from "@/components/logo/LogoInfo";
+import ChatMarkdown from '@/components/chat/chat-message/chat-markdown';
+import * as generateService from '@/services/llm/generate';
+import { Button } from 'antd';
+import { useState } from 'react';
 
 const Chat: React.FC = () => {
-    return (
-        <LogoInfo className='mt-24 lg:mt-32 '/>
-    );
+  const [content, setContent] = useState('');
+
+  const sse = (workspaceUid: string) => {
+    setContent('');
+    generateService.chat(workspaceUid, (event) => {
+      if (event.event === 'message') {
+        setContent((prev) => prev + JSON.parse(event.data).content);
+      }
+    });
   };
-  
-  export default Chat;
+
+  return (
+    <>
+      <Button onClick={() => sse('01HXASS3M44ZX8EF3ZJCW0N7G9')}>stream</Button>
+      <ChatMarkdown>{content}</ChatMarkdown>
+    </>
+  );
+};
+
+export default Chat;

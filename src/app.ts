@@ -30,7 +30,7 @@ import {
 import { message, notification } from 'antd';
 import _ from 'lodash';
 import { ACCESS_TOKEN, TOKEN_TYPE } from './constants';
-import { LLM } from './services/llm/provider/typings';
+import { LLM } from './services/llm/typings';
 import { SYSTEM } from './services/system/typings';
 import { USER } from './services/user/typings';
 
