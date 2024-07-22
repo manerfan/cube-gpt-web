@@ -14,3 +14,16 @@
  * limitations under the License.
  */
 
+import React from "react";
+import { Typography } from "antd";
+
+
+const ChatList: React.FC = () => {
+  return (
+    <>
+      <Typography.Text>123</Typography.Text>
+    </>
+  );
+};
+
+export default ChatList;

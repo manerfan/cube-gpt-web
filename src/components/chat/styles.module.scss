@@ -13,4 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+.chat-content {
 
+  .chat-list {
+    min-height: inherit !important;
+  }
+
+  .chat-input {
+    padding: 0 !important
+  }
+
+}

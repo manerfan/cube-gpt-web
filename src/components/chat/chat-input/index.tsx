@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-import { Form, Input, Image } from "antd";
-import { CSSProperties } from "react";
-import styles from "./styles.module.scss";
+import { CSSProperties } from 'react';
 
 import { useIntl } from '@umijs/max';
+import { Avatar, Button, Divider, Flex, Input, Space, Tooltip, Typography } from 'antd';
+import {
+  ArrowBigUp,
+  AtSign,
+  CornerDownLeft,
+  FilePlus,
+  MessageCircleOff,
+  MessageCirclePlus,
+  SendHorizontal,
+} from 'lucide-react';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: any) => void;
@@ -26,61 +34,106 @@ const ChatInput: React.FC<{
   autoFocus?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({
-  onSubmit,
-  loading,
-  autoFocus,
-  className,
-  style,
-}) => {
+}> = ({ onSubmit, loading, autoFocus, className, style }) => {
   const intl = useIntl();
 
+  const inputKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        e.preventDefault();
+        console.log('Shift + Enter');
+      } else {
+        console.log('Enter');
+      }
+    }
+  };
+
   return (
-    <Form
-      name="chat"
-      wrapperCol={{ span: 16 }}
-      className={`container relative my-8 lg:w-1/2 md:w-3/4 sm:w-full ${className}`}
-      style={style}
-      onFinish={(values) => !!onSubmit && onSubmit(values)}
-    >
-      <Form.Item
-        name="message"
-        wrapperCol={{ span: 24 }}
-        className="block w-full resize-none rounded-xl border-none bg-slate-100 shadow-md"
-        style={{ paddingLeft: 14 }}
+    <>
+      <Flex
+        vertical
+        justify="flex-start"
+        align="flex-start"
+        className="rounded-xl bg-white py-4 w-full min-h-24"
       >
-        <Input
-          className="h-14 w-full border-none bg-slate-100 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base"
-          placeholder={loading ? "Waiting Response ..." : intl.formatMessage({ id: 'chat.slogon' })}
-          bordered={false}
-          autoFocus={autoFocus}
-          size="large"
-          disabled={loading}
-          suffix={
-            <button
-              type="submit"
-              className={`absolute border-none bottom-2 right-2.5 rounded-lg bg-blue-100 p-2 text-sm w-10 h-10 font-medium focus:outline-none focus:ring-4 focus:ring-blue-300 sm:text-base ${loading ? 'hover:cursor-progress' : 'hover:bg-blue-200 hover:cursor-pointer'}`}
-              disabled={loading}
-            >
-              {loading ? (
-                <div className={styles['lds-ellipsis']}><div></div><div></div><div></div><div></div></div>
-              ) : (
-                <Image
-                  className="relative"
-                  src="/logo.png"
-                  alt="CubeBit Logo"
-                  width={24}
-                  height={24}
-                  preview={false}
-                />
-              )}
-              <span className="sr-only">Send message</span>
-            </button>
-          }
+        <Input.TextArea
+          autoSize={{ minRows: 1, maxRows: 6 }}
+          className={`border-0 rounded-0 outline-none focus:outline-none focus:border-0 focus:shadow-none leading-5 w-full min-h-5 px-5 mb-3`}
+          placeholder="和我聊聊天吧"
+          onKeyDown={inputKeyDown}
         />
-      </Form.Item>
-    </Form>
+
+        {/* 底部按钮 */}
+        <Flex justify="space-between" align="center" className="w-full px-4">
+          {/* 新建会话 */}
+          <Tooltip title="新建对话">
+            <Button size="small" type="text" className="p-1">
+              <MessageCirclePlus size={18} />
+            </Button>
+          </Tooltip>
+
+          <Space align="center">
+            <Typography.Text type="secondary">
+              <Space align="center" size={4}>
+                <CornerDownLeft size={14} className="relative top-0.5" />
+                <span>换行</span>
+                <span>/</span>
+                <CornerDownLeft size={14} className="relative top-0.5" />
+                <ArrowBigUp size={16} className="relative top-0.5" />
+                <span>发送</span>
+              </Space>
+            </Typography.Text>
+
+            {/* 选择机器人 */}
+            <Tooltip title="@机器人">
+              <Button
+                size="small"
+                type="text"
+                className="p-1"
+                disabled={loading}
+              >
+                <AtSign size={18} />
+              </Button>
+            </Tooltip>
+
+            {/* 添加附件 */}
+            <Tooltip title="上传文件">
+              <Button
+                size="small"
+                type="text"
+                className="p-1"
+                disabled={loading}
+              >
+                <FilePlus size={18} />
+              </Button>
+            </Tooltip>
+
+            <Divider type="vertical" />
+
+            {/* 发起会话 */}
+            {!loading ? (
+              <Tooltip title="发送">
+                <Button size="small" type='primary' className="p-1" icon={<img src="/logo.png" alt="cubechat" width={18} />}>
+                  发送
+                </Button>
+              </Tooltip>
+            ) : (
+              <Tooltip title="停止">
+                <Button size="small" type="primary" className="p-1" icon={<MessageCircleOff size={18} />}>
+                  停止
+                </Button>
+              </Tooltip>
+            )}
+          </Space>
+        </Flex>
+      </Flex>
+      <Flex justify="center" align="center" className="w-full mt-3">
+        <Typography.Text type="secondary" className="select-none">
+          内容由AI生成，无法确保真实准确，仅供参考。
+        </Typography.Text>
+      </Flex>
+    </>
   );
-}
+};
 
 export default ChatInput;

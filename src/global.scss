@@ -149,6 +149,14 @@ body,
     }
 }
 
+.ant-layout {
+    .ant-layout-content {
+        &.chat-content {
+            min-height: inherit !important;
+        }
+    }
+}
+
 .ant-dropdown {
     .ant-dropdown-menu {
         .ant-dropdown-menu-item {

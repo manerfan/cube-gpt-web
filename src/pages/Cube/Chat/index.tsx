@@ -14,29 +14,37 @@
  * limitations under the License.
  */
 
+import ChatContent from '@/components/chat';
 import ChatMarkdown from '@/components/chat/chat-message/chat-markdown';
 import * as generateService from '@/services/llm/generate';
 import { Button } from 'antd';
 import { useState } from 'react';
 
 const Chat: React.FC = () => {
-  const [content, setContent] = useState('');
+  // const [content, setContent] = useState('');
 
-  const sse = (workspaceUid: string) => {
-    setContent('');
-    generateService.chat(workspaceUid, (event) => {
-      if (event.event === 'message') {
-        setContent((prev) => prev + JSON.parse(event.data).content);
-      }
-    });
-  };
+  // const sse = (workspaceUid: string) => {
+  //   setContent('');
+  //   generateService.chat(workspaceUid, (event) => {
+  //     if (event.event === 'message') {
+  //       setContent((prev) => prev + JSON.parse(event.data).content);
+  //     }
+  //   });
+  // };
+
+  // return (
+  //   <>
+  //     <Button onClick={() => sse('01HXASS3M44ZX8EF3ZJCW0N7G9')}>stream</Button>
+  //     <ChatMarkdown>{content}</ChatMarkdown>
+  //     <ChatInput />
+  //   </>
+  // );
 
   return (
     <>
-      <Button onClick={() => sse('01HXASS3M44ZX8EF3ZJCW0N7G9')}>stream</Button>
-      <ChatMarkdown>{content}</ChatMarkdown>
+      <ChatContent />
     </>
-  );
+  )
 };
 
 export default Chat;
