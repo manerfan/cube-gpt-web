@@ -14,14 +14,59 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { Typography } from "antd";
-
+import { List } from 'antd';
+import React, { useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
+import ChatItem from '../chat-item';
 
 const ChatList: React.FC = () => {
+  const [items, setItems] = useState([
+    {
+      title: 'Bot 1',
+    },
+    {
+      title: 'Bot 2',
+    },
+    {
+      title: 'Bot 3',
+    },
+    {
+      title: 'Bot 4',
+    },
+  ]);
+
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadMore = () => {
+    console.log('loadMore');
+    setTimeout(() => {
+      setItems((prevItems) => [...prevItems, { title: 'Bot' }]);
+      setHasMore(items.length < 50);
+      console.log(items.length);
+    }, 1000);
+  };
+
   return (
     <>
-      <Typography.Text>123</Typography.Text>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        useWindow={false}
+        initialLoad={false}
+        isReverse={true}
+      >
+        <List
+          itemLayout="horizontal"
+          bordered={false}
+          dataSource={items}
+          renderItem={(item, index) => (
+            <List.Item style={{ border: 'none' }} className="my-1">
+              <ChatItem />
+            </List.Item>
+          )}
+        />
+      </InfiniteScroll>
     </>
   );
 };

@@ -14,30 +14,53 @@
  * limitations under the License.
  */
 
-import { Flex, Layout } from 'antd';
+import ScrollToBottomBtn from '@/components/common/ScrollToBottomBtn';
+import { Flex, Layout, Typography } from 'antd';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import ChatFunc from './chat-function';
 import ChatInput from './chat-input';
 import ChatList from './chat-list';
 import styles from './styles.module.scss';
 
-const ChatContent: React.FC = () => {
+const ChatContent: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <>
-      <Flex align="center" justify="center" className="h-full w-full p-6">
+      <Flex
+        gap="large"
+        vertical
+        align="center"
+        justify="center"
+        className={`h-full w-full p-6 ${className}`}
+      >
         <Layout
-          className={`bg-inherit h-full w-full max-w-screen-md ${styles['chat-content']}`}
+          className={`bg-inherit h-full max-h-full w-full max-w-screen-md ${styles['chat-content']}`}
         >
           <Layout.Content
-            className={`bg-inherit chat-content ${styles['chat-list']}`}
+            className={`bg-inherit flex-auto chat-content ${styles['chat-list']}`}
           >
-            <ChatList />
+            <ScrollToBottom
+              initialScrollBehavior="smooth"
+              followButtonClassName="hidden"
+              className="h-full max-h-full relative overscroll-none"
+            >
+              <ChatList />
+              <ScrollToBottomBtn />
+            </ScrollToBottom>
           </Layout.Content>
           <Layout.Footer
-            className={`bg-inherit chat-content ${styles['chat-input']}`}
+            className={`bg-inherit mt-5 chat-content ${styles['chat-input']}`}
           >
             <ChatInput />
+            <Flex justify="center" align="center" className="w-full mt-3">
+              <Typography.Text type="secondary" className="select-none">
+                内容由AI生成，无法确保真实准确，仅供参考。
+              </Typography.Text>
+            </Flex>
           </Layout.Footer>
         </Layout>
       </Flex>
+
+      <ChatFunc />
     </>
   );
 };

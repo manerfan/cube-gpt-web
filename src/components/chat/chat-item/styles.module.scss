@@ -14,28 +14,3 @@
  * limitations under the License.
  */
 
-.chat-content {
-
-  .chat-header {
-    padding: 0 !important;
-  }
-
-  .chat-list {
-    min-height: inherit !important;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    * {
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  }
-
-  .chat-input {
-    padding: 0 !important
-  }
-
-}

@@ -138,7 +138,7 @@ const Workspace: React.FC = () => {
     left: (
       <Space style={{ marginLeft: '1rem' }}>
         <Avatar>
-          <FluentEmoji type={'anim'} {...control} className="-mt-6" />
+          <FluentEmoji type={'anim'} {...control} />
         </Avatar>
         <Typography.Text className="hidden md:inline text-gray-500 font-bold">
           {isPublicSpace(workspace)

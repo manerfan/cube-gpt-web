@@ -42,7 +42,7 @@ const Chat: React.FC = () => {
 
   return (
     <>
-      <ChatContent />
+      <ChatContent className='max-h-full max-h-screen' />
     </>
   )
 };

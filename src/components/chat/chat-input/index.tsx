@@ -14,61 +14,109 @@
  * limitations under the License.
  */
 
-import { CSSProperties } from 'react';
+import { CSSProperties, useState } from 'react';
 
-import { useIntl } from '@umijs/max';
-import { Avatar, Button, Divider, Flex, Input, Space, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+  Flex,
+  Input,
+  message,
+  Space,
+  Tooltip,
+  Typography,
+} from 'antd';
+import _ from 'lodash';
 import {
   ArrowBigUp,
   AtSign,
   CornerDownLeft,
   FilePlus,
   MessageCircleOff,
-  MessageCirclePlus,
-  SendHorizontal,
+  Sparkles,
 } from 'lucide-react';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: any) => void;
   loading?: boolean | undefined;
-  autoFocus?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({ onSubmit, loading, autoFocus, className, style }) => {
-  const intl = useIntl();
+}> = ({ onSubmit, loading, className, style }) => {
+  const [query, setQuery] = useState('');
 
-  const inputKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (e.shiftKey) {
-        e.preventDefault();
-        console.log('Shift + Enter');
-      } else {
-        console.log('Enter');
+  const submit = () => {
+    if (!_.isEmpty(query)) {
+      onSubmit?.(query);
+    }
+    setQuery('');
+  };
+
+  const inputKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case 'Enter': {
+        // 换行
+        if (event.shiftKey) {
+          // 发送
+          event.preventDefault();
+          submit();
+        }
+        break;
       }
+      case '@': {
+        // 召唤机器人
+        break;
+      }
+      case '/':
+      case '、': {
+        // 召唤技能
+        message.info('input /');
+        break;
+      }
+
+      default:
+        break;
     }
   };
 
   return (
     <>
+      {loading && (
+        <Flex
+        justify="center"
+        align="center"
+        className='w-full mb-3'
+      >
+        <Button
+          type="primary"
+          icon={<MessageCircleOff size={16} />}
+        >
+          停止响应
+        </Button>
+        </Flex>
+      )}
       <Flex
         vertical
         justify="flex-start"
         align="flex-start"
-        className="rounded-xl bg-white py-4 w-full min-h-24"
+        style={style}
+        className={`rounded-xl bg-white py-4 w-full min-h-24 ${className}`}
       >
         <Input.TextArea
           autoSize={{ minRows: 1, maxRows: 6 }}
           className={`border-0 rounded-0 outline-none focus:outline-none focus:border-0 focus:shadow-none leading-5 w-full min-h-5 px-5 mb-3`}
-          placeholder="和我聊聊天吧"
+          placeholder="发送消息、@Bot 有什么问题尽管问我..."
+          readOnly={loading}
           onKeyDown={inputKeyDown}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
 
         {/* 底部按钮 */}
         <Flex justify="space-between" align="center" className="w-full px-4">
-          {/* 新建会话 */}
-          <Tooltip title="新建对话">
-            <Button size="small" type="text" className="p-1">
-              <MessageCirclePlus size={18} />
+          {/* 技能 */}
+          <Tooltip title="技能">
+            <Button size="small" type="text" className="p-1" disabled={loading}>
+              <Sparkles size={18} />
             </Button>
           </Tooltip>
 
@@ -113,24 +161,26 @@ const ChatInput: React.FC<{
             {/* 发起会话 */}
             {!loading ? (
               <Tooltip title="发送">
-                <Button size="small" type='primary' className="p-1" icon={<img src="/logo.png" alt="cubechat" width={18} />}>
-                  发送
-                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  className="py-1 px-2 bg-sky-50"
+                  icon={<img src="/logo.png" alt="cubechat" width={18} />}
+                  onClick={submit}
+                />
               </Tooltip>
             ) : (
               <Tooltip title="停止">
-                <Button size="small" type="primary" className="p-1" icon={<MessageCircleOff size={18} />}>
-                  停止
-                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  className="py-1 px-2"
+                  icon={<MessageCircleOff size={18} />}
+                />
               </Tooltip>
             )}
           </Space>
         </Flex>
-      </Flex>
-      <Flex justify="center" align="center" className="w-full mt-3">
-        <Typography.Text type="secondary" className="select-none">
-          内容由AI生成，无法确保真实准确，仅供参考。
-        </Typography.Text>
       </Flex>
     </>
   );
