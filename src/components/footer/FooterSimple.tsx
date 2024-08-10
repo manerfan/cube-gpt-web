@@ -29,7 +29,7 @@ const FooterSimple: React.FC<{
         <Space align="end">
           <Image
             src="/logo.png"
-            alt="CubeBit Logo"
+            alt="ModuBit Logo"
             width={32}
             height={32}
             preview={false}
@@ -39,7 +39,7 @@ const FooterSimple: React.FC<{
             strong
             className="underline decoration-4 decoration-sky-200"
           >
-            . CUBE CHAT
+            . MODU 墨读
           </Typography.Text>
           <Typography.Text className="text-gray-700">Maner·Fan</Typography.Text>
           <LanguageChanger size="small" />

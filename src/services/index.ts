@@ -38,8 +38,3 @@ export enum FormFieldValueStatusEnum {
   Warning = 'Warning',
   Default = 'Default',
 }
-
-export const getPathAndModule = (path: string) => {
-  const match = path.match(/^(\/[\w-|\\/]+)\/([\w-]+).*$/);
-  return [_.get(match, 1, null), _.get(match, 2, null)];
-};

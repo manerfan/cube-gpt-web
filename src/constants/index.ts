@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export const APP_NAME = 'Cube Chat';
+export const APP_NAME = 'MODU 墨读';
 
 export const EMAIL_PATTERN =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
 export const PASSWORD_PATTERN = /^[a-zA-Z][a-zA-Z0-9_!@#$%&*]{5,31}$/;

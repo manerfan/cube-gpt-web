@@ -41,13 +41,13 @@ const spaceRoutes: Routes = [
       },
       {
         path: ':settingModule',
-        component: './Cube/Workspace/Setting',
+        component: './Modu/Workspace/Setting',
       },
     ],
   },
   {
     path: ':spaceModule',
-    component: './Cube/Workspace',
+    component: './Modu/Workspace',
   },
 ];
 
@@ -70,39 +70,39 @@ const routes: Routes = [
     wrappers: ['@/wrappers/entry/EntryWrapper'],
   },
   {
-    path: '/cube',
-    wrappers: ['@/wrappers/cube/CubeWrapper'],
+    path: '/modu',
+    wrappers: ['@/wrappers/modu/ModuWrapper'],
     routes: [
       {
         path: '',
-        component: './Cube',
-        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+        component: './Modu',
+        wrappers: ['@/wrappers/modu/ModuContentWrapper'],
       },
       // 聊天
       {
         path: 'chat',
-        component: './Cube/Chat',
-        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+        component: './Modu/Chat',
+        wrappers: ['@/wrappers/modu/ModuContentWrapper'],
       },
       // 市场
       {
         path: 'store',
-        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+        wrappers: ['@/wrappers/modu/ModuContentWrapper'],
         routes: [
           {
             path: 'bot',
-            component: './Cube/Store',
+            component: './Modu/Store',
           },
           {
             path: 'plugin',
-            component: './Cube/Store',
+            component: './Modu/Store',
           },
         ],
       },
       // 空间
       {
         path: 'space/:spaceId',
-        wrappers: ['@/wrappers/cube/CubeContentWrapper'],
+        wrappers: ['@/wrappers/modu/ModuContentWrapper'],
         routes: spaceRoutes,
       },
     ],

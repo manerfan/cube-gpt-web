@@ -22,7 +22,7 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   tailwindcss: {},
   metas: metas,
-  title: 'Cube Chat | Speak FREELY with Me! | 想你所想 及你所及!',
+  title: 'MODU 墨读无界 | 想你所想 及你所及!',
   locale: {
     default: 'zh-CN',
     baseSeparator: '-',
@@ -30,4 +30,11 @@ export default defineConfig({
     baseNavigator: true,
   },
   svgo: false,
+  mfsu: {
+    strategy: 'normal',
+  },
+  jsMinifier: 'esbuild',
+  codeSplitting: {
+    jsStrategy: 'granularChunks',
+  },
 });

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import CubeContentWrapper from "@/wrappers/cube/CubeContentWrapper";
+import ModuContentWrapper from "@/wrappers/modu/ModuContentWrapper";
 
 const LLMConfig: React.FC = () => {
-    return <CubeContentWrapper header={<>header</>}>content</CubeContentWrapper>
+    return <ModuContentWrapper header={<>header</>}>content</ModuContentWrapper>
     
 }
 

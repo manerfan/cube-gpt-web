@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SmartFoxWorkToolsProjectState">
-    <option name="branch" value="first-milstone" />
-    <option name="gitUrl" value="git@github.com:CubewiseBit/cube-chat-web.git" />
-    <option name="localBranch" value="first-milstone" />
-    <option name="revision" value="f603860213493ad04ca6c45b6713aa5e8a64197d" />
-  </component>
-</project>

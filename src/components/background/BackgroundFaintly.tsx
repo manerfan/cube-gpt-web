@@ -16,7 +16,9 @@
 
 import styles from './styles.module.scss';
 
-const BackgroundFaintly: React.FC = () => {
+const BackgroundFaintly: React.FC<{
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+}> = ({ position = 'top-right' }) => {
   return (
     <section style={{ position: 'relative', flex: 1, maxWidth: '100%' }}>
       <div
@@ -29,7 +31,7 @@ const BackgroundFaintly: React.FC = () => {
           transform: 'rotate(-4deg)',
         }}
       ></div>
-      <div className={`${styles.faintly} ${styles['faintly-right']}`}></div>
+      <div className={`${styles.faintly} ${styles['faintly-' + position]}`}></div>
     </section>
   );
 };

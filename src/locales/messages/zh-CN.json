@@ -27,9 +27,9 @@
     }
   },
   "chat": {
-    "slogon": "想你所想 及你所及"
+    "slogon": "墨读无界 | 想你所想 及你所及"
   },
-  "cube": {
+  "modu": {
     "menu": {
       "chat": "聊一聊",
       "createBot": "创建机器人",

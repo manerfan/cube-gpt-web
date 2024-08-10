@@ -20,7 +20,7 @@ import HeaderSimple from '@/components/header/HeaderSimple';
 import { Card, Col, Image, Layout, Row } from 'antd';
 
 import BackgroundBanderole from '@/components/background/BackgroundBanderole';
-import LogoBlock from '@/components/logo/LogoInfo';
+import LogoInfo from '@/components/logo/LogoInfo';
 import styles from './styles.module.scss';
 
 import { ThemeProvider } from '@lobehub/ui';
@@ -47,7 +47,7 @@ const EntryWrapper: React.FC = () => {
               xl={8}
               className="mb-32 -mt-20 lg:mb-0 lg:mt-0"
             >
-              <LogoBlock />
+              <LogoInfo disableActions />
             </Col>
             <Col span={22} xs={22} sm={22} md={20} lg={10} xl={8}>
               <Card
@@ -66,7 +66,7 @@ const EntryWrapper: React.FC = () => {
                 >
                   <Image
                     src="/logo.png"
-                    alt="CubeBit Logo"
+                    alt="ModuBit Logo"
                     width={50}
                     height={50}
                     preview={false}

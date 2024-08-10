@@ -14,59 +14,61 @@
  * limitations under the License.
  */
 
+import LogoInfoSimple from '@/components/logo/LogoInfoSimple';
+import { MESSAGE } from '@/services/message/typings';
 import { List } from 'antd';
+import _ from 'lodash';
 import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import ChatItem from '../chat-item';
 
-const ChatList: React.FC = () => {
-  const [items, setItems] = useState([
-    {
-      title: 'Bot 1',
-    },
-    {
-      title: 'Bot 2',
-    },
-    {
-      title: 'Bot 3',
-    },
-    {
-      title: 'Bot 4',
-    },
-  ]);
-
+const ChatList: React.FC<{
+  messages: MESSAGE.MessageContent[];
+  loadingMessageId?: string;
+}> = ({ messages, loadingMessageId }) => {
   const [hasMore, setHasMore] = useState(true);
 
   const loadMore = () => {
     console.log('loadMore');
-    setTimeout(() => {
-      setItems((prevItems) => [...prevItems, { title: 'Bot' }]);
-      setHasMore(items.length < 50);
-      console.log(items.length);
-    }, 1000);
   };
 
   return (
     <>
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadMore}
-        hasMore={hasMore}
-        useWindow={false}
-        initialLoad={false}
-        isReverse={true}
-      >
-        <List
-          itemLayout="horizontal"
-          bordered={false}
-          dataSource={items}
-          renderItem={(item, index) => (
-            <List.Item style={{ border: 'none' }} className="my-1">
-              <ChatItem />
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
+      {_.isEmpty(messages) ? (
+        <LogoInfoSimple className="h-full" />
+      ) : (
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadMore}
+          hasMore={hasMore}
+          useWindow={false}
+          initialLoad={false}
+          isReverse={true}
+        >
+          <List
+            itemLayout="horizontal"
+            bordered={false}
+            dataSource={messages}
+            renderItem={(message) => (
+              <List.Item
+                key={message.messageId}
+                style={{ border: 'none' }}
+                className="my-1"
+              >
+                <ChatItem
+                  message={message}
+                  loading={message.messageId === loadingMessageId}
+                  messageClassName={
+                    message.senderRole === 'user'
+                      ? 'bg-user-msg'
+                      : 'bg-assistant-msg'
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      )}
     </>
   );
 };

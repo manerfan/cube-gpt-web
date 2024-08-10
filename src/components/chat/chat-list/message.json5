@@ -1,0 +1,44 @@
+{
+    success: true,
+    content: [
+        {
+            sender_id: "", // 发送者 id
+            sender_role: "assistant", // "user" or "assistant"
+            message_id: "", // 消息 id
+            message_time: "", // 消息发送时间
+            message: [ // 消息内容，可能有多中类型的消息组合在一起
+                {
+                    type: "", // question answer verbose function_call ...
+                    content_type: "text",
+                    content: "test",
+                    section_id: "", // section id
+                    extra_info: { 
+                        // ？？？HumanMessage AIMessage FunctionMessage ToolMessage ChatMessage SystemMessage
+                    }
+                }
+            ],
+        }
+    ]
+}
+
+// event:message
+// data: {}
+{
+    message: {
+        sender_id: "", // 发送者 id
+        sender_role: "assistant", // "user" or "assistant"
+        message_id: "", // 消息 id
+        message_time: "", // 消息发送时间
+        message: {
+            type: "", // question answer verbose function_call ...
+            content_type: "text",
+            content: "test",
+            section_id: "", // section id
+            extra_info: { 
+                // ？？？HumanMessage AIMessage FunctionMessage ToolMessage ChatMessage SystemMessage
+            }
+        }
+    },
+    conversation_id: "",
+    is_finish: false,
+}

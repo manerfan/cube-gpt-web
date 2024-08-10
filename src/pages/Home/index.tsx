@@ -20,45 +20,107 @@ import HeaderSimple from '@/components/header/HeaderSimple';
 import LogoInfo from '@/components/logo/LogoInfo';
 import { ThemeProvider } from '@lobehub/ui';
 
-import { Features, FeaturesProps } from '@lobehub/ui';
-import { Waypoints, MousePointerClick, Boxes} from 'lucide-react';
-
-const items: FeaturesProps['items'] = [
-  {
-    description:
-      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz.',
-    icon:  Waypoints,
-    title: '灵活开放',
-  },
-  {
-    description:
-      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx.',
-    icon: MousePointerClick,
-    title: '开箱即用',
-  },
-  {
-    description:
-      'xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz xxx yyy zzz.',
-    icon: Boxes,
-    title: '私有部署',
-  },
-];
+import { Card, Col, Row, Space, Typography } from 'antd';
 
 const HomePage: React.FC = () => {
   return (
     <ThemeProvider>
       <BackgroundBanderole />
-      
-      <main className="flex relative flex-col h-full min-h-screen items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24" style={{gridTemplateRows: 'auto 1fr auto'}}>
+
+      <main
+        className="flex relative flex-col h-full min-h-screen items-center justify-between p-5 sm:px-10 md:px-15 lg:px-24"
+        style={{ gridTemplateRows: 'auto 1fr auto' }}
+      >
         <HeaderSimple />
 
-        <LogoInfo className='mt-24 lg:mt-32 '/>
+        <LogoInfo className="mt-24 lg:mt-32 " />
 
-        <div className="mt-20 mb-16 md:mb-20">
-          <Features items={items} />
+        <div className="mt-20 mb-16 md:mb-20 max-w-5xl w-full">
+          <Row justify="space-between" gutter={[8, 8]}>
+            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+              <Card
+                bordered={false}
+                className="backdrop-blur-md bg-white/30"
+                styles={{ header: { borderBottom: 'none' } }}
+                title={
+                  <>
+                    <Typography.Text strong className="text-2xl">
+                      M
+                    </Typography.Text>
+                    <Typography.Text>odular</Typography.Text>
+                  </>
+                }
+              >
+                <Space direction="vertical">
+                  <Typography.Text>模块化</Typography.Text>
+                  <Typography.Text>xxxx xxxx</Typography.Text>
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+              <Card
+                bordered={false}
+                className="backdrop-blur-md bg-white/30"
+                styles={{ header: { borderBottom: 'none' } }}
+                title={
+                  <>
+                    <Typography.Text strong className="text-2xl">
+                      O
+                    </Typography.Text>
+                    <Typography.Text>pen</Typography.Text>
+                  </>
+                }
+              >
+                <Space direction="vertical">
+                  <Typography.Text>开放</Typography.Text>
+                  <Typography.Text>xxxx xxxx</Typography.Text>
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+              <Card
+                bordered={false}
+                className="backdrop-blur-md bg-white/30"
+                styles={{ header: { borderBottom: 'none' } }}
+                title={
+                  <>
+                    <Typography.Text strong className="text-2xl">
+                      D
+                    </Typography.Text>
+                    <Typography.Text>iverse</Typography.Text>
+                  </>
+                }
+              >
+                <Space direction="vertical">
+                  <Typography.Text>多样化</Typography.Text>
+                  <Typography.Text>xxxx xxxx</Typography.Text>
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+              <Card
+                bordered={false}
+                className="backdrop-blur-md bg-white/30"
+                styles={{ header: { borderBottom: 'none' } }}
+                title={
+                  <>
+                    <Typography.Text strong className="text-2xl">
+                      U
+                    </Typography.Text>
+                    <Typography.Text>ser-Centric</Typography.Text>
+                  </>
+                }
+              >
+                <Space direction="vertical">
+                  <Typography.Text>以用户为中心</Typography.Text>
+                  <Typography.Text>xxxx xxxx</Typography.Text>
+                </Space>
+              </Card>
+            </Col>
+          </Row>
         </div>
 
-        <Footer className='py-4 grow-0 shrink-0 mb-36 lg:mb-2' />
+        <Footer className="py-4 grow-0 shrink-0 mb-36 lg:mb-2" />
       </main>
     </ThemeProvider>
   );

@@ -17,23 +17,25 @@
 import { Hero, HeroProps } from '@lobehub/ui';
 import { useIntl } from '@umijs/max';
 import { CSSProperties } from 'react';
-import LogoSlogan from './LogoSlogan';
 import IdeaSlogan from './IdeaSlogan';
+import LogoSlogan from './LogoSlogan';
+import styles from './styles.module.scss';
 
 const LogoInfo: React.FC<{
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({ className, style }) => {
+  disableActions?: boolean;
+}> = ({ className, style, disableActions }) => {
   const intl = useIntl();
 
   const actions: HeroProps['actions'] = [
     {
       icon: 'Github',
-      link: 'https://github.com/manerfan',
+      link: 'https://modubit.github.io',
       text: 'Github',
     },
     {
-      link: '/cube/chat',
+      link: '/modu/chat',
       text: intl.formatMessage({ id: 'home.header.start' }),
       type: 'primary',
     },
@@ -45,14 +47,18 @@ const LogoInfo: React.FC<{
         className={`relative grid place-items-center z-10
       before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] before:lg:h-[360px]
       after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] ${
-        className || ''
-      }`}
+        styles['logo-info']
+      } ${className || ''}`}
         style={style || {}}
       >
-        <Hero actions={actions} title="<b>. CUBE</b> CHAT" />
+        <Hero
+          actions={disableActions ? undefined : actions}
+          title="<b>. MODU</b> 墨读"
+          description="/ˈmɔː.du/ 墨读无界"
+        />
 
         <LogoSlogan />
-        <IdeaSlogan className="mt-4 underline decoration-4 decoration-sky-200"/>
+        <IdeaSlogan className="mt-4 underline decoration-4 decoration-sky-200" />
       </div>
     </>
   );

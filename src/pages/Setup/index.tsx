@@ -52,7 +52,7 @@ const Login: React.FC = () => {
   }, [initialState]);
 
   return (
-    <ProForm name="cube_chat_setup" onFinish={submitSetup} className='px-8 py-6'>
+    <ProForm name="modu_chat_setup" onFinish={submitSetup} className='px-8 py-6'>
       <ProFormText
         name="name"
         rules={[

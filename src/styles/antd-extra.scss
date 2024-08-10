@@ -1,0 +1,162 @@
+/**
+ * Copyright 2024 Maner·Fan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * 对 layout 的样式进行覆盖
+ */
+.ant-pro-layout {
+    .ant-layout-sider {
+        padding: .5rem !important;
+
+        .ant-layout-sider-children {
+            background: linear-gradient(to bottom,
+                    transparent,
+                    rgb(245, 245, 245)) rgb(245, 245, 245) !important;
+            border-radius: 1rem !important;
+            border: none;
+        }
+
+        .ant-pro-sider-extra {
+            margin: 0;
+        }
+
+        .ant-space {
+            display: flex;
+        }
+
+        .ant-menu {
+            container-type: inline-size;
+
+            .ant-menu-item {
+                padding: 0 15px !important;
+            }
+
+            @container (max-width: 80px) {
+                .ant-menu-item {
+                    padding: 0 !important;
+                }
+            }
+
+            .ant-menu-item-selected {
+                background-color: rgba(0, 0, 0, 0.08) !important;
+            }
+        }
+    }
+
+    .ant-pro-layout-container {
+        background: linear-gradient(to bottom,
+                transparent,
+                rgb(245, 245, 245)) rgb(245, 245, 245) !important;
+
+        .ant-layout-content {
+            padding: 0 !important;
+            min-height: 100vh !important;
+
+            .ant-tabs {
+                .ant-tabs-nav {
+                    .ant-tabs-nav-list {
+
+                        // 默认button样式
+                        .ant-tabs-tab-btn {
+                            font-size: 14px !important;
+                            font-weight: 500 !important;
+                            color: rgba(29, 28, 35, 0.6) !important;
+                            transition: color 0.3s ease-out;
+
+                            .ant-tabs-tab-btn-icon {
+                                position: relative;
+                                margin: 0px 5px -6px 0px;
+                            }
+                        }
+
+                        // 选中button样式
+                        .ant-tabs-tab-active {
+                            .ant-tabs-tab-btn {
+                                color: #589aF4 !important;
+                            }
+                        }
+
+                        // 禁用的button样式
+                        .ant-tabs-tab-disabled {
+                            .ant-tabs-tab-btn {
+                                color: rgb(187, 187, 187) !important;
+                            }
+                        }
+
+                        // button底部线条样式
+                        .ant-tabs-ink-bar {
+                            background-color: #589aF4 !important;
+                        }
+                    }
+                }
+
+                .ant-tabs-content {
+                    padding: 0 1rem 1rem !important;
+                }
+            }
+        }
+    }
+}
+
+.ant-layout {
+    .ant-layout-content {
+        &.chat-content {
+            min-height: inherit !important;
+        }
+    }
+}
+
+.ant-dropdown {
+    .ant-dropdown-menu {
+        .ant-dropdown-menu-item {
+            .ant-typography {
+                color: #080808 !important;
+
+                &.ant-typography-danger {
+                    color: #ec5e41 !important;
+                }
+            }
+
+            &.ant-dropdown-menu-item-disabled {
+                .ant-typography {
+                    color: #a1a1a1 !important;
+
+                    &.ant-typography-danger {
+                        color: #ffbeb1 !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ant-select {
+    &.ant-select-sm {
+
+        .ant-select-selection-item,
+        .ant-select-selection-item-content {
+            font-size: 12px !important;
+        }
+    }
+}
+
+.menu-height-30 {
+    .ant-menu-inline,
+    .ant-menu-item {
+        line-height: 30px !important;
+        height: 30px !important;
+    }
+}

@@ -31,9 +31,9 @@ export async function login(
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
-    data: Object.keys(auth)
+    data: Object.entries(auth)
       .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(auth[key])}`,
+        ([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
       )
       .join('&'),
     ...(options || {}),

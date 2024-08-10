@@ -20,6 +20,7 @@ import {
   systemService,
   userService,
 } from '@/services';
+import { toCamelCase } from '@/services/common';
 import type { Response } from '@/services/typings';
 import {
   AxiosResponse,
@@ -36,30 +37,6 @@ import { USER } from './services/user/typings';
 
 const loginPath = '/login';
 const ignoreAuthPath = ['/login', '/setup'];
-
-/**
- * 将对象中下划线格式的键转换为驼峰格式
- */
-function toCamelCase<T>(obj: T): T {
-  if (_.isArray(obj)) {
-    // 如果是数组，对数组的每个元素进行递归处理
-    return obj.map((item) => toCamelCase(item)) as T;
-  } else if (_.isObject(obj)) {
-    // 如果是对象，首先用 _.mapKeys 转换对象的键
-    return _.mapValues(
-      _.mapKeys(obj, (value, key) => _.camelCase(key)),
-      (value) => {
-        // 然后对对象的值进行递归处理
-        if (_.isObject(value)) {
-          return toCamelCase(value);
-        }
-        return value;
-      },
-    ) as T;
-  }
-  // 如果既不是对象也不是数组，直接返回原值
-  return obj;
-}
 
 // 运行时配置
 
@@ -181,7 +158,7 @@ const responseHandler = (
   if (!response) {
     return undefined;
   }
-  
+
   // 处理401，跳转到登录
   if (response.status === 401) {
     // 首页和登录页不需要

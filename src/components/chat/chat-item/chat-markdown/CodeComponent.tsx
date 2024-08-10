@@ -16,6 +16,7 @@
 
 import { CopyOutlined } from '@ant-design/icons';
 import { Flex, Typography } from 'antd';
+import Mermaid from 'react-mermaid2';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark as codeTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -29,50 +30,65 @@ const CodeComponent = (props: any) => {
     !_.isEmpty(match) && match!.length > 1 && !_.isEmpty(match![1])
       ? match![1]
       : '';
+
+  let codeComponent: React.ReactNode = <></>;
+  switch (language) {
+    case 'mermaid':
+      // mermaid绘图
+      codeComponent = <Mermaid chart={children} />;
+      break;
+    default:
+      // 普通的代码
+      codeComponent = (
+        <>
+          <Flex
+            justify="space-between"
+            align="center"
+            style={{
+              marginTop: '0.5em',
+              padding: '0.5em 1em',
+              backgroundColor: 'rgb(40, 44, 52)',
+              borderTopLeftRadius: '0.3em',
+              borderTopRightRadius: '0.3em',
+              borderBottom: '1px solid rgb(75 85 99)',
+            }}
+          >
+            <Typography.Text strong className="text-gray-200">
+              {_.isEmpty(language) ? '' : 'language-' + language}
+            </Typography.Text>
+            <Typography.Text
+              copyable={{
+                text: content,
+                icon: <CopyOutlined className="text-gray-200" />,
+                tooltips: false,
+              }}
+            ></Typography.Text>
+          </Flex>
+          <SyntaxHighlighter
+            {...rest}
+            PreTag="div"
+            language={language}
+            style={codeTheme}
+            showLineNumbers={true}
+            customStyle={{
+              'margin-top': '0',
+              'border-top-right-radius': '0em',
+              'border-top-left-radius': '0em',
+              'border-bottom-right-radius': '0.3em',
+              'border-bottom-left-radius': '0.3em',
+            }}
+          >
+            {content}
+          </SyntaxHighlighter>
+        </>
+      );
+      break;
+  }
+
   return match ? (
-    <>
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{
-          marginTop: '0.5em',
-          padding: '0.5em 1em',
-          backgroundColor: 'rgb(40, 44, 52)',
-          borderTopLeftRadius: '0.3em',
-          borderTopRightRadius: '0.3em',
-          borderBottom: '1px solid rgb(75 85 99)',
-        }}
-      >
-        <Typography.Text strong className="text-gray-200">
-          {_.isEmpty(language) ? '' : 'language-' + language}
-        </Typography.Text>
-        <Typography.Text
-          copyable={{
-            text: content,
-            icon: <CopyOutlined className="text-gray-200" />,
-            tooltips: false,
-          }}
-        ></Typography.Text>
-      </Flex>
-      <SyntaxHighlighter
-        {...rest}
-        PreTag="div"
-        language={language}
-        style={codeTheme}
-        showLineNumbers={true}
-        customStyle={{
-          'margin-top': '0',
-          'border-top-right-radius': '0em',
-          'border-top-left-radius': '0em',
-          'border-bottom-right-radius': '0.3em',
-          'border-bottom-left-radius': '0.3em',
-        }}
-      >
-        {content}
-      </SyntaxHighlighter>
-    </>
+    codeComponent
   ) : (
-    <code {...rest} className={className}>
+    <code {...rest} className={`font-code ${className}`}>
       {children}
     </code>
   );

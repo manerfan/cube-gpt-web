@@ -38,7 +38,7 @@ const metas: Metas = [
   },
   {
     name: 'application-name',
-    content: 'Cube Chat',
+    content: 'MODU 墨读',
   },
   {
     name: 'author',
@@ -46,7 +46,7 @@ const metas: Metas = [
   },
   {
     name: 'keywords',
-    content: 'gpt, chatgpt, aigc',
+    content: 'gpt, aigc',
   },
   {
     name: 'viewport',

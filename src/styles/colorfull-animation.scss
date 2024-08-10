@@ -1,0 +1,182 @@
+/**
+ * Copyright 2024 Maner·Fan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+//////// text
+
+.text-colorful {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-animation {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    -webkit-background-size: 400% 400%;
+    background-size: 400% 400%;
+    border-radius: inherit;
+    -webkit-animation: 5s animation-text 5s ease infinite;
+    animation: 5s animation-text 5s ease infinite;
+    position: relative;
+    z-index: 5;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    @keyframes animation-text {
+        0% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+
+        50% {
+            -webkit-background-position: 100% 50%;
+            background-position: 100% 50%;
+        }
+
+        100% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+    }
+}
+
+//////// message background
+
+.bg-user-msg {
+    background-image: linear-gradient(-45deg, #a171ff -10%, #5d66ff 100%);
+
+    * {
+        color: rgb(241, 245, 249);
+    }
+
+    .font-code {
+        color: rgb(71, 85, 105);
+        background-color: rgb(240, 249, 255);
+    }
+}
+
+.bg-assistant-msg {
+    background-color: rgb(255, 255, 255);
+}
+
+.bg-assistant-msg-loading {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    -webkit-background-size: 400% 400%;
+    background-size: 400% 400%;
+    border-radius: inherit;
+    -webkit-animation: 2s animation-border 2s ease infinite;
+    animation: 2s animation-border 2s ease infinite;
+    position: relative;
+    z-index: 1;
+    border: none;
+    border-radius: inherit;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-block-start: 1px;
+        inset-inline-start: 1px;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: inherit;
+    }
+
+    @keyframes animation-border {
+        0% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+
+        50% {
+            -webkit-background-position: 100% 50%;
+            background-position: 100% 50%;
+        }
+
+        100% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+    }
+}
+
+//////// button
+
+.border-colorful {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    -webkit-background-size: 400% 400%;
+    background-size: 400% 400%;
+    border-radius: inherit;
+    position: relative;
+    z-index: 1;
+    border: none;
+    border-radius: 7px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-block-start: 1px;
+        inset-inline-start: 1px;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        background: #f8f8f8;
+        border-radius: 7px;
+    }
+}
+
+.border-animation {
+    background-image: linear-gradient(-45deg, #ffcb47, #e34ba9, #369eff, #95f3d9);
+    -webkit-background-size: 400% 400%;
+    background-size: 400% 400%;
+    border-radius: inherit;
+    -webkit-animation: 2s animation-border 2s ease infinite;
+    animation: 2s animation-border 2s ease infinite;
+    position: relative;
+    z-index: 1;
+    border: none;
+    border-radius: 7px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-block-start: 1px;
+        inset-inline-start: 1px;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        // background: #f8f8f8;
+        border-radius: 7px;
+    }
+
+    @keyframes animation-border {
+        0% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+
+        50% {
+            -webkit-background-position: 100% 50%;
+            background-position: 100% 50%;
+        }
+
+        100% {
+            -webkit-background-position: 0% 50%;
+            background-position: 0% 50%;
+        }
+    }
+}

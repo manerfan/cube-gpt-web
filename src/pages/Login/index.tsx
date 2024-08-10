@@ -49,7 +49,7 @@ const Login: React.FC = () => {
   }, [initialState]);
 
   return (
-    <LoginForm name="cube_chat_login" onFinish={submitLogin}>
+    <LoginForm name="modu_chat_login" onFinish={submitLogin}>
       <ProFormText
         name="username"
         rules={[

@@ -19,7 +19,7 @@ import { message } from 'antd';
 
 export type ServerSendEvent = {
   data?: string;
-  event?: string;
+  event?: 'message' | 'done';
   id?: string;
 };
 
@@ -142,7 +142,7 @@ async function handleNonSSE(
  *     someKey: "someValue"
  * };
  *
- * const sseConnection = customFetchSSE("https://example.com/sse", headers, bodyData);
+ * const sseConnection = sseRequest("https://example.com/sse", headers, bodyData);
  *
  * sseConnection.onMessage((event) => {
  *     console.log("New event:", event);

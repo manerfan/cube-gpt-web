@@ -26,6 +26,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
+import { motion } from 'framer-motion';
 import _ from 'lodash';
 import {
   ArrowBigUp,
@@ -36,8 +37,10 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+import type { MESSAGE } from '@/services/message/typings';
+
 const ChatInput: React.FC<{
-  onSubmit?: (values: any) => void;
+  onSubmit?: (values: MESSAGE.GenerateCmd) => void;
   loading?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
@@ -45,8 +48,13 @@ const ChatInput: React.FC<{
   const [query, setQuery] = useState('');
 
   const submit = () => {
-    if (!_.isEmpty(query)) {
-      onSubmit?.(query);
+    if (!_.isEmpty(_.trim(query))) {
+      onSubmit?.({
+        query: {
+          // 兼容 markdown 换行
+          inputs: [{ type: 'text', content: _.replace(query, /(?<![\r\n])[\r\n](?![\r\n])/g, '\n\n') }],
+        },
+      });
     }
     setQuery('');
   };
@@ -55,7 +63,7 @@ const ChatInput: React.FC<{
     switch (event.key) {
       case 'Enter': {
         // 换行
-        if (event.shiftKey) {
+        if (event.shiftKey || event.ctrlKey || event.metaKey) {
           // 发送
           event.preventDefault();
           submit();
@@ -64,12 +72,13 @@ const ChatInput: React.FC<{
       }
       case '@': {
         // 召唤机器人
+        message.info('召唤机器人');
         break;
       }
       case '/':
       case '、': {
         // 召唤技能
-        message.info('input /');
+        message.info('召唤技能');
         break;
       }
 
@@ -78,20 +87,31 @@ const ChatInput: React.FC<{
     }
   };
 
+  const stopIcon = (
+    <motion.div
+      className="w-4 h-4 bg-white"
+      animate={{
+        scale: [0.8, 0.8, 1, 1, 0.8],
+        rotate: [0, 0, 180, 180, 0],
+        borderRadius: ['0%', '0%', '50%', '50%', '0%'],
+      }}
+      transition={{
+        duration: 2,
+        ease: 'easeInOut',
+        times: [0, 0.2, 0.5, 0.8, 1],
+        repeat: Infinity,
+        repeatDelay: 1,
+      }}
+    />
+  );
+
   return (
     <>
       {loading && (
-        <Flex
-        justify="center"
-        align="center"
-        className='w-full mb-3'
-      >
-        <Button
-          type="primary"
-          icon={<MessageCircleOff size={16} />}
-        >
-          停止响应
-        </Button>
+        <Flex justify="center" align="center" className="w-full mb-3">
+          <Button type="primary" icon={stopIcon}>
+            停止响应
+          </Button>
         </Flex>
       )}
       <Flex
@@ -165,7 +185,7 @@ const ChatInput: React.FC<{
                   size="small"
                   type="primary"
                   className="py-1 px-2 bg-sky-50"
-                  icon={<img src="/logo.png" alt="cubechat" width={18} />}
+                  icon={<img src="/logo.png" alt="modu" width={18} />}
                   onClick={submit}
                 />
               </Tooltip>

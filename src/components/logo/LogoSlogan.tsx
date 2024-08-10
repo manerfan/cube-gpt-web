@@ -24,9 +24,9 @@ const LogoSlogan: React.FC<{
           className || ''
         }`}
       >
-        <code className="font-mono font-bold text-2xl">. CUBE CHAT</code>
-        <span>|</span>
-        <span className="font-mono">
+        <code className="font-bold text-2xl">. MODU 墨读</code>
+        <span> | </span>
+        <span>
           Speak <span className="font-bold">FREELY</span> with Me!
         </span>
       </span>

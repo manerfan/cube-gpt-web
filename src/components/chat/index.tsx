@@ -15,14 +15,19 @@
  */
 
 import ScrollToBottomBtn from '@/components/common/ScrollToBottomBtn';
+import { MESSAGE } from '@/services/message/typings';
 import { Flex, Layout, Typography } from 'antd';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import ChatFunc from './chat-function';
 import ChatInput from './chat-input';
 import ChatList from './chat-list';
 import styles from './styles.module.scss';
 
-const ChatContent: React.FC<{ className?: string }> = ({ className }) => {
+const ChatContent: React.FC<{
+  messages: MESSAGE.MessageContent[];
+  onSubmit?: (values: MESSAGE.GenerateCmd) => void;
+  className?: string;
+  loadingMessageId?: string;
+}> = ({ messages, onSubmit, className, loadingMessageId }) => {
   return (
     <>
       <Flex
@@ -30,7 +35,7 @@ const ChatContent: React.FC<{ className?: string }> = ({ className }) => {
         vertical
         align="center"
         justify="center"
-        className={`h-full w-full p-6 ${className}`}
+        className={`h-full w-full p-6 ${styles['chat-container']} ${className}`}
       >
         <Layout
           className={`bg-inherit h-full max-h-full w-full max-w-screen-md ${styles['chat-content']}`}
@@ -43,14 +48,16 @@ const ChatContent: React.FC<{ className?: string }> = ({ className }) => {
               followButtonClassName="hidden"
               className="h-full max-h-full relative overscroll-none"
             >
-              <ChatList />
+              {/* 消息列表 */}
+              <ChatList messages={messages} loadingMessageId={loadingMessageId} />
               <ScrollToBottomBtn />
             </ScrollToBottom>
           </Layout.Content>
           <Layout.Footer
             className={`bg-inherit mt-5 chat-content ${styles['chat-input']}`}
           >
-            <ChatInput />
+            {/* 消息输入 */}
+            <ChatInput loading={!!loadingMessageId} onSubmit={onSubmit} />
             <Flex justify="center" align="center" className="w-full mt-3">
               <Typography.Text type="secondary" className="select-none">
                 内容由AI生成，无法确保真实准确，仅供参考。
@@ -59,8 +66,6 @@ const ChatContent: React.FC<{ className?: string }> = ({ className }) => {
           </Layout.Footer>
         </Layout>
       </Flex>
-
-      <ChatFunc />
     </>
   );
 };

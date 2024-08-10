@@ -38,7 +38,7 @@ const Footer: React.FC<{
         <Space align="end">
           <Image
             src="/logo.png"
-            alt="CubeBit Logo"
+            alt="ModuBit Logo"
             width={32}
             height={32}
             preview={false}
@@ -47,7 +47,7 @@ const Footer: React.FC<{
             strong
             className="underline decoration-4 decoration-sky-200"
           >
-            . CUBE CHAT
+            . MODU 墨读
           </Typography.Text>
         </Space>
         <Typography.Paragraph className="text-gray-500">
@@ -84,7 +84,7 @@ const Footer: React.FC<{
           <LanguageChanger size="small" />
         </Space>
         <Typography.Text className="text-gray-500">
-          © 2024 . CUBE CHAT Maner·Fan
+          © 2024 . MODU Maner·Fan
         </Typography.Text>
       </Flex>
     </Flex>
