@@ -22,9 +22,11 @@ import {
   useCreateStore,
 } from '@lobehub/ui';
 import { useModel } from '@umijs/max';
-import { Avatar, Flex, List, Typography } from 'antd';
+import { Avatar, Button, Flex, List, Typography } from 'antd';
+import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
+import styles from './styles.module.scss';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -69,7 +71,7 @@ const ChatItem: React.FC<{
         justify="flex-start"
         align="flex-start"
         gap={12}
-        className={`w-full ${className}`}
+        className={`w-full ${styles['chat-item']} ${className}`}
         style={style}
       >
         <Flex
@@ -97,11 +99,30 @@ const ChatItem: React.FC<{
           align="flex-start"
           className="flex-auto"
         >
-          <Flex justify="flex-start" align="center" className="w-full mb-2">
-            <Typography.Text strong>
+          <Flex
+            justify="flex-start"
+            align="center"
+            gap={8}
+            className="w-full mb-2"
+          >
+            <Typography.Text type="secondary">
               {message.senderRole === 'user'
                 ? initialState?.userMe?.name
                 : 'Assistant'}
+              {message.senderRole !== 'user' && (
+                <Typography.Text
+                  type="secondary"
+                  className={`${styles['operation-header']}`}
+                >
+                  <Button type="link" className='p-1'>@</Button>
+                </Typography.Text>
+              )}
+            </Typography.Text>
+            <Typography.Text
+              type="secondary"
+              className={`${styles['operation-header']}`}
+            >
+              {moment(message.messageTime).format('YYYY-MM-DD HH:mm:ss')}
             </Typography.Text>
           </Flex>
 

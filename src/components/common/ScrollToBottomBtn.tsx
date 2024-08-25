@@ -16,12 +16,23 @@
 
 import { Button } from 'antd';
 import { ArrowDownToLine } from 'lucide-react';
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
 
-const ScrollToBottomBtn: React.FC<{ className?: string }> = ({ className }) => {
+export interface ScrollToBottomBtnRefProperty {
+  trigScrollToBottom: () => void;
+}
+
+const ScrollToBottomBtn: React.FC<{ className?: string }> = forwardRef(({ className }, ref) => {
   const scrollToBottom = useScrollToBottom();
   const [sticky] = useSticky();
+
+  useImperativeHandle(ref, () => ({
+    trigScrollToBottom() {
+      scrollToBottom({ behavior: 'smooth' });
+      console.log('scroll to bottom');
+    },
+  }));
 
   // 如果 sticky 为 false，显示滚动按钮
   return (
@@ -38,6 +49,6 @@ const ScrollToBottomBtn: React.FC<{ className?: string }> = ({ className }) => {
       )}
     </>
   );
-};
+});
 
 export default ScrollToBottomBtn;

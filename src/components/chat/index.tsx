@@ -14,20 +14,36 @@
  * limitations under the License.
  */
 
-import ScrollToBottomBtn from '@/components/common/ScrollToBottomBtn';
+import ScrollToBottomBtn, {
+  ScrollToBottomBtnRefProperty,
+} from '@/components/common/ScrollToBottomBtn';
 import { MESSAGE } from '@/services/message/typings';
 import { Flex, Layout, Typography } from 'antd';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import ChatInput from './chat-input';
 import ChatList from './chat-list';
 import styles from './styles.module.scss';
+
+export interface ChatContentRefProperty {
+  scrollMessageToBottom: () => void;
+}
 
 const ChatContent: React.FC<{
   messages: MESSAGE.MessageContent[];
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
   className?: string;
   loadingMessageId?: string;
-}> = ({ messages, onSubmit, className, loadingMessageId }) => {
+}> = forwardRef(({ messages, onSubmit, className, loadingMessageId }, ref) => {
+  const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
+
+  useImperativeHandle(ref, () => ({
+    scrollMessageToBottom() {
+      chatContentPopoverRef.current?.trigScrollToBottom();
+      console.log('scroll to bottom');
+    },
+  }));
+
   return (
     <>
       <Flex
@@ -49,8 +65,11 @@ const ChatContent: React.FC<{
               className="h-full max-h-full relative overscroll-none"
             >
               {/* 消息列表 */}
-              <ChatList messages={messages} loadingMessageId={loadingMessageId} />
-              <ScrollToBottomBtn />
+              <ChatList
+                messages={messages}
+                loadingMessageId={loadingMessageId}
+              />
+              <ScrollToBottomBtn ref={chatContentPopoverRef} />
             </ScrollToBottom>
           </Layout.Content>
           <Layout.Footer
@@ -68,6 +87,6 @@ const ChatContent: React.FC<{
       </Flex>
     </>
   );
-};
+});
 
 export default ChatContent;

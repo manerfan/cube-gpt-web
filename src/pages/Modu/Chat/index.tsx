@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import ChatContent from '@/components/chat';
+import ChatContent, { ChatContentRefProperty } from '@/components/chat';
 import ChatFunc from '@/components/chat/chat-function';
 import { toCamelCase } from '@/services/common';
 import * as generateService from '@/services/message/generate';
 import { MESSAGE } from '@/services/message/typings';
 import { useModel } from '@umijs/max';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ulid } from 'ulid';
 
 const Chat: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const chatContentPopoverRef = useRef<ChatContentRefProperty>();
 
   const [loadingMessageId, setLoadingMessageId] = useState<string>();
 
@@ -33,13 +34,15 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<MESSAGE.MessageContent[]>([]);
 
   const submit = (submitQuery: MESSAGE.GenerateCmd) => {
+    chatContentPopoverRef.current?.scrollMessageToBottom();
+    
     const conversationMessages = _.cloneDeep(messages);
 
     conversationMessages.push({
       senderId: initialState?.userMe?.uid,
       senderRole: 'user',
       messageId: ulid(),
-      messageTime: new Date().getTime() / 1000,
+      messageTime: new Date().getTime(),
       messages: [
         ..._.map(submitQuery.query.refers || [], (ref) => {
           return {
@@ -68,8 +71,10 @@ const Chat: React.FC = () => {
       console.log(id, '======= event', messageEvent);
       switch (event) {
         case 'message': {
-          const messageEvent = toCamelCase(JSON.parse(data)) as MESSAGE.MessageEvent;
-          console.log(id, 'current', currentMessage)
+          const messageEvent = toCamelCase(
+            JSON.parse(data),
+          ) as MESSAGE.MessageEvent;
+          console.log(id, 'current', currentMessage);
           if (
             !currentMessage ||
             currentMessage.messageId !== messageEvent.messageId
@@ -94,11 +99,12 @@ const Chat: React.FC = () => {
             conversationMessages.push(currentMessage);
             setMessages(_.cloneDeep(conversationMessages));
             setLoadingMessageId(messageEvent.messageId);
-            console.log(id, 'messages', conversationMessages)
+            console.log(id, 'messages', conversationMessages);
           } else {
-            const lastSectionId = _.last(_.last(conversationMessages)?.messages)?.sectionId;
+            const lastSectionId = _.last(_.last(conversationMessages)?.messages)
+              ?.sectionId;
             if (lastSectionId !== messageEvent.message.sectionId) {
-              console.log(id, 'new message section')
+              console.log(id, 'new message section');
               _.last(conversationMessages)?.messages?.push({
                 type: messageEvent.message.type,
                 contentType: messageEvent.message.contentType,
@@ -108,12 +114,14 @@ const Chat: React.FC = () => {
               setMessages(conversationMessages);
             } else {
               console.log(id, 'append message');
-              const lastMessageBlock = _.last(_.last(conversationMessages)?.messages);
+              const lastMessageBlock = _.last(
+                _.last(conversationMessages)?.messages,
+              );
               lastMessageBlock.content += messageEvent.message.content;
               setMessages(_.cloneDeep(conversationMessages));
             }
 
-            console.log(id, 'messages', conversationMessages)
+            console.log(id, 'messages', conversationMessages);
           }
           break;
         }
@@ -131,6 +139,7 @@ const Chat: React.FC = () => {
   return (
     <>
       <ChatContent
+        ref={chatContentPopoverRef}
         messages={messages}
         className="max-h-full max-h-screen"
         onSubmit={submit}

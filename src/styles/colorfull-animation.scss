@@ -77,8 +77,8 @@
     -webkit-background-size: 400% 400%;
     background-size: 400% 400%;
     border-radius: inherit;
-    -webkit-animation: 2s animation-border 2s ease infinite;
-    animation: 2s animation-border 2s ease infinite;
+    -webkit-animation: 5s animation-border 5s ease infinite;
+    animation: 5s animation-border 5s ease infinite;
     position: relative;
     z-index: 1;
     border: none;
@@ -88,11 +88,11 @@
         content: '';
         position: absolute;
         z-index: -1;
-        inset-block-start: 1px;
-        inset-inline-start: 1px;
-        width: calc(100% - 2px);
-        height: calc(100% - 2px);
-        background: rgba(255, 255, 255, 0.9);
+        inset-block-start: 2px;
+        inset-inline-start: 2px;
+        width: calc(100% - 4px);
+        height: calc(100% - 4px);
+        background: rgba(255, 255, 255, 1);
         border-radius: inherit;
     }
 
@@ -102,9 +102,19 @@
             background-position: 0% 50%;
         }
 
+        25% {
+            -webkit-background-position: 50% 50%;
+            background-position: 50% 50%;
+        }
+
         50% {
-            -webkit-background-position: 100% 50%;
-            background-position: 100% 50%;
+            -webkit-background-position: 50% 100%;
+            background-position: 50% 100%;
+        }
+
+        75% {
+            -webkit-background-position: 50% 50%;
+            background-position: 50% 50%;
         }
 
         100% {
@@ -144,8 +154,8 @@
     -webkit-background-size: 400% 400%;
     background-size: 400% 400%;
     border-radius: inherit;
-    -webkit-animation: 2s animation-border 2s ease infinite;
-    animation: 2s animation-border 2s ease infinite;
+    -webkit-animation: 5s animation-border 5s ease infinite;
+    animation: 5s animation-border 5s ease infinite;
     position: relative;
     z-index: 1;
     border: none;
