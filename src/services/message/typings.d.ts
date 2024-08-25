@@ -67,8 +67,8 @@ declare namespace MESSAGE {
     /**
      * 消息内容的类型
      */
-    contentType: "text" | "refer:text";
-
+    contentType: "text" | "refer:text" | "error";
+    
     /**
      * 消息内容
      */

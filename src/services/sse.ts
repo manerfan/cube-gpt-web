@@ -19,7 +19,7 @@ import { message } from 'antd';
 
 export type ServerSendEvent = {
   data?: string;
-  event?: 'message' | 'done';
+  event?: 'message' | 'done' | 'error';
   id?: string;
 };
 
@@ -102,6 +102,11 @@ async function handleSSE(
       boundary = buffer.indexOf('\n\n');
     }
   }
+
+  onMessage({
+    id: new Date().getTime().toString(),
+    event: 'done'
+  })
 }
 
 /**
@@ -181,6 +186,7 @@ export async function sseRequest(url: string, init?: RequestInit) {
   const status = response.status;
   if (status !== 200) {
     message.error(`Request failed with status ${status}`);
+    console.error(`Request failed with status ${status}`, response)
   }
 
   if (!response.body) {

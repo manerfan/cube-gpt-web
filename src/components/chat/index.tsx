@@ -40,7 +40,6 @@ const ChatContent: React.FC<{
   useImperativeHandle(ref, () => ({
     scrollMessageToBottom() {
       chatContentPopoverRef.current?.trigScrollToBottom();
-      console.log('scroll to bottom');
     },
   }));
 

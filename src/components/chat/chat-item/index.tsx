@@ -15,6 +15,7 @@
  */
 
 import { MESSAGE } from '@/services/message/typings';
+import { ReloadOutlined } from '@ant-design/icons';
 import {
   FluentEmoji,
   FluentEmojiProps,
@@ -22,7 +23,7 @@ import {
   useCreateStore,
 } from '@lobehub/ui';
 import { useModel } from '@umijs/max';
-import { Avatar, Button, Flex, List, Typography } from 'antd';
+import { Alert, Avatar, Button, Flex, List, Space, Typography } from 'antd';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
@@ -114,7 +115,9 @@ const ChatItem: React.FC<{
                   type="secondary"
                   className={`${styles['operation-header']}`}
                 >
-                  <Button type="link" className='p-1'>@</Button>
+                  <Button type="link" className="p-1">
+                    @
+                  </Button>
                 </Typography.Text>
               )}
             </Typography.Text>
@@ -134,6 +137,7 @@ const ChatItem: React.FC<{
               loading ? 'bg-assistant-msg-loading' : ''
             } ${messageClassName}`}
           >
+            {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
             <List
               itemLayout="horizontal"
               bordered={false}
@@ -143,8 +147,31 @@ const ChatItem: React.FC<{
                   key={msg.sectionId}
                   style={{ border: 'none', padding: 0 }}
                 >
+                  {/* 文本 */}
                   {msg.contentType === 'text' && (
                     <ChatMarkdown>{msg.content as string}</ChatMarkdown>
+                  )}
+                  {/* 异常 */}
+                  {msg.contentType === 'error' && (
+                    <Alert
+                      message="遇到异常"
+                      description={msg.content as string}
+                      type="error"
+                      showIcon
+                      className="w-full my-3"
+                      action={
+                        <Space>
+                          <Button
+                            type="primary"
+                            danger
+                            size="small"
+                            icon={<ReloadOutlined />}
+                          >
+                            重试
+                          </Button>
+                        </Space>
+                      }
+                    />
                   )}
                 </List.Item>
               )}
