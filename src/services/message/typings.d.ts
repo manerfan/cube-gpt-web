@@ -45,7 +45,7 @@ declare namespace MESSAGE {
     /**
      * 会话 ID
      */
-    conversationId?: string;
+    conversationUid?: string;
 
     /**
      * 会话内容
@@ -77,19 +77,19 @@ declare namespace MESSAGE {
     /**
      * 该部分内容 ID
      */
-    sectionId: string;
+    sectionUid: string;
   }
 
   type MessageEvent = {
     /**
      * 会话 ID
      */
-    conversationId: string;
+    conversationUid: string;
 
     /**
      * 发送者 ID
      */
-    senderId: string;
+    senderUid: string;
 
     /**
      * 发送者角色
@@ -99,7 +99,7 @@ declare namespace MESSAGE {
     /**
      * 消息 ID
      */
-    messageId: string;
+    messageUid: string;
 
     /**
      * 消息时间戳
@@ -121,7 +121,7 @@ declare namespace MESSAGE {
     /**
      * 发送者 ID
      */
-    senderId: string;
+    senderUid: string;
 
     /**
      * 发送者角色
@@ -131,7 +131,7 @@ declare namespace MESSAGE {
     /**
      * 消息 ID
      */
-    messageId: string;
+    messageUid: string;
 
     /**
      * 消息时间戳

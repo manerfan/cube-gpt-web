@@ -24,8 +24,8 @@ import ChatItem from '../chat-item';
 
 const ChatList: React.FC<{
   messages: MESSAGE.MessageContent[];
-  loadingMessageId?: string;
-}> = ({ messages, loadingMessageId }) => {
+  loadingMessageUid?: string;
+}> = ({ messages, loadingMessageUid }) => {
   const [hasMore, setHasMore] = useState(true);
 
   const loadMore = () => {
@@ -51,13 +51,13 @@ const ChatList: React.FC<{
             dataSource={messages}
             renderItem={(message) => (
               <List.Item
-                key={message.messageId}
+                key={message.messageUid}
                 style={{ border: 'none' }}
                 className="my-1"
               >
                 <ChatItem
                   message={message}
-                  loading={message.messageId === loadingMessageId}
+                  loading={message.messageUid === loadingMessageUid}
                   messageClassName={
                     message.senderRole === 'user'
                       ? 'bg-user-msg'

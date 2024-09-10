@@ -144,7 +144,7 @@ const ChatItem: React.FC<{
               dataSource={message?.messages}
               renderItem={(msg) => (
                 <List.Item
-                  key={msg.sectionId}
+                  key={msg.sectionUid}
                   style={{ border: 'none', padding: 0 }}
                 >
                   {/* 文本 */}

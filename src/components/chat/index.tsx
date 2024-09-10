@@ -33,8 +33,8 @@ const ChatContent: React.FC<{
   messages: MESSAGE.MessageContent[];
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
   className?: string;
-  loadingMessageId?: string;
-}> = forwardRef(({ messages, onSubmit, className, loadingMessageId }, ref) => {
+  loadingMessageUid?: string;
+}> = forwardRef(({ messages, onSubmit, className, loadingMessageUid }, ref) => {
   const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
 
   useImperativeHandle(ref, () => ({
@@ -66,7 +66,7 @@ const ChatContent: React.FC<{
               {/* 消息列表 */}
               <ChatList
                 messages={messages}
-                loadingMessageId={loadingMessageId}
+                loadingMessageUid={loadingMessageUid}
               />
               <ScrollToBottomBtn ref={chatContentPopoverRef} />
             </ScrollToBottom>
@@ -75,7 +75,7 @@ const ChatContent: React.FC<{
             className={`bg-inherit mt-5 chat-content ${styles['chat-input']}`}
           >
             {/* 消息输入 */}
-            <ChatInput loading={!!loadingMessageId} onSubmit={onSubmit} />
+            <ChatInput loading={!!loadingMessageUid} onSubmit={onSubmit} />
             <Flex justify="center" align="center" className="w-full mt-3">
               <Typography.Text type="secondary" className="select-none">
                 内容由AI生成，无法确保真实准确，仅供参考。

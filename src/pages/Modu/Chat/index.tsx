@@ -30,10 +30,14 @@ const Chat: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const chatContentPopoverRef = useRef<ChatContentRefProperty>();
 
-  const [loadingMessageId, setLoadingMessageId] = useState<string>();
+  const [loadingMessageUid, setLoadingMessageUid] = useState<string>();
 
   // 消息列表
   const [messages, setMessages] = useState<MESSAGE.MessageContent[]>([]);
+
+  const scrollMessageToBottom = () => {
+    chatContentPopoverRef.current?.scrollMessageToBottom();
+  };
 
   const messageParser = (appendMessage?: MESSAGE.MessageContent) => {
     const conversationMessages = _.cloneDeep(messages);
@@ -53,40 +57,27 @@ const Chat: React.FC = () => {
 
       if (
         !currentMessage ||
-        currentMessage.messageId !== messageEvent.messageId
+        currentMessage.messageUid !== messageEvent.messageUid
       ) {
         // 新消息
-        const message = {
-          senderId: messageEvent.senderId,
+        currentMessage = {
+          senderUid: messageEvent.senderUid,
           senderRole: messageEvent.senderRole,
-          messageId: messageEvent.messageId,
+          messageUid: messageEvent.messageUid,
           messageTime: messageEvent.messageTime,
-          messages: [
-            {
-              type: messageEvent.message.type,
-              contentType: messageEvent.message.contentType,
-              content: messageEvent.message.content,
-              sectionId: messageEvent.message.sectionId,
-            } as MESSAGE.MessageBlock,
-          ],
+          messages: [messageEvent.message],
         };
 
-        currentMessage = message;
         conversationMessages.push(currentMessage);
         setMessages(_.cloneDeep(conversationMessages));
-        setLoadingMessageId(messageEvent.messageId);
+        setLoadingMessageUid(messageEvent.messageUid);
       } else {
         // 追加消息内容
-        const lastSectionId = _.last(_.last(conversationMessages)?.messages)
-          ?.sectionId;
-        if (lastSectionId !== messageEvent.message.sectionId) {
+        const lastSectionUid = _.last(_.last(conversationMessages)?.messages)
+          ?.sectionUid;
+        if (lastSectionUid !== messageEvent.message.sectionUid) {
           // 新的 section
-          _.last(conversationMessages)?.messages?.push({
-            type: messageEvent.message.type,
-            contentType: messageEvent.message.contentType,
-            content: messageEvent.message.content,
-            sectionId: messageEvent.message.sectionId,
-          } as MESSAGE.MessageBlock);
+          _.last(conversationMessages)?.messages?.push(messageEvent.message);
           setMessages(conversationMessages);
         } else {
           // 在原 section 上追加内容
@@ -103,15 +94,15 @@ const Chat: React.FC = () => {
   // 提交
   const submit = (submitQuery: MESSAGE.GenerateCmd) => {
     // 取消 loading
-    setLoadingMessageId(undefined);
+    setLoadingMessageUid(undefined);
     // 将消息列表滚动到底部
-    chatContentPopoverRef.current?.scrollMessageToBottom();
+    scrollMessageToBottom();
 
     // 追加用户消息
     const parseMessageEvent = messageParser({
-      senderId: initialState?.userMe?.uid,
+      senderUid: initialState?.userMe?.uid,
       senderRole: 'user',
-      messageId: ulid(),
+      messageUid: ulid(),
       messageTime: new Date().getTime(),
       messages: [
         ..._.map(submitQuery.query.refers || [], (ref) => {
@@ -119,7 +110,7 @@ const Chat: React.FC = () => {
             type: 'question',
             contentType: ref.type,
             content: ref.content,
-            sectionId: ulid(),
+            sectionUid: ulid(),
           } as MESSAGE.MessageBlock;
         }),
         ..._.map(submitQuery.query.inputs || [], (input) => {
@@ -127,7 +118,7 @@ const Chat: React.FC = () => {
             type: 'question',
             contentType: input.type,
             content: input.content,
-            sectionId: ulid(),
+            sectionUid: ulid(),
           } as MESSAGE.MessageBlock;
         }),
       ],
@@ -135,12 +126,14 @@ const Chat: React.FC = () => {
 
     // 发起请求
     generateService.chat(submitQuery, (messageEvent) => {
-      if (messageEvent instanceof String || (typeof messageEvent === 'string')) {
-          const {success, message: errorMsg} = JSON.parse(messageEvent as string);
-          if (!success && !!errorMsg) {
-            message.error(errorMsg);
-          }
-          return;
+      if (messageEvent instanceof String || typeof messageEvent === 'string') {
+        const { success, message: errorMsg } = JSON.parse(
+          messageEvent as string,
+        );
+        if (!success && !!errorMsg) {
+          message.error(errorMsg);
+        }
+        return;
       }
 
       const { event, data } = messageEvent as ServerSendEvent;
@@ -154,15 +147,19 @@ const Chat: React.FC = () => {
         // 异常
         case 'error': {
           parseMessageEvent(data);
-          setLoadingMessageId(undefined);
+          setLoadingMessageUid(undefined);
           break;
         }
         // 结束
         case 'done': {
-          setLoadingMessageId(undefined);
+          setLoadingMessageUid(undefined);
+          // 将消息列表滚动到底部
+          scrollMessageToBottom();
           break;
         }
-        default:{
+        default: {
+          // 将消息列表滚动到底部
+          scrollMessageToBottom();
           break;
         }
       }
@@ -176,7 +173,7 @@ const Chat: React.FC = () => {
         messages={messages}
         className="max-h-full max-h-screen"
         onSubmit={submit}
-        loadingMessageId={loadingMessageId}
+        loadingMessageUid={loadingMessageUid}
       />
 
       <ChatFunc />
