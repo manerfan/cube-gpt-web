@@ -24,7 +24,7 @@ const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
         className || ''
       }`}
     >
-      <p className="fixed left-0 top-0 flex w-full justify-center items-center pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:bg-opacity-10 lg:p-4">
+      <div className="fixed left-0 top-0 flex w-full justify-center items-center pb-6 pt-8 backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:bg-opacity-10 lg:p-4">
         <Space>
           <code className="font-bold">. MODU 墨读</code>
           <span>|</span>
@@ -32,7 +32,7 @@ const HeaderSimple: React.FC<{ className?: string }> = ({ className }) => {
             Speak <span className="font-bold">FREELY</span> with Me!
           </code>
         </Space>
-      </p>
+      </div>
       <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white lg:static lg:h-auto lg:w-auto lg:bg-none">
         <Link
           to="/login"

@@ -153,9 +153,9 @@ const ProviderSettingDrawer: React.FC<{
               setAdding(true);
               llmService
                 .addProviderConfig(workspaceUid, providerSchema!.provider, {
-                  workspace_uid: workspaceUid,
-                  provider_name: providerSchema!.provider,
-                  provider_credential: values,
+                  workspaceUid: workspaceUid,
+                  providerName: providerSchema!.provider,
+                  providerCredential: values,
                 })
                 .then((resp) => {
                   notificationApi.success({

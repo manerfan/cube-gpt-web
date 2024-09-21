@@ -90,13 +90,7 @@ export async function allModelsOnProvider(
       params: {},
       ...(options || {}),
     },
-  ).then((resp) => {
-    // textGenerator -> TEXT_GENERATION
-    resp.content = _.mapKeys(resp.content, (modelSchema, modelType) => {
-      return _.snakeCase(modelType).toUpperCase();
-    });
-    return resp;
-  });
+  );
 }
 
 /**
@@ -137,23 +131,7 @@ export async function getSystemModelConfig(
       params: {},
       ...(options || {}),
     },
-  ).then((resp) => {
-    resp.content = _.mapKeys(resp.content, (modelConfig, modelType) => {
-      // e.g. textGeneration [string] → TEXT_GENERATION [ModelType]
-      return _.snakeCase(modelType).toUpperCase() as ModelType;
-    });
-
-    resp.content = _.mapValues(resp.content, (modelConfig) => {
-      // e.g. {"modelParameters": {"topP": 0.2}} → {"modelParameters": {"top_p": 0.2}}
-      modelConfig.modelParameters = _.mapKeys(modelConfig.modelParameters, (value, key) => {
-        return _.snakeCase(key);
-      });
-
-      return modelConfig;
-    });
-
-    return resp;
-  });
+  );
 }
 
 /**
@@ -170,12 +148,7 @@ export async function addSystemConfig(
     `/api/workspace/${workspaceUid}/model/system/config`,
     {
       method: 'POST',
-      data: _.mapValues(modelConfig, (config) => {
-        // 驼峰转下划线
-        return _.mapKeys(config, (value, key) => {
-          return _.snakeCase(key);
-        });
-      }),
+      data: modelConfig,
       ...(options || {}),
     },
   );

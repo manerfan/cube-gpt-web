@@ -49,7 +49,7 @@ export function convertFormSchema2AntdFormSchema<T>(
       // 字段提示
       tooltip: getLocaleContent<string>(formSchema.tooltip, locale),
       // 初始值
-      initialValue: initialValues?.[_.camelCase(formSchema.name)],
+      initialValue: initialValues?.[formSchema.name],
       // 对脱敏字段进行处理 - server → form
       convertValue: (value, field) => {
         if (_.startsWith(value, HIDDEN_PREFIX)) {

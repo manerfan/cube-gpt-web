@@ -16,24 +16,47 @@
 
 import ChatContent, { ChatContentRefProperty } from '@/components/chat';
 import ChatFunc from '@/components/chat/chat-function';
-import { toCamelCase } from '@/services/common';
+import { workspaceService } from '@/services';
 import * as generateService from '@/services/message/generate';
 import { MESSAGE } from '@/services/message/typings';
 import { ServerSendEvent } from '@/services/sse';
+import { WorkspaceType } from '@/services/workspace';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
 import _ from 'lodash';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ulid } from 'ulid';
 
 const Chat: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const chatContentPopoverRef = useRef<ChatContentRefProperty>();
 
+  // 当前conversationUid
+  const [conversationUid, setConversationUid] = useState<string>();
+  // 当前使用的空间
+  const [workspaceUid, setWorkspaceUid] = useState<string>();
+
+  // 正在加载的messageUid
   const [loadingMessageUid, setLoadingMessageUid] = useState<string>();
 
   // 消息列表
   const [messages, setMessages] = useState<MESSAGE.MessageContent[]>([]);
+
+  useEffect(() => {
+    // 查询空间列表
+    workspaceService.list().then((resp) => {
+      const workspaces = resp.content;
+
+      // 私有空间
+      const privateSpace = _.head(
+        _.filter(
+          workspaces,
+          (workspace) => workspace.type === WorkspaceType.PRIVATE,
+        ),
+      );
+      setWorkspaceUid(privateSpace?.uid);
+    });
+  });
 
   const scrollMessageToBottom = () => {
     chatContentPopoverRef.current?.scrollMessageToBottom();
@@ -51,9 +74,11 @@ const Chat: React.FC = () => {
     let currentMessage: MESSAGE.MessageContent | null = null;
 
     return (data: string) => {
-      const messageEvent = toCamelCase(
-        JSON.parse(data),
-      ) as MESSAGE.MessageEvent;
+      const messageEvent = JSON.parse(data) as MESSAGE.MessageEvent;
+
+      if (conversationUid !== messageEvent.conversationUid) {
+        setConversationUid(messageEvent.conversationUid);
+      }
 
       if (
         !currentMessage ||
@@ -73,8 +98,9 @@ const Chat: React.FC = () => {
         setLoadingMessageUid(messageEvent.messageUid);
       } else {
         // 追加消息内容
-        const lastSectionUid = _.last(_.last(conversationMessages)?.messages)
-          ?.sectionUid;
+        const lastSectionUid = _.last(
+          _.last(conversationMessages)?.messages,
+        )?.sectionUid;
         if (lastSectionUid !== messageEvent.message.sectionUid) {
           // 新的 section
           _.last(conversationMessages)?.messages?.push(messageEvent.message);
@@ -125,7 +151,8 @@ const Chat: React.FC = () => {
     });
 
     // 发起请求
-    generateService.chat(submitQuery, (messageEvent) => {
+    submitQuery.conversationUid = conversationUid;
+    generateService.chat(workspaceUid!!, submitQuery, (messageEvent) => {
       if (messageEvent instanceof String || typeof messageEvent === 'string') {
         const { success, message: errorMsg } = JSON.parse(
           messageEvent as string,

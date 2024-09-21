@@ -16,6 +16,7 @@
 
 import { Avatar, Result } from 'antd';
 import LdsRipple from './components/loading/LdsRipple';
+import IdeaSlogan from './components/logo/IdeaSlogan';
 
 const Loading: React.FC = () => {
   return (
@@ -29,7 +30,7 @@ const Loading: React.FC = () => {
               shape="square"
             />
           }
-          title="想你所想 及你所及"
+          title={<IdeaSlogan className="text-sm block underline decoration-4 decoration-sky-200" />}
           extra={ <LdsRipple /> }
         />
       </main>

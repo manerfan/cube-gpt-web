@@ -17,6 +17,7 @@
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { LLM } from './typings';
+import { toCamelCase } from '../common';
 
 export enum ProviderStatus {
   /**
@@ -44,7 +45,10 @@ export async function providers(
       params: {},
       ...(options || {}),
     },
-  );
+  ).then(resp => {
+    resp.content = toCamelCase(resp.content);
+    return resp;
+  });
 }
 
 /**
@@ -55,7 +59,7 @@ export async function providers(
 export async function addProviderConfig(
   workspaceUid: string,
   providerName: string,
-  providerConfig: any,
+  providerConfig: LLM.ProviderConfig,
   options?: Record<string, any>,
 ): Promise<Response.SingleResponse<LLM.ProviderConfig>> {
   return request<Response.SingleResponse<LLM.ProviderConfig>>(

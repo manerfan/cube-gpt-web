@@ -23,6 +23,8 @@ const Loading: React.FC = () => {
       <div className={styles['lds-ripple']}>
         <div></div>
         <div></div>
+        <div></div>
+        <div></div>
       </div>
     </>
   );

@@ -52,20 +52,6 @@ const ChatItem: React.FC<{
     { store: userStore },
   );
 
-  const assistantStore = useCreateStore();
-  const assistantControl: FluentEmojiProps = useControls(
-    {
-      emoji: '🤖',
-      size: {
-        max: 128,
-        min: 16,
-        step: 1,
-        value: 64,
-      },
-    },
-    { store: assistantStore },
-  );
-
   return (
     <>
       <Flex
@@ -176,6 +162,14 @@ const ChatItem: React.FC<{
                 </List.Item>
               )}
             />
+
+            {message.senderRole !== 'user' && !loading && (
+              <Flex justify="flex-end" align="center" className="w-full mt-2">
+                <Typography.Text type="secondary" className="text-xs">
+                  内容由AI生成
+                </Typography.Text>
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Flex>

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import type { AUTH } from './typings';
 import { request } from '@umijs/max';
+import { toCamelCase } from '../common';
+import type { AUTH } from './typings';
 
 /**
  * 登录认证
@@ -33,9 +34,10 @@ export async function login(
     },
     data: Object.entries(auth)
       .map(
-        ([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
       )
       .join('&'),
     ...(options || {}),
-  });
+  }).then((resp) => toCamelCase(resp));
 }

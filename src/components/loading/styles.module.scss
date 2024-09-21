@@ -24,14 +24,25 @@
     div {
         box-sizing: border-box;
         position: absolute;
-        border: 4px solid currentColor;
+        border: 4px solid #369eff;
         opacity: 1;
         border-radius: 50%;
         animation: lds-ripple-animation 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
     }
 
     div:nth-child(2) {
+        border: 4px solid #95f3d9;
+        animation-delay: -0.25s;
+    }
+
+    div:nth-child(3) {
+        border: 4px solid #ffcb47;
         animation-delay: -0.5s;
+    }
+
+    div:nth-child(3) {
+        border: 4px solid #e34ba9;
+        animation-delay: -0.75s;
     }
 
     @keyframes lds-ripple-animation {

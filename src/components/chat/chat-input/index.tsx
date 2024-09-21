@@ -107,13 +107,13 @@ const ChatInput: React.FC<{
 
   return (
     <>
-      {loading && (
+      {/* {loading && (
         <Flex justify="center" align="center" className="w-full mb-3">
           <Button type="primary" icon={stopIcon}>
             停止响应
           </Button>
         </Flex>
-      )}
+      )} */}
       <Flex
         vertical
         justify="flex-start"

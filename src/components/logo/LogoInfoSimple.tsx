@@ -20,10 +20,11 @@ import IdeaSlogan from './IdeaSlogan';
 import LogoSlogan from './LogoSlogan';
 
 const LogoInfoSimple: React.FC<{
+  animated?: boolean;
   className?: string | undefined;
   style?: CSSProperties | undefined;
-  disableActions?: boolean;
-}> = ({ className, style }) => {
+  children?: React.ReactNode;
+}> = ({ animated, className, style, children }) => {
   return (
       <Flex
         vertical
@@ -33,13 +34,15 @@ const LogoInfoSimple: React.FC<{
         style={style}
       >
         <span className="font-bold" style={{ fontSize: 80 }}>
-          <b className="text-animation">. MODU</b> 墨读
+          <b className={animated ? "text-animation" : "text-colorful"}>. MODU</b> 墨读
         </span>
-        <span className="text-colorful" style={{ fontSize: 40 }}>
+        <span className="text-colorful font-blod" style={{ fontSize: 40 }}>
           /ˈmɔː.du/ 墨读无界
         </span>
-
-        <div className='h-16' />
+        
+        <div className='mt-8 mb-8'>
+          {children && <>{children}</>}
+        </div>
 
         <LogoSlogan />
         <IdeaSlogan className="mt-4 underline decoration-4 decoration-sky-200" />

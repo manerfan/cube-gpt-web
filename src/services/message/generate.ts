@@ -15,7 +15,6 @@
  */
 
 import { SeverSendEventCallbackFn, sseRequest } from '@/services/sse';
-import { toSnakeCase } from '../common';
 import { MESSAGE } from './typings';
 
 /**
@@ -24,12 +23,13 @@ import { MESSAGE } from './typings';
  * @param onMessage Event 回调
  */
 export async function chat(
+  workspaceUid: string,
   generateCmd: MESSAGE.GenerateCmd,
   onMessage: SeverSendEventCallbackFn,
 ) {
-  const connection = await sseRequest(`/api/chat`, {
+  const connection = await sseRequest(`/api/${workspaceUid}/chat`, {
     method: 'POST',
-    body: JSON.stringify(toSnakeCase(generateCmd)),
+    body: JSON.stringify(generateCmd),
   });
   connection.onMessage(onMessage);
 }

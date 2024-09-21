@@ -20,7 +20,6 @@ import {
   systemService,
   userService,
 } from '@/services';
-import { toCamelCase } from '@/services/common';
 import type { Response } from '@/services/typings';
 import {
   AxiosResponse,
@@ -182,7 +181,6 @@ const responseHandler = (
     (opts || {}).skipErrorHandler = true;
   }
 
-  response.data = toCamelCase(response.data);
   return response;
 };
 

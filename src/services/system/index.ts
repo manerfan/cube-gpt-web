@@ -17,6 +17,7 @@
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { SYSTEM } from './typings';
+import { toCamelCase } from '../common';
 
 /**
  * 检查是否已经完成系统设置
@@ -62,5 +63,8 @@ export async function profile(
       params: {},
       ...(options || {}),
     },
-  );
+  ).then(resp => {
+    resp.content = toCamelCase(resp.content);
+    return resp;
+  });
 }
