@@ -23,7 +23,7 @@ import {
   useCreateStore,
 } from '@lobehub/ui';
 import { useModel } from '@umijs/max';
-import { Alert, Avatar, Button, Flex, List, Space, Typography } from 'antd';
+import { Alert, Avatar, Button, Divider, Flex, List, Space, Typography } from 'antd';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
@@ -54,125 +54,150 @@ const ChatItem: React.FC<{
 
   return (
     <>
-      <Flex
-        justify="flex-start"
-        align="flex-start"
-        gap={12}
-        className={`w-full ${styles['chat-item']} ${className}`}
-        style={style}
-      >
-        <Flex
-          vertical
-          justify="flex-start"
-          align="flex-start"
-          className="w-9 h-9"
-        >
-          <Avatar
-            className="bg-transparent"
-            shape="square"
-            icon={{
-              ...(message.senderRole === 'user' ? (
-                <FluentEmoji type={'anim'} {...userControl} />
-              ) : (
-                <img src={'/logo.png'} alt="MODU 墨读无界" />
-              )),
-            }}
+      {message.senderRole === 'system' && (
+        <Flex vertical justify="center" align="center" className="w-full pl-9">
+          <List
+            itemLayout="horizontal"
+            bordered={false}
+            className="w-full"
+            dataSource={message?.messages}
+            renderItem={(msg) => (
+              <List.Item
+                key={msg.sectionUid}
+                style={{ border: 'none', padding: 0 }}
+              >
+                {/* 文本 */}
+                {msg.contentType === 'text' && (
+                  <Divider dashed>
+                    <Typography.Text type="secondary" className='text-xs'>{msg.content as string}</Typography.Text>
+                  </Divider>
+                )}
+              </List.Item>
+            )}
           />
         </Flex>
-
+      )}
+      {message.senderRole !== 'system' && (
         <Flex
-          vertical
           justify="flex-start"
           align="flex-start"
-          className="flex-auto"
+          gap={12}
+          className={`w-full ${styles['chat-item']} ${className}`}
+          style={style}
         >
           <Flex
+            vertical
             justify="flex-start"
-            align="center"
-            gap={8}
-            className="w-full mb-2"
+            align="flex-start"
+            className="w-9 h-9"
           >
-            <Typography.Text type="secondary">
-              {message.senderRole === 'user'
-                ? initialState?.userMe?.name
-                : 'Assistant'}
-              {message.senderRole !== 'user' && (
-                <Typography.Text
-                  type="secondary"
-                  className={`${styles['operation-header']}`}
-                >
-                  <Button type="link" className="p-1">
-                    @
-                  </Button>
-                </Typography.Text>
-              )}
-            </Typography.Text>
-            <Typography.Text
-              type="secondary"
-              className={`${styles['operation-header']}`}
-            >
-              {moment(message.messageTime).format('YYYY-MM-DD HH:mm:ss')}
-            </Typography.Text>
+            <Avatar
+              className="bg-transparent"
+              shape="square"
+              icon={{
+                ...(message.senderRole === 'user' ? (
+                  <FluentEmoji type={'anim'} {...userControl} />
+                ) : (
+                  <img src={'/logo.png'} alt="MODU 墨读无界" />
+                )),
+              }}
+            />
           </Flex>
 
           <Flex
             vertical
             justify="flex-start"
             align="flex-start"
-            className={`w-auto max-w-full bg-white rounded-lg p-3 ${
-              loading ? 'bg-assistant-msg-loading' : ''
-            } ${messageClassName}`}
+            className="flex-auto"
           >
-            {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
-            <List
-              itemLayout="horizontal"
-              bordered={false}
-              dataSource={message?.messages}
-              renderItem={(msg) => (
-                <List.Item
-                  key={msg.sectionUid}
-                  style={{ border: 'none', padding: 0 }}
-                >
-                  {/* 文本 */}
-                  {msg.contentType === 'text' && (
-                    <ChatMarkdown>{msg.content as string}</ChatMarkdown>
-                  )}
-                  {/* 异常 */}
-                  {msg.contentType === 'error' && (
-                    <Alert
-                      message="遇到异常"
-                      description={msg.content as string}
-                      type="error"
-                      showIcon
-                      className="w-full my-3"
-                      action={
-                        <Space>
-                          <Button
-                            type="primary"
-                            danger
-                            size="small"
-                            icon={<ReloadOutlined />}
-                          >
-                            重试
-                          </Button>
-                        </Space>
-                      }
-                    />
-                  )}
-                </List.Item>
-              )}
-            />
+            <Flex
+              justify="flex-start"
+              align="center"
+              gap={8}
+              className="w-full mb-2"
+            >
+              <Typography.Text type="secondary">
+                {message.senderRole === 'user'
+                  ? initialState?.userMe?.name
+                  : 'Assistant'}
+                {message.senderRole !== 'user' && (
+                  <Typography.Text
+                    type="secondary"
+                    className={`${styles['operation-header']}`}
+                  >
+                    <Button type="link" className="p-1">
+                      @
+                    </Button>
+                  </Typography.Text>
+                )}
+              </Typography.Text>
+              <Typography.Text
+                type="secondary"
+                className={`${styles['operation-header']}`}
+              >
+                {moment(message.messageTime).format('YYYY-MM-DD HH:mm:ss')}
+              </Typography.Text>
+            </Flex>
 
-            {message.senderRole !== 'user' && !loading && (
-              <Flex justify="flex-end" align="center" className="w-full mt-2">
-                <Typography.Text type="secondary" className="text-xs">
-                  内容由AI生成
-                </Typography.Text>
-              </Flex>
-            )}
+            <Flex
+              vertical
+              justify="flex-start"
+              align="flex-start"
+              className={`w-auto max-w-full bg-white rounded-lg p-3 ${
+                loading ? 'bg-assistant-msg-loading' : ''
+              } ${messageClassName}`}
+            >
+              {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
+              <List
+                itemLayout="horizontal"
+                bordered={false}
+                dataSource={message?.messages}
+                renderItem={(msg) => (
+                  <List.Item
+                    key={msg.sectionUid}
+                    style={{ border: 'none', padding: 0 }}
+                  >
+                    {/* 文本 */}
+                    {msg.contentType === 'text' && (
+                      <ChatMarkdown>{msg.content as string}</ChatMarkdown>
+                    )}
+                    {/* 异常 */}
+                    {msg.contentType === 'error' && (
+                      <Alert
+                        message="遇到异常"
+                        description={msg.content as string}
+                        type="error"
+                        showIcon
+                        className="w-full my-3"
+                        action={
+                          <Space>
+                            <Button
+                              type="primary"
+                              danger
+                              size="small"
+                              icon={<ReloadOutlined />}
+                            >
+                              重试
+                            </Button>
+                          </Space>
+                        }
+                      />
+                    )}
+                  </List.Item>
+                )}
+              />
+
+              {message.senderRole !== 'user' && !loading && (
+                <Flex justify="flex-end" align="center" className="w-full mt-2">
+                  <Typography.Text type="secondary" className="text-xs">
+                    内容由AI生成
+                  </Typography.Text>
+                </Flex>
+              )}
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
+      )}
     </>
   );
 };

@@ -56,7 +56,7 @@ const Chat: React.FC = () => {
       );
       setWorkspaceUid(privateSpace?.uid);
     });
-  });
+  }, []);
 
   const scrollMessageToBottom = () => {
     chatContentPopoverRef.current?.scrollMessageToBottom();
@@ -193,6 +193,18 @@ const Chat: React.FC = () => {
     });
   };
 
+  const clearMemory = async () => {
+    if (!conversationUid) {
+      return;
+    }
+
+    // 清空记忆，展示系统消息
+    const resp = await generateService.clearMemory(conversationUid!!);
+    const newMessages = _.cloneDeep(messages);
+    newMessages.push(...resp.content);
+    setMessages(newMessages);
+  };
+
   return (
     <>
       <ChatContent
@@ -200,6 +212,7 @@ const Chat: React.FC = () => {
         messages={messages}
         className="max-h-full max-h-screen"
         onSubmit={submit}
+        onClearMemory={clearMemory}
         loadingMessageUid={loadingMessageUid}
       />
 

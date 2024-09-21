@@ -62,7 +62,7 @@ declare namespace MESSAGE {
     /**
      * 消息类型
      */
-    type: "question" | "answer";
+    type: "question" | "answer" | "system";
 
     /**
      * 消息内容的类型
@@ -126,7 +126,7 @@ declare namespace MESSAGE {
     /**
      * 发送者角色
      */
-    senderRole: "user" | "assistant";
+    senderRole: "user" | "assistant" | "system";
 
     /**
      * 消息 ID

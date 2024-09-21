@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import type { Response } from '@/services/typings';
 import { SeverSendEventCallbackFn, sseRequest } from '@/services/sse';
 import { MESSAGE } from './typings';
+import { request } from '@umijs/max';
 
 /**
  * 发起生成请求
@@ -27,9 +29,19 @@ export async function chat(
   generateCmd: MESSAGE.GenerateCmd,
   onMessage: SeverSendEventCallbackFn,
 ) {
-  const connection = await sseRequest(`/api/${workspaceUid}/chat`, {
+  const connection = await sseRequest(`/api/chat?workspace_uid=${workspaceUid}`, {
     method: 'POST',
     body: JSON.stringify(generateCmd),
   });
   connection.onMessage(onMessage);
+}
+
+export async function clearMemory(
+  conversationUid: string, 
+  options?: Record<string, any>): Promise<Response.MultiResponse<MESSAGE.MessageContent>> {
+    return request<Response.MultiResponse<MESSAGE.MessageContent>>(`/api/chat/${conversationUid}/message/clear`, {
+      method: 'POST',
+      ...(options || {}),
+    });
+  
 }
