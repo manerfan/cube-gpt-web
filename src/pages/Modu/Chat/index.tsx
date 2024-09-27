@@ -16,7 +16,7 @@
 
 import ChatContent from '@/components/chat';
 import ChatConversationList from '@/components/chat/chat-conversation-list';
-import { workspaceService, messageService } from '@/services';
+import { workspaceService } from '@/services';
 import { WorkspaceType } from '@/services/workspace';
 import { Drawer, FloatButton } from 'antd';
 import _ from 'lodash';
@@ -94,7 +94,7 @@ const Chat: React.FC = () => {
             setOpenSlider(false);
           }}
           onConversationDeleted={(_conversationUid) => {
-            if (conversationUid === _conversationUid) {
+            if ("ALL" === _conversationUid || conversationUid === _conversationUid) {
               setConversationUid(undefined);
             }
             setOpenSlider(false);

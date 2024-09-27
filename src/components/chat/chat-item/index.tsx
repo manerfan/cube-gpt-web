@@ -15,7 +15,6 @@
  */
 
 import { MESSAGE } from '@/services/message/typings';
-import { ReloadOutlined } from '@ant-design/icons';
 import {
   FluentEmoji,
   FluentEmojiProps,
@@ -23,7 +22,7 @@ import {
   useCreateStore,
 } from '@lobehub/ui';
 import { useModel } from '@umijs/max';
-import { Alert, Avatar, Button, Divider, Flex, List, Space, Typography } from 'antd';
+import { Alert, Avatar, Button, Divider, Flex, List, Typography } from 'antd';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
@@ -96,7 +95,7 @@ const ChatItem: React.FC<{
               shape="square"
               icon={{
                 ...(message.senderRole === 'user' ? (
-                  <FluentEmoji type={'anim'} {...userControl} />
+                  <Avatar size={32} className={`bg-user-msg font-bold`}>{initialState?.userMe?.name[0]}</Avatar>
                 ) : (
                   <img src={'/logo.png'} alt="MODU 墨读无界" />
                 )),

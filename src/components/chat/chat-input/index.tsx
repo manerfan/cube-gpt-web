@@ -43,11 +43,13 @@ import type { MESSAGE } from '@/services/message/typings';
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
   onClearMemory?: () => Promise<any>;
+  onStop?: () => Promise<any>;
   loading?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({ onSubmit, onClearMemory, loading, className, style }) => {
+}> = ({ onSubmit, onClearMemory, onStop, loading, className, style }) => {
   const [clearLoading, setClearLoading] = useState(false);
+  const [stopLoading, setStopLoading] = useState(false);
 
   const [query, setQuery] = useState('');
 
@@ -242,6 +244,13 @@ const ChatInput: React.FC<{
                     type="primary"
                     className="py-1 px-2"
                     icon={<MessageCircleOff size={18} />}
+                    loading={stopLoading}
+                    onClick={() => {
+                      if (!!onStop) {
+                        setStopLoading(true);
+                        onStop().finally(() => setStopLoading(false));
+                      }
+                    }}
                   />
                 </Tooltip>
               )}

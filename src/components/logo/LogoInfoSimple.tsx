@@ -36,7 +36,7 @@ const LogoInfoSimple: React.FC<{
         <span className="font-bold" style={{ fontSize: 80 }}>
           <b className={animated ? "text-animation" : "text-colorful"}>. MODU</b> 墨读
         </span>
-        <span className="text-colorful font-blod" style={{ fontSize: 40 }}>
+        <span className="text-colorful font-bold" style={{ fontSize: 40 }}>
           /ˈmɔː.du/ 墨读无界
         </span>
         

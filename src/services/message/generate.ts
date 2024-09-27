@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import type { Response } from '@/services/typings';
 import { SeverSendEventCallbackFn, sseRequest } from '@/services/sse';
-import { MESSAGE } from './typings';
+import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
+import { MESSAGE } from './typings';
 
 /**
  * 发起生成请求
@@ -30,19 +30,38 @@ export async function chat(
   onMessage: SeverSendEventCallbackFn,
   onFinish?: () => void,
 ) {
-  const connection = await sseRequest(`/api/chat?workspace_uid=${workspaceUid}`, {
-    method: 'POST',
-    body: JSON.stringify(generateCmd),
-  });
+  const connection = await sseRequest(
+    `/api/chat?workspace_uid=${workspaceUid}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(generateCmd),
+    },
+  );
   connection.onEvent(onMessage, onFinish);
 }
 
+export async function stop(
+  conversationUid: string,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<boolean>> {
+  return request<Response.SingleResponse<boolean>>(
+    `/api/chat/${conversationUid}/stop`,
+    {
+      method: 'PUT',
+      ...(options || {}),
+    },
+  );
+}
+
 export async function clearMemory(
-  conversationUid: string, 
-  options?: Record<string, any>): Promise<Response.MultiResponse<MESSAGE.MessageContent>> {
-    return request<Response.MultiResponse<MESSAGE.MessageContent>>(`/api/chat/${conversationUid}/message/clear`, {
+  conversationUid: string,
+  options?: Record<string, any>,
+): Promise<Response.MultiResponse<MESSAGE.MessageContent>> {
+  return request<Response.MultiResponse<MESSAGE.MessageContent>>(
+    `/api/chat/${conversationUid}/message/clear`,
+    {
       method: 'POST',
       ...(options || {}),
-    });
-  
+    },
+  );
 }

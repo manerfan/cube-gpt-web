@@ -252,6 +252,18 @@ const ChatContent: React.FC<{
     scrollMessageToBottom();
   };
 
+  const stopGenerate = async () => {
+    if (!conversationUid) {
+      return;
+    }
+
+    if (!loadingMessageUid) {
+      return;
+    }
+
+    return generateService.stop(conversationUid!!);
+  }
+
   return (
     <>
       {contextHolder}
@@ -291,6 +303,7 @@ const ChatContent: React.FC<{
               loading={!!loadingMessageUid}
               onSubmit={submit}
               onClearMemory={clearMemory}
+              onStop={stopGenerate}
             />
             <Flex justify="center" align="center" className="w-full mt-3">
               <Typography.Text type="secondary" className="select-none">

@@ -91,12 +91,31 @@ const ChatConversationList: React.FC<{
           className="flex-auto"
         />
         <Tooltip title="删除所有会话">
-          <Button
-            size="small"
-            color="danger"
-            variant="filled"
-            icon={<CopyX size={16} color="rgb(249 115 22)" />}
-          />
+          <Popconfirm
+            title="删除所有会话?"
+            description="确认要删除所有会话？"
+            okText="确定要删"
+            cancelText="再想想"
+            okType='danger'
+            onConfirm={() => {
+              setOperating(true);
+              return messageService
+                .deleteAllConversations()
+                .then(() => {
+                  setConversations([]);
+                  setEditConversation(undefined);
+                  onConversationDeleted?.("ALL");
+                })
+                .finally(() => setOperating(false));
+            }}
+          >
+            <Button
+              size="small"
+              color="danger"
+              variant="filled"
+              icon={<CopyX size={16} color="rgb(249 115 22)" />}
+            />
+          </Popconfirm>
         </Tooltip>
       </Flex>
 
@@ -110,9 +129,7 @@ const ChatConversationList: React.FC<{
             key={conversation.conversationUid}
             style={{ borderColor: 'rgba(0,0,0,0.05)' }}
             className={`cursor-pointer ${styles['conversation-item']}`}
-            onClick={() =>
-              onConversationSelected?.(conversation.conversationUid)
-            }
+            onClick={() => onConversationSelected?.(conversation.conversationUid)}
           >
             <Flex
               justify="flex-start"
@@ -120,8 +137,7 @@ const ChatConversationList: React.FC<{
               gap="small"
               className="w-full"
             >
-              {conversation.conversationUid ===
-                editConversation?.conversationUid ? (
+              {conversation.conversationUid === editConversation?.conversationUid ? (
                 <Space.Compact
                   size="small"
                   className="flex-auto"
