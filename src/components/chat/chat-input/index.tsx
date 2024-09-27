@@ -47,6 +47,8 @@ const ChatInput: React.FC<{
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }> = ({ onSubmit, onClearMemory, loading, className, style }) => {
+  const [clearLoading, setClearLoading] = useState(false);
+
   const [query, setQuery] = useState('');
 
   const submit = () => {
@@ -128,9 +130,21 @@ const ChatInput: React.FC<{
               type="default"
               shape="circle"
               className="p-1 mb-4"
-              icon={<SquareSplitVertical size={18} color="rgb(71 85 105)" style={{marginTop: '.2rem'}} />}
+              icon={
+                <SquareSplitVertical
+                  size={18}
+                  color="rgb(71 85 105)"
+                  style={{ marginTop: '.2rem' }}
+                />
+              }
               disabled={loading}
-              onClick={onClearMemory}
+              loading={clearLoading}
+              onClick={() => {
+                if (!!onClearMemory) {
+                  setClearLoading(true);
+                  onClearMemory().finally(() => setClearLoading(false));
+                }
+              }}
             />
           </Tooltip>
         </Flex>

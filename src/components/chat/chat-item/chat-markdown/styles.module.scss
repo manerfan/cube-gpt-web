@@ -30,10 +30,18 @@
             padding: .1rem .4rem;
             margin: auto .2rem;
             font-weight: bold;
+            color: inherit;
+        }
+
+        &[class^="language-"] {
+            &>span {
+                display: contents !important;
+            }
         }
     }
 
     table {
+
         th,
         td {
             border: 1px solid rgb(209 213 219);

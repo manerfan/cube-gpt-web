@@ -68,14 +68,15 @@ const CodeComponent = (props: any) => {
             {...rest}
             PreTag="div"
             language={language}
+            wrapLongLines={true}
             style={codeTheme}
             showLineNumbers={true}
             customStyle={{
-              'margin-top': '0',
-              'border-top-right-radius': '0em',
-              'border-top-left-radius': '0em',
-              'border-bottom-right-radius': '0.3em',
-              'border-bottom-left-radius': '0.3em',
+              marginTop: '0',
+              borderTopRightRadius: '0em',
+              borderTopLeftRadius: '0em',
+              borderBottomRightRadius: '0.3em',
+              borderBottomLeftRadius: '0.3em',
             }}
           >
             {content}

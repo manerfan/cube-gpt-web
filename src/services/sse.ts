@@ -79,7 +79,8 @@ function parseSSE(data: string) {
  */
 async function handleSSE(
   body: ReadableStream<Uint8Array>,
-  onMessage: SeverSendEventCallbackFn,
+  onMessage?: SeverSendEventCallbackFn,
+  onFinish?: () => void,
 ) {
   const reader = body.getReader();
   const decoder = new TextDecoder('utf-8');
@@ -98,15 +99,17 @@ async function handleSSE(
     while (boundary !== -1) {
       const chunk = buffer.substring(0, boundary + 2);
       buffer = buffer.substring(boundary + 2);
-      onMessage(parseSSE(chunk));
+      onMessage?.(parseSSE(chunk));
       boundary = buffer.indexOf('\n\n');
     }
   }
 
-  onMessage({
+  onMessage?.({
     id: new Date().getTime().toString(),
-    event: 'done'
-  })
+    event: 'done',
+  });
+
+  onFinish?.();
 }
 
 /**
@@ -116,7 +119,8 @@ async function handleSSE(
  */
 async function handleNonSSE(
   body: ReadableStream<Uint8Array>,
-  onMessage: SeverSendEventCallbackFn,
+  onMessage?: SeverSendEventCallbackFn,
+  onFinish?: () => void,
 ) {
   const reader = body.getReader();
   const decoder = new TextDecoder('utf-8');
@@ -131,7 +135,8 @@ async function handleNonSSE(
     data += decoder.decode(value, { stream: true });
   }
 
-  onMessage(data);
+  onMessage?.(data);
+  onFinish?.();
 }
 
 /**
@@ -161,6 +166,13 @@ async function handleNonSSE(
  * @returns
  */
 export async function sseRequest(url: string, init?: RequestInit) {
+  let onMessageCallback: SeverSendEventCallbackFn | undefined = undefined;
+  let onFinishCallback: (() => void) | undefined = undefined;
+  let resolveOnMessageReady: () => void;
+  const onMessageReady = new Promise<void>((resolve) => {
+    resolveOnMessageReady = resolve;
+  });
+
   // 加入认证信息
   const requestInit = init || ({} as RequestInit);
   requestInit.headers = Object.assign(
@@ -186,7 +198,8 @@ export async function sseRequest(url: string, init?: RequestInit) {
   const status = response.status;
   if (status !== 200) {
     message.error(`Request failed with status ${status}`);
-    console.error(`Request failed with status ${status}`, response)
+    console.error(`Request failed with status ${status}`, response);
+    onFinishCallback?.();
   }
 
   if (!response.body) {
@@ -198,28 +211,22 @@ export async function sseRequest(url: string, init?: RequestInit) {
   let isSSE = contentType && contentType.includes('text/event-stream');
   const sseHandler: (
     body: ReadableStream<Uint8Array>,
-    onMessage: SeverSendEventCallbackFn,
+    onMessage?: SeverSendEventCallbackFn,
+    onFinish?: () => void,
   ) => void = isSSE ? handleSSE : handleNonSSE;
-
-  let onMessageCallback: SeverSendEventCallbackFn | null = null;
-  let resolveOnMessageReady: () => void;
-  const onMessageReady = new Promise<void>((resolve) => {
-    resolveOnMessageReady = resolve;
-  });
 
   const processResponse = async () => {
     await onMessageReady; // 等待 onMessage 函数设置
-    await sseHandler(response.body!, (event) => {
-      onMessageCallback?.(event);
-    });
+    await sseHandler(response.body!, onMessageCallback, onFinishCallback);
   };
 
   // Start processing the response in the background
   processResponse();
 
   return {
-    onMessage: (callback: SeverSendEventCallbackFn) => {
-      onMessageCallback = callback;
+    onEvent: (onMessage?: SeverSendEventCallbackFn, onFinish?: () => void) => {
+      onMessageCallback = onMessage;
+      onFinishCallback = onFinish;
       resolveOnMessageReady();
     },
     close: () => {

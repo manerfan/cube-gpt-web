@@ -18,19 +18,16 @@ import LogoInfoSimple from '@/components/logo/LogoInfoSimple';
 import { MESSAGE } from '@/services/message/typings';
 import { List } from 'antd';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import ChatItem from '../chat-item';
 
 const ChatList: React.FC<{
   messages: MESSAGE.MessageContent[];
+  hasMore?: boolean;
+  loadMore?: () => void;
   loadingMessageUid?: string;
-}> = ({ messages, loadingMessageUid }) => {
-  const [hasMore, setHasMore] = useState(true);
-
-  const loadMore = () => {
-    console.log('loadMore');
-  };
+}> = ({ messages, hasMore, loadMore, loadingMessageUid }) => {
 
   return (
     <>
@@ -39,7 +36,7 @@ const ChatList: React.FC<{
       ) : (
         <InfiniteScroll
           pageStart={0}
-          loadMore={loadMore}
+          loadMore={() => loadMore?.()}
           hasMore={hasMore}
           useWindow={false}
           initialLoad={false}

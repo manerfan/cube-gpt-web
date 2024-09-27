@@ -17,85 +17,291 @@
 import ScrollToBottomBtn, {
   ScrollToBottomBtnRefProperty,
 } from '@/components/common/ScrollToBottomBtn';
+import { messageService } from '@/services';
+import * as generateService from '@/services/message/generate';
+import * as parser from '@/services/message/parser';
 import { MESSAGE } from '@/services/message/typings';
-import { Flex, Layout, Typography } from 'antd';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { ServerSendEvent } from '@/services/sse';
+import { useModel } from '@umijs/max';
+import { Flex, Layout, Typography, message } from 'antd';
+import _ from 'lodash';
+import { useEffect, useRef, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { ulid } from 'ulid';
 import ChatInput from './chat-input';
 import ChatList from './chat-list';
 import styles from './styles.module.scss';
 
-export interface ChatContentRefProperty {
-  scrollMessageToBottom: () => void;
-}
-
 const ChatContent: React.FC<{
-  messages: MESSAGE.MessageContent[];
-  onSubmit?: (values: MESSAGE.GenerateCmd) => void;
-  onClearMemory?: () => Promise<any>;
+  workspaceUid?: string;
+  conversationUid?: string;
   className?: string;
-  loadingMessageUid?: string;
-}> = forwardRef(
-  (
-    { messages, onSubmit, onClearMemory, className, loadingMessageUid },
-    ref,
+}> = ({ workspaceUid, conversationUid: _conversationUid, className }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
+  const { initialState } = useModel('@@initialState');
+
+  // 当前会话
+  const [conversationUid, setConversationUid] = useState<string | undefined>(
+    _conversationUid,
+  );
+
+  // 消息列表
+  const [messages, setMessages] = useState<MESSAGE.MessageContent[]>([]);
+
+  // 正在加载的messageUid
+  const [loadingMessageUid, setLoadingMessageUid] = useState<string>();
+
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  // 滚动到消息列表底部
+  const scrollMessageToBottom = () => {
+    chatContentPopoverRef.current?.trigScrollToBottom();
+  };
+
+  // 加载更多会话
+  const loadMore = (
+    _conversationUid?: string,
+    clearMessages: boolean = false,
   ) => {
-    const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
+    const convUid = _conversationUid || conversationUid;
+    if (!convUid) {
+      // 没有会话，就不加载了
+      return;
+    }
 
-    useImperativeHandle(ref, () => ({
-      scrollMessageToBottom() {
-        chatContentPopoverRef.current?.trigScrollToBottom();
+    if (loadingMore) {
+      // 正在加载，不处理
+      return;
+    }
+
+    const fistMessageUid = clearMessages
+      ? undefined
+      : _.first(messages)?.messageUid;
+    
+    const loadingMessageKey = ulid();
+    messageApi.open({
+      key: loadingMessageKey,
+      type: 'loading',
+      content: '加载中...',
+      duration: 0,
+    });
+    
+    setLoadingMore(true);
+    messageService
+      .messages(convUid, fistMessageUid, 10)
+      .then((resp) => {
+        if (_.isEmpty(resp.content)) {
+          setHasMore(false);
+          return;
+        }
+
+        const newMessages = _.cloneDeep(messages) || [];
+        setMessages(
+          clearMessages ? resp.content : [...resp.content, ...newMessages],
+        );
+      })
+      .finally(() => {
+        setLoadingMore(false);
+        messageApi.destroy(loadingMessageKey);
+      });
+  };
+
+  useEffect(() => {
+    if (conversationUid === _conversationUid) {
+      return;
+    }
+
+    setConversationUid(_conversationUid);
+    setMessages([]);
+    setHasMore(!!_conversationUid);
+
+    if (!!_conversationUid) {
+      loadMore(_conversationUid, true);
+      scrollMessageToBottom();
+    }
+  }, [workspaceUid, _conversationUid]);
+
+
+  const scrollMessageToBottomTicker = () => {
+    const tickerId = setInterval(() => {
+      scrollMessageToBottom();
+    }, 1000);
+
+    return () => {
+      clearInterval(tickerId);
+    };
+  };
+
+  const messageParser = (appendMessage?: MESSAGE.MessageContent) => {
+    return parser.messageParser({
+      conversationUid,
+      setConversationUid,
+      messages,
+      setMessages,
+      setLoadingMessageUid,
+      appendMessage,
+    });
+  };
+
+  // 提交
+  const submit = (submitQuery: MESSAGE.GenerateCmd) => {
+    // 取消 loading
+    setLoadingMessageUid(undefined);
+    // 将消息列表滚动到底部
+    scrollMessageToBottom();
+
+    // 追加用户消息
+    const parseMessageEvent = messageParser({
+      senderUid: initialState?.userMe?.uid,
+      senderRole: 'user',
+      messageUid: ulid(),
+      messageTime: new Date().getTime(),
+      messages: [
+        ..._.map(submitQuery.query.refers || [], (ref) => {
+          return {
+            type: 'question',
+            contentType: ref.type,
+            content: ref.content,
+            sectionUid: ulid(),
+          } as MESSAGE.MessageBlock;
+        }),
+        ..._.map(submitQuery.query.inputs || [], (input) => {
+          return {
+            type: 'question',
+            contentType: input.type,
+            content: input.content,
+            sectionUid: ulid(),
+          } as MESSAGE.MessageBlock;
+        }),
+      ],
+    });
+
+    // 发起请求
+    const stopScrollMessageToBottom = scrollMessageToBottomTicker();
+    submitQuery.conversationUid = conversationUid;
+    generateService.chat(
+      workspaceUid!!,
+      submitQuery,
+      // onMessage
+      (messageEvent) => {
+        if (
+          messageEvent instanceof String ||
+          typeof messageEvent === 'string'
+        ) {
+          const { success, message: errorMsg } = JSON.parse(
+            messageEvent as string,
+          );
+          if (!success && !!errorMsg) {
+            messageApi.error(errorMsg);
+          }
+          return;
+        }
+
+        const { event, data } = messageEvent as ServerSendEvent;
+
+        switch (event) {
+          // 消息
+          case 'message': {
+            parseMessageEvent(data);
+            break;
+          }
+          // 异常
+          case 'error': {
+            parseMessageEvent(data);
+            setLoadingMessageUid(undefined);
+            break;
+          }
+          // 结束
+          case 'done': {
+            setLoadingMessageUid(undefined);
+            // 将消息列表滚动到底部
+            scrollMessageToBottom();
+            break;
+          }
+          default: {
+            // 将消息列表滚动到底部
+            scrollMessageToBottom();
+            break;
+          }
+        }
       },
-    }));
-
-    return (
-      <>
-        <Flex
-          gap="large"
-          vertical
-          align="center"
-          justify="center"
-          className={`h-full w-full p-6 ${styles['chat-container']} ${className}`}
-        >
-          <Layout
-            className={`bg-inherit h-full max-h-full w-full max-w-screen-md ${styles['chat-content']}`}
-          >
-            <Layout.Content
-              className={`bg-inherit flex-auto chat-content ${styles['chat-list']}`}
-            >
-              <ScrollToBottom
-                initialScrollBehavior="smooth"
-                followButtonClassName="hidden"
-                className="h-full max-h-full relative overscroll-none"
-              >
-                {/* 消息列表 */}
-                <ChatList
-                  messages={messages}
-                  loadingMessageUid={loadingMessageUid}
-                />
-                <ScrollToBottomBtn ref={chatContentPopoverRef} />
-              </ScrollToBottom>
-            </Layout.Content>
-            <Layout.Footer
-              className={`bg-inherit mt-5 chat-content ${styles['chat-input']}`}
-            >
-              {/* 消息输入 */}
-              <ChatInput
-                loading={!!loadingMessageUid}
-                onSubmit={onSubmit}
-                onClearMemory={onClearMemory}
-              />
-              <Flex justify="center" align="center" className="w-full mt-3">
-                <Typography.Text type="secondary" className="select-none">
-                  内容由AI生成，无法确保真实准确，仅供参考。
-                </Typography.Text>
-              </Flex>
-            </Layout.Footer>
-          </Layout>
-        </Flex>
-      </>
+      // onFinish
+      () => {
+        stopScrollMessageToBottom();
+      },
     );
-  },
-);
+  };
+
+  // 清除记忆
+  const clearMemory = async () => {
+    if (!conversationUid) {
+      return;
+    }
+
+    // 清空记忆，展示系统消息
+    const resp = await generateService.clearMemory(conversationUid!!);
+    if (!_.isEmpty(resp.content)) {
+      const newMessages = _.cloneDeep(messages);
+      newMessages.push(...resp.content);
+      setMessages(newMessages);
+    }
+
+    scrollMessageToBottom();
+  };
+
+  return (
+    <>
+      {contextHolder}
+      <Flex
+        gap="large"
+        vertical
+        align="center"
+        justify="center"
+        className={`h-full w-full p-6 ${styles['chat-container']} ${className}`}
+      >
+        <Layout
+          className={`bg-inherit h-full max-h-full w-full max-w-screen-md ${styles['chat-content']}`}
+        >
+          <Layout.Content
+            className={`bg-inherit flex-auto chat-content ${styles['chat-list']}`}
+          >
+            <ScrollToBottom
+              initialScrollBehavior="smooth"
+              followButtonClassName="hidden"
+              className="h-full max-h-full relative overscroll-none"
+            >
+              {/* 消息列表 */}
+              <ChatList
+                messages={messages}
+                hasMore={hasMore}
+                loadMore={loadMore}
+                loadingMessageUid={loadingMessageUid}
+              />
+              <ScrollToBottomBtn ref={chatContentPopoverRef} />
+            </ScrollToBottom>
+          </Layout.Content>
+          <Layout.Footer
+            className={`bg-inherit mt-5 chat-content ${styles['chat-input']}`}
+          >
+            {/* 消息输入 */}
+            <ChatInput
+              loading={!!loadingMessageUid}
+              onSubmit={submit}
+              onClearMemory={clearMemory}
+            />
+            <Flex justify="center" align="center" className="w-full mt-3">
+              <Typography.Text type="secondary" className="select-none">
+                内容由AI生成，无法确保真实准确，仅供参考。
+              </Typography.Text>
+            </Flex>
+          </Layout.Footer>
+        </Layout>
+      </Flex>
+    </>
+  );
+};
 
 export default ChatContent;

@@ -144,3 +144,22 @@ declare namespace MESSAGE {
     messages: MessageBlock[];
   }
 }
+
+declare namespace CONVERSATION {
+  type Conversation = {
+    /**
+     * 会话 ID
+     */
+    conversationUid: string;
+
+    /**
+     * 会话名称
+     */
+    name: string;
+
+    /**
+     * 会话创建时间
+     */
+    createdAt: number;
+  }
+}

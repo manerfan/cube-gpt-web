@@ -169,18 +169,18 @@ const ChatItem: React.FC<{
                         type="error"
                         showIcon
                         className="w-full my-3"
-                        action={
-                          <Space>
-                            <Button
-                              type="primary"
-                              danger
-                              size="small"
-                              icon={<ReloadOutlined />}
-                            >
-                              重试
-                            </Button>
-                          </Space>
-                        }
+                        // action={
+                        //   <Space>
+                        //     <Button
+                        //       type="primary"
+                        //       danger
+                        //       size="small"
+                        //       icon={<ReloadOutlined />}
+                        //     >
+                        //       重试
+                        //     </Button>
+                        //   </Space>
+                        // }
                       />
                     )}
                   </List.Item>

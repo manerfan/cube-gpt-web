@@ -22,6 +22,7 @@ export * as userService from './user';
 export * as llmProviderService from './llm/provider';
 export * as llmModelService from './llm/model';
 export * as workspaceService from './workspace';
+export * as messageService from './message';
 
 export enum ErrorShowType {
   SILENT = 'SILENT',

@@ -28,12 +28,13 @@ export async function chat(
   workspaceUid: string,
   generateCmd: MESSAGE.GenerateCmd,
   onMessage: SeverSendEventCallbackFn,
+  onFinish?: () => void,
 ) {
   const connection = await sseRequest(`/api/chat?workspace_uid=${workspaceUid}`, {
     method: 'POST',
     body: JSON.stringify(generateCmd),
   });
-  connection.onMessage(onMessage);
+  connection.onEvent(onMessage, onFinish);
 }
 
 export async function clearMemory(
