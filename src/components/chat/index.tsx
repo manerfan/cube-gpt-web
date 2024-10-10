@@ -67,7 +67,7 @@ const ChatContent: React.FC<{
     clearMessages: boolean = false,
   ) => {
     const convUid = _conversationUid || conversationUid;
-    if (!convUid) {
+    if (_.isEmpty(convUid)) {
       // 没有会话，就不加载了
       return;
     }
@@ -304,6 +304,7 @@ const ChatContent: React.FC<{
               onSubmit={submit}
               onClearMemory={clearMemory}
               onStop={stopGenerate}
+              key="chat-input"
             />
             <Flex justify="center" align="center" className="w-full mt-3">
               <Typography.Text type="secondary" className="select-none">

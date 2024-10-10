@@ -18,10 +18,13 @@ import { CSSProperties } from 'react';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import remarkToc from 'remark-toc';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import styles from './styles.module.scss';
 
 import Markdown from 'react-markdown';
-import CodeComponent from './CodeComponent';
+import CodeComponent from '@/components/markdown/react-markdown/component/CodeComponent';
+import replaceParenthesesInMarkdown from '@/components/markdown/react-markdown/plugin/remark/remark-custom-math';
 
 const ChatMarkdown: React.FC<{
   children?: string;
@@ -32,13 +35,13 @@ const ChatMarkdown: React.FC<{
     <>
       <div className={`${className} ${styles['markdown']}`} style={style}>
         <Markdown
-          rehypePlugins={[rehypeRaw]}
-          remarkPlugins={[remarkGfm, remarkToc]}
+          rehypePlugins={[rehypeRaw, rehypeKatex]}
+          remarkPlugins={[remarkGfm, remarkToc, remarkMath]}
           components={{
             code: CodeComponent,
           }}
         >
-          {children}
+          {replaceParenthesesInMarkdown(children)}
         </Markdown>
       </div>
     </>

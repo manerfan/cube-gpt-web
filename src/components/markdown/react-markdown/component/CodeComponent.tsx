@@ -15,21 +15,23 @@
  */
 
 import { CopyOutlined } from '@ant-design/icons';
-import { Flex, Typography } from 'antd';
+import { Flex, Space, Typography } from 'antd';
 import Mermaid from 'react-mermaid2';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark as codeTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import _ from 'lodash';
+import { Terminal } from 'lucide-react';
 
 const CodeComponent = (props: any) => {
   const { children, className, ...rest } = props;
   const match = /language-(\w+)/.exec(className || '');
   const content = String(children).replace(/\n$/, '');
-  const language =
+  const language = _.replace(_.lowerCase(
     !_.isEmpty(match) && match!.length > 1 && !_.isEmpty(match![1])
       ? match![1]
-      : '';
+      : ''
+  ), ' ', '');
 
   let codeComponent: React.ReactNode = <></>;
   switch (language) {
@@ -54,7 +56,7 @@ const CodeComponent = (props: any) => {
             }}
           >
             <Typography.Text strong className="text-gray-200">
-              {_.isEmpty(language) ? '' : 'language-' + language}
+              {_.isEmpty(language) ? '' : (<Space align='center'><Terminal size={22} color="rgb(229, 231, 235)" className='pt-2 mr-1' />{language}</Space>)}
             </Typography.Text>
             <Typography.Text
               copyable={{

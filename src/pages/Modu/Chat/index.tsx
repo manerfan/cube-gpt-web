@@ -68,7 +68,7 @@ const Chat: React.FC = () => {
         <FloatButton
           icon={<MessageCirclePlus size={18} />}
           tooltip="发起新会话"
-          onClick={() => setConversationUid(undefined)}
+          onClick={() => setConversationUid(conversationUid === undefined ? '' : undefined)}
         />
         <FloatButton
           icon={<MessageSquareText size={18} />}
@@ -95,7 +95,7 @@ const Chat: React.FC = () => {
           }}
           onConversationDeleted={(_conversationUid) => {
             if ("ALL" === _conversationUid || conversationUid === _conversationUid) {
-              setConversationUid(undefined);
+              setConversationUid(conversationUid === undefined ? '' : undefined);
             }
             setOpenSlider(false);
           }}

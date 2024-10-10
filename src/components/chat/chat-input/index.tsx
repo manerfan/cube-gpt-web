@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-import { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 
 import {
   Button,
   Divider,
   Flex,
-  Input,
   message,
   Space,
   Tooltip,
   Typography,
 } from 'antd';
-import { motion } from 'framer-motion';
 import _ from 'lodash';
 import {
   ArrowBigUp,
@@ -39,6 +37,9 @@ import {
 } from 'lucide-react';
 
 import type { MESSAGE } from '@/services/message/typings';
+import { MilkdownProvider } from '@milkdown/react';
+import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react'
+import MilkdownTextarea from '@/components/markdown/milkdown/milkdown-textarea';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
@@ -57,11 +58,10 @@ const ChatInput: React.FC<{
     if (!_.isEmpty(_.trim(query))) {
       onSubmit?.({
         query: {
-          // 兼容 markdown 换行
           inputs: [
             {
               type: 'text',
-              content: _.replace(query, /(?<![\r\n])[\r\n](?![\r\n])/g, '\n\n'),
+              content: _.unescape(query),
             },
           ],
         },
@@ -97,24 +97,6 @@ const ChatInput: React.FC<{
         break;
     }
   };
-
-  const stopIcon = (
-    <motion.div
-      className="w-4 h-4 bg-white"
-      animate={{
-        scale: [0.8, 0.8, 1, 1, 0.8],
-        rotate: [0, 0, 180, 180, 0],
-        borderRadius: ['0%', '0%', '50%', '50%', '0%'],
-      }}
-      transition={{
-        duration: 2,
-        ease: 'easeInOut',
-        times: [0, 0.2, 0.5, 0.8, 1],
-        repeat: Infinity,
-        repeatDelay: 1,
-      }}
-    />
-  );
 
   return (
     <>
@@ -164,15 +146,30 @@ const ChatInput: React.FC<{
           style={style}
           className={`flex-auto rounded-xl bg-white py-4 w-full min-h-24`}
         >
-          <Input.TextArea
+          <div className='w-full min-h-5 px-5 mb-3 max-h-40 overflow-y-scroll'>
+            <MilkdownProvider>
+              <ProsemirrorAdapterProvider>
+                <MilkdownTextarea
+                  placeholder='发送消息、@Bot 有什么问题尽管问我...'
+                  readOnly={loading}
+                  defaultValue=''
+                  value={query}
+                  onChange={setQuery}
+                  onKeyDown={inputKeyDown}
+                />
+                </ProsemirrorAdapterProvider>
+            </MilkdownProvider>
+          </div>
+          {/* <Input.TextArea
             autoSize={{ minRows: 1, maxRows: 6 }}
             className={`border-0 rounded-0 outline-none focus:outline-none focus:border-0 focus:shadow-none leading-5 w-full min-h-5 px-5 mb-3`}
             placeholder="发送消息、@Bot 有什么问题尽管问我..."
             readOnly={loading}
             onKeyDown={inputKeyDown}
+            defaultValue=''
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-          />
+          /> */}
 
           {/* 底部按钮 */}
           <Flex justify="space-between" align="center" className="w-full px-4">
