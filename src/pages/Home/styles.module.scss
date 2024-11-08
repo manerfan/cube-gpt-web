@@ -1,0 +1,9 @@
+.landing {
+    &.marquee {
+        &>* {
+            &>* {
+                margin: auto 1rem;
+            }
+        }
+    }
+}
