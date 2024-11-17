@@ -18,7 +18,6 @@ import StatusLight from '@/components/status/StatusLight';
 import * as icons from '@/pages/Modu/Workspace/components/llm/icons';
 import * as modelService from '@/services/llm/model';
 import type { LLM } from '@/services/llm/typings';
-import type { WORKSPACE } from '@/services/workspace/typings';
 import { PlusCircleFilled } from '@ant-design/icons';
 import {
   Button,

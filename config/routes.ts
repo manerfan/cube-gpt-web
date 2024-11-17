@@ -55,7 +55,7 @@ const routes: Routes = [
   // 首页
   {
     path: '/',
-    component: './Home/PageUIHome',
+    component: './Home',
   },
   // 初始化
   {

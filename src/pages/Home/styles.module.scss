@@ -1,5 +1,29 @@
 .landing {
-    &.marquee {
+    .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+    .w-max-content {
+        max-width: 680px;
+    }
+
+    @media(min-width: 992px) {
+        .large-padding-content {
+            padding-left: calc(50% - 480px);
+            padding-right: calc(50% - 480px);
+        }
+    }
+
+    .with-background {
+        background-color: rgba(165, 180, 252, 0.2);
+    }
+
+    .marquee {
         &>* {
             &>* {
                 margin: auto 1rem;

@@ -55,7 +55,7 @@ export const VideoPlayer = ({
       style={{ maxWidth }}
       className={clsx(className, 'rounded-lg overflow-hidden shadow-md')}
     >
-      <div className="relative bg-white dark:bg-black rounded-md">
+      <div className="relative bg-white rounded-md">
         {!isPlaying ? (
           <button
             onClick={togglePlay}
