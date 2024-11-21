@@ -155,6 +155,7 @@ const ChatItem: React.FC<{
                 renderItem={(msg) => (
                   <List.Item
                     key={msg.sectionUid}
+                    style={{ border: 'none', padding: 0 }}
                     className='border-0 p-0 w-full'
                   >
                     {/* 文本 */}

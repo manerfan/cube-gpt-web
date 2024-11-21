@@ -27,15 +27,10 @@ import {
 } from '@lobehub/ui';
 import { history, useIntl, useLocation, useParams } from '@umijs/max';
 import { Avatar, Button, Space, TabsProps, Typography } from 'antd';
-import {
-  Bot,
-  Box,
-  LibraryBig,
-  MessageSquareCode,
-  Workflow,
-} from 'lucide-react';
+import { BookCopy, Bot, } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TabHeader from './components/TabHeader';
+import Studio from './Studio';
 
 const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {
   return space?.type === WorkspaceType.PUBLIC;
@@ -73,65 +68,78 @@ const Workspace: React.FC = () => {
   // tab内容
   const items: TabsProps['items'] = [
     {
-      key: 'bots',
+      key: 'studio',
       label: (
         <>
           <Space align="center" size={0}>
             <Bot size={22} className="ant-tabs-tab-btn-icon" />
-            {intl.formatMessage({ id: 'modu.space.tab.bots' })}
+            工作室
+          </Space>
+        </>
+      ),
+      children: <Studio workspaceUid={param!.spaceId!} />,
+    },
+    {
+      key: 'resource',
+      label: (
+        <>
+          <Space align="center" size={0}>
+            <BookCopy size={22} className="ant-tabs-tab-btn-icon" />
+            资源库
           </Space>
         </>
       ),
       children: 'Content of Tab Pane Bots',
     },
-    {
-      key: 'plugins',
-      label: (
-        <>
-          <Space align="center" size={0}>
-            <Box size={22} className="ant-tabs-tab-btn-icon" />
-            {intl.formatMessage({ id: 'modu.space.tab.plugins' })}
-          </Space>
-        </>
-      ),
-      children: 'Content of Tab Pane Plugins',
-    },
-    {
-      key: 'workflows',
-      label: (
-        <>
-          <Space align="center" size={0}>
-            <Workflow size={22} className="ant-tabs-tab-btn-icon" />
-            {intl.formatMessage({ id: 'modu.space.tab.workflows' })}
-          </Space>
-        </>
-      ),
-      children: 'Content of Tab Pane Workflows',
-    },
-    {
-      key: 'knowledges',
-      label: (
-        <>
-          <Space align="center" size={0}>
-            <LibraryBig size={22} className="ant-tabs-tab-btn-icon" />
-            {intl.formatMessage({ id: 'modu.space.tab.knowledge' })}
-          </Space>
-        </>
-      ),
-      children: 'Content of Tab Pane Knowledges',
-    },
-    {
-      key: 'cards',
-      label: (
-        <>
-          <Space align="center" size={0}>
-            <MessageSquareCode size={22} className="ant-tabs-tab-btn-icon" />
-            {intl.formatMessage({ id: 'modu.space.tab.cards' })}
-          </Space>
-        </>
-      ),
-      children: 'Content of Tab Pane Cards',
-    },
+
+    // {
+    //   key: 'plugins',
+    //   label: (
+    //     <>
+    //       <Space align="center" size={0}>
+    //         <Box size={22} className="ant-tabs-tab-btn-icon" />
+    //         {intl.formatMessage({ id: 'modu.space.tab.plugins' })}
+    //       </Space>
+    //     </>
+    //   ),
+    //   children: 'Content of Tab Pane Plugins',
+    // },
+    // {
+    //   key: 'workflows',
+    //   label: (
+    //     <>
+    //       <Space align="center" size={0}>
+    //         <Workflow size={22} className="ant-tabs-tab-btn-icon" />
+    //         {intl.formatMessage({ id: 'modu.space.tab.workflows' })}
+    //       </Space>
+    //     </>
+    //   ),
+    //   children: 'Content of Tab Pane Workflows',
+    // },
+    // {
+    //   key: 'knowledges',
+    //   label: (
+    //     <>
+    //       <Space align="center" size={0}>
+    //         <LibraryBig size={22} className="ant-tabs-tab-btn-icon" />
+    //         {intl.formatMessage({ id: 'modu.space.tab.knowledge' })}
+    //       </Space>
+    //     </>
+    //   ),
+    //   children: 'Content of Tab Pane Knowledges',
+    // },
+    // {
+    //   key: 'cards',
+    //   label: (
+    //     <>
+    //       <Space align="center" size={0}>
+    //         <MessageSquareCode size={22} className="ant-tabs-tab-btn-icon" />
+    //         {intl.formatMessage({ id: 'modu.space.tab.cards' })}
+    //       </Space>
+    //     </>
+    //   ),
+    //   children: 'Content of Tab Pane Cards',
+    // },
   ];
 
   // tab左右两侧内容
@@ -166,8 +174,12 @@ const Workspace: React.FC = () => {
   return (
     <>
       <TabHeader
+        centered
+        sticky
+        locationUpdate
         tabBarRender
         items={items}
+        defaultActiveKey={param.spaceModule || 'studio'}
         tabBarExtraContent={tabBarExtraContent}
       />
     </>

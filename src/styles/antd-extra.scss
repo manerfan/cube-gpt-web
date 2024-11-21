@@ -64,49 +64,6 @@
         .ant-layout-content {
             padding: 0 !important;
             min-height: 100vh !important;
-
-            .ant-tabs {
-                .ant-tabs-nav {
-                    .ant-tabs-nav-list {
-
-                        // 默认button样式
-                        .ant-tabs-tab-btn {
-                            font-size: 14px !important;
-                            font-weight: 500 !important;
-                            color: rgba(29, 28, 35, 0.6) !important;
-                            transition: color 0.3s ease-out;
-
-                            .ant-tabs-tab-btn-icon {
-                                position: relative;
-                                margin: 0px 5px -6px 0px;
-                            }
-                        }
-
-                        // 选中button样式
-                        .ant-tabs-tab-active {
-                            .ant-tabs-tab-btn {
-                                color: #589aF4 !important;
-                            }
-                        }
-
-                        // 禁用的button样式
-                        .ant-tabs-tab-disabled {
-                            .ant-tabs-tab-btn {
-                                color: rgb(187, 187, 187) !important;
-                            }
-                        }
-
-                        // button底部线条样式
-                        .ant-tabs-ink-bar {
-                            background-color: #589aF4 !important;
-                        }
-                    }
-                }
-
-                .ant-tabs-content {
-                    padding: 0 1rem 1rem !important;
-                }
-            }
         }
     }
 }
@@ -153,7 +110,93 @@
     }
 }
 
+.ant-tabs {
+    .ant-tabs-nav {
+        .ant-tabs-nav-list {
+
+            // 默认button样式
+            .ant-tabs-tab-btn {
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                color: rgba(29, 28, 35, 0.6) !important;
+                transition: color 0.3s ease-out;
+
+                .ant-tabs-tab-btn-icon {
+                    position: relative;
+                    margin: 0px 5px -6px 0px;
+                }
+            }
+
+            // 选中button样式
+            .ant-tabs-tab-active {
+                .ant-tabs-tab-btn {
+                    color: #589aF4 !important;
+                }
+            }
+
+            // 禁用的button样式
+            .ant-tabs-tab-disabled {
+                .ant-tabs-tab-btn {
+                    color: rgb(187, 187, 187) !important;
+                }
+            }
+
+            // button底部线条样式
+            .ant-tabs-ink-bar {
+                background-color: #589aF4 !important;
+            }
+        }
+    }
+
+    .ant-tabs-content {
+        padding: 0 1rem 1rem !important;
+    }
+}
+
+.ant-tabs {
+    .ant-tabs-nav {
+        .ant-tabs-nav-wrap {
+            .ant-tabs-nav-list {
+                .ant-tabs-tab {
+
+                    // 默认样式
+                    &.ant-tabs-tab-btn {
+                        font-size: 14px !important;
+                        font-weight: 500 !important;
+                        color: rgba(29, 28, 35, 0.6) !important;
+                        transition: color 0.3s ease-out;
+
+                        .ant-tabs-tab-btn-icon {
+                            position: relative;
+                            margin: 0px 5px -6px 0px;
+                        }
+                    }
+
+                    // 禁用样式
+                    &.ant-tabs-tab-disabled {
+                        .ant-tabs-tab-btn {
+                            color: rgb(187, 187, 187) !important;
+                        }
+                    }
+
+                    // 选中样式
+                    &.ant-tabs-tab-active {
+                        .ant-tabs-tab-btn {
+                            color: #0c0a09 !important;
+                        }
+                    }
+                }
+
+                .ant-tabs-ink-bar {
+                    background-color: #0c0a09 !important;
+                }
+            }
+        }
+    }
+}
+
 .menu-height-30 {
+
     .ant-menu-inline,
     .ant-menu-item {
         line-height: 30px !important;

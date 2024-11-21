@@ -40,7 +40,8 @@
         &[class^="language-"] {
             &>span {
                 display: flex;
-                flex-wrap: wrap;
+                // 开启折行
+                // flex-wrap: wrap;
             }
         }
     }

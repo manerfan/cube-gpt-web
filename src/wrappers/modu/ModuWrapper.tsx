@@ -133,7 +133,7 @@ const ModuWrapper: React.FC = () => {
         label: intl.formatMessage({ id: 'modu.menu.personal' }),
       });
       keyPath['menu-personal'] = {
-        path: `/modu/space/${privateSpace!.uid}/bots`,
+        path: `/modu/space/${privateSpace!.uid}/studio`,
         key: `/modu/space/${privateSpace!.uid}`,
       };
 
@@ -168,7 +168,7 @@ const ModuWrapper: React.FC = () => {
             label: space.name,
           });
           keyPath[`menu-team-${space.uid}`] = {
-            path: `/modu/space/${space.uid}/bots`,
+            path: `/modu/space/${space.uid}/studio`,
             key: `/modu/space/${space.uid}`,
           };
         });

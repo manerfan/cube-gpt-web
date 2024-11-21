@@ -168,8 +168,12 @@ const Setting: React.FC = () => {
   return (
     <>
       <TabHeader
+        centered
+        sticky
+        locationUpdate
         tabBarRender
         items={items}
+        defaultActiveKey={param.settingModule || 'providers'}
         tabBarExtraContent={tabBarExtraContent}
       />
     </>

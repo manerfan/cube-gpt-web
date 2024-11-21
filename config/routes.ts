@@ -30,7 +30,7 @@ type Routes = Array<
 const spaceRoutes: Routes = [
   {
     path: '',
-    redirect: 'bots',
+    redirect: 'studio',
   },
   {
     path: 'setting',

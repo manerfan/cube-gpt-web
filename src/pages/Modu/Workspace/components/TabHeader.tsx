@@ -16,55 +16,65 @@
 
 import { getPathAndModule } from '@/services/common';
 import { history, useLocation } from '@umijs/max';
-import { Tabs, TabsProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { ConfigProvider, Tabs, TabsProps } from 'antd';
+import { SizeType } from 'antd/lib/config-provider/SizeContext';
+import { useState } from 'react';
 import StickyBox from 'react-sticky-box';
 
 const TabHeader: React.FC<{
   items: TabsProps['items'],
+  centered?: boolean,
+  size?: SizeType;
+  sticky?: boolean,
+  locationUpdate?: boolean,
   tabBarRender?: boolean,
+  defaultActiveKey?: string;
   tabBarExtraContent?: Partial<Record<'left' | 'right', React.ReactNode>>
-}> = ({items, tabBarRender, tabBarExtraContent}) => {
+}> = ({ items, centered, size, sticky, locationUpdate, tabBarRender, defaultActiveKey, tabBarExtraContent }) => {
   const location = useLocation();
 
   // 选择的菜单KEY
-  const [activeKey, setActiveKey] = useState<string | undefined>();
+  const [activeKey, setActiveKey] = useState<string | undefined>(defaultActiveKey);
 
-  useEffect(() => {
-    const [path, module] = getPathAndModule(location.pathname);
-    if (path && module) {
-      setActiveKey(module);
-    }
-  }, [location.pathname]);
+  const tabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
+    <DefaultTabBar
+      {...props}
+      style={{
+        background: 'rgb(245, 245, 245, .2)',
+        backdropFilter: 'blur(5px)',
+        padding: '.6rem 0',
+      }}
+    />
+  )
 
-  const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
-    <StickyBox style={{ zIndex: 1 }}>
-      <DefaultTabBar
-        {...props}
-        style={{
-          background: 'rgb(245, 245, 245, .2)',
-          backdropFilter: 'blur(5px)',
-          padding: '.6rem 0',
-        }}
-      />
-    </StickyBox>
-  );
+  const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => {
+    return sticky ? (
+      <StickyBox style={{ zIndex: 1 }}>
+        {tabBar(props, DefaultTabBar)}
+      </StickyBox>
+    ) : (
+      tabBar(props, DefaultTabBar)
+    )
+  }
+
+
   return (
-    <>
-      <Tabs
-        centered
-        size="large"
-        activeKey={activeKey}
-        onChange={(activeKey: string) => {
-          setActiveKey(activeKey);
+    <Tabs
+      centered={centered}
+      size={size || "large"}
+      defaultActiveKey={defaultActiveKey}
+      activeKey={activeKey}
+      onChange={(activeKey: string) => {
+        setActiveKey(activeKey);
+        if (locationUpdate) {
           const [path] = getPathAndModule(location.pathname);
           history.push(`${path}/${activeKey}`);
-        }}
-        renderTabBar={!!tabBarRender ? renderTabBar : undefined}
-        tabBarExtraContent={tabBarExtraContent}
-        items={items}
-      />
-    </>
+        }
+      }}
+      renderTabBar={!!tabBarRender ? renderTabBar : undefined}
+      tabBarExtraContent={tabBarExtraContent}
+      items={items}
+    />
   );
 };
 
