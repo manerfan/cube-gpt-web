@@ -107,13 +107,14 @@ const ChatItem: React.FC<{
             vertical
             justify="flex-start"
             align="flex-start"
-            className="flex-auto"
+            className="flex-auto box-border"
+            style={{ width: 'calc(100% - 36px - 12px)' }}
           >
             <Flex
               justify="flex-start"
               align="center"
               gap={8}
-              className="w-full mb-2"
+              className="w-full mb-2 box-border"
             >
               <Typography.Text type="secondary">
                 {message.senderRole === 'user'
@@ -142,19 +143,19 @@ const ChatItem: React.FC<{
               vertical
               justify="flex-start"
               align="flex-start"
-              className={`w-auto max-w-full bg-white rounded-lg p-3 ${
-                loading ? 'bg-assistant-msg-loading' : ''
-              } ${messageClassName}`}
+              className={`w-auto max-w-full box-border bg-white rounded-lg p-3 ${loading ? 'bg-assistant-msg-loading' : ''
+                } ${messageClassName}`}
             >
               {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
               <List
                 itemLayout="horizontal"
                 bordered={false}
+                className='w-full'
                 dataSource={message?.messages}
                 renderItem={(msg) => (
                   <List.Item
                     key={msg.sectionUid}
-                    style={{ border: 'none', padding: 0 }}
+                    className='border-0 p-0 w-full'
                   >
                     {/* 文本 */}
                     {msg.contentType === 'text' && (
@@ -168,18 +169,18 @@ const ChatItem: React.FC<{
                         type="error"
                         showIcon
                         className="w-full my-3"
-                        // action={
-                        //   <Space>
-                        //     <Button
-                        //       type="primary"
-                        //       danger
-                        //       size="small"
-                        //       icon={<ReloadOutlined />}
-                        //     >
-                        //       重试
-                        //     </Button>
-                        //   </Space>
-                        // }
+                      // action={
+                      //   <Space>
+                      //     <Button
+                      //       type="primary"
+                      //       danger
+                      //       size="small"
+                      //       icon={<ReloadOutlined />}
+                      //     >
+                      //       重试
+                      //     </Button>
+                      //   </Space>
+                      // }
                       />
                     )}
                   </List.Item>

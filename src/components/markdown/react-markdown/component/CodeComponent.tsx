@@ -89,7 +89,9 @@ const CodeComponent = (props: any) => {
   }
 
   return match ? (
-    codeComponent
+    <div data-type='code-block'>
+      {codeComponent}
+    </div>
   ) : (
     <code {...rest} className={`font-code ${className}`}>
       {children}

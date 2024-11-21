@@ -15,6 +15,8 @@
  */
 
 .markdown {
+    width: 100%;
+    
     >* {
         margin-bottom: .6rem;
 
@@ -24,6 +26,7 @@
     }
 
     code {
+        // inline code
         &:not([class^="language-"]) {
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: .3rem;
@@ -33,15 +36,30 @@
             color: inherit;
         }
 
+        // code block
         &[class^="language-"] {
             &>span {
-                display: contents !important;
+                display: flex;
+                flex-wrap: wrap;
+            }
+        }
+    }
+
+    ol {
+        padding-left: 40px;
+
+        li {
+            &:not(:first-child) {
+                margin-top: 14px;
+            }
+
+            p {
+                margin-bottom: 6px;
             }
         }
     }
 
     table {
-
         th,
         td {
             border: 1px solid rgb(209 213 219);
