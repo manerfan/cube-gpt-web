@@ -27,12 +27,28 @@
 
     &:hover {
         background-color: #f5f5f5;
+
         .conversation-time {
             display: none;
         }
 
         .conversation-operator {
             display: flex;
+        }
+    }
+}
+
+.skeleton-list {
+    width: 100%;
+
+    &>div:nth-child(2) {
+        flex: 1 1 auto;
+
+        .skeleton-item {
+            width: 100% !important;
+            &>span {
+                width: 100% !important;
+            }
         }
     }
 }

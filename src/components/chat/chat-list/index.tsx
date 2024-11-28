@@ -16,7 +16,7 @@
 
 import LogoInfoSimple from '@/components/logo/LogoInfoSimple';
 import { MESSAGE } from '@/services/message/typings';
-import { List } from 'antd';
+import { List, Skeleton, Space } from 'antd';
 import _ from 'lodash';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -26,8 +26,9 @@ const ChatList: React.FC<{
   messages: MESSAGE.MessageContent[];
   hasMore?: boolean;
   loadMore?: () => void;
+  loadingMore?: boolean;
   loadingMessageUid?: string;
-}> = ({ messages, hasMore, loadMore, loadingMessageUid }) => {
+}> = ({ messages, hasMore, loadMore, loadingMore, loadingMessageUid }) => {
 
   return (
     <>
@@ -35,13 +36,15 @@ const ChatList: React.FC<{
         <LogoInfoSimple className="h-full" />
       ) : (
         <InfiniteScroll
-          pageStart={0}
           loadMore={() => loadMore?.()}
           hasMore={hasMore}
           useWindow={false}
           initialLoad={false}
           isReverse={true}
         >
+          {/* 加载动画 */}
+          <Skeleton avatar active paragraph={{ rows: 2 }} className={loadingMore ? '' : 'hidden'} />
+
           <List
             itemLayout="horizontal"
             bordered={false}

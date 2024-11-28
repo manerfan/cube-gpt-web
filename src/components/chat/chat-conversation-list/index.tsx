@@ -254,18 +254,23 @@ const ChatConversationList: React.FC<{
           </List.Item>
         )}
         loadMore={
-          hasMore &&
-          !loading && (
+          hasMore && (
             <Flex justify="center" align="center" className="w-full mt-10">
-              <Button type="primary" size="small" onClick={loadMore}>
-                加载更多
+              <Button color="default" variant="filled" size="small" loading={loading} onClick={loadMore}>
+                <Typography.Text type="secondary">加载更多</Typography.Text>
               </Button>
             </Flex>
           )
         }
       />
 
-      {loading && <Skeleton active />}
+      {loading && <Space direction='vertical' className='w-full'>
+        {_.times(2, (i) => <Space key={`skeleton-${i}`} className={`${styles['skeleton-list']}`}>
+          <Skeleton.Avatar active size='small' />
+          <Skeleton.Input active size='small' className={`${styles['skeleton-item']}`} />
+          <Skeleton.Button active size='small' />
+        </Space>)}
+      </Space>}
       {!loading && !hasMore && (
         <Divider>
           <Typography.Text type="secondary" className="text-xs">

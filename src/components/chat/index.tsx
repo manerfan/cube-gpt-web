@@ -81,14 +81,6 @@ const ChatContent: React.FC<{
       ? undefined
       : _.first(messages)?.messageUid;
     
-    const loadingMessageKey = ulid();
-    messageApi.open({
-      key: loadingMessageKey,
-      type: 'loading',
-      content: '加载中...',
-      duration: 0,
-    });
-    
     setLoadingMore(true);
     messageService
       .messages(convUid, fistMessageUid, 10)
@@ -105,7 +97,6 @@ const ChatContent: React.FC<{
       })
       .finally(() => {
         setLoadingMore(false);
-        messageApi.destroy(loadingMessageKey);
       });
   };
 

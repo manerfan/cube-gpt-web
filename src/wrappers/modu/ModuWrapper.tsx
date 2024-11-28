@@ -51,7 +51,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { Bot, Box, Home, Speech, User } from 'lucide-react';
+import { Bot, Box, MessageCircleMore, Speech, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -120,7 +120,7 @@ const ModuWrapper: React.FC = () => {
       const defaultMenuItems: MenuItem[] = [];
       defaultMenuItems.push({
         key: 'menu-chat',
-        icon: <Home />,
+        icon: <MessageCircleMore size={18} />,
         label: intl.formatMessage({ id: 'modu.menu.chat' }),
       });
       keyPath['menu-chat'] = {
@@ -129,7 +129,7 @@ const ModuWrapper: React.FC = () => {
       };
       defaultMenuItems.push({
         key: 'menu-personal',
-        icon: <User />,
+        icon: <User size={18} />,
         label: intl.formatMessage({ id: 'modu.menu.personal' }),
       });
       keyPath['menu-personal'] = {
@@ -141,7 +141,7 @@ const ModuWrapper: React.FC = () => {
       const exploreMenuItems: MenuItem[] = [];
       exploreMenuItems.push({
         key: 'menu-store-bot',
-        icon: <Bot />,
+        icon: <Bot size={18} />,
         label: intl.formatMessage({ id: 'modu.menu.botStore' }),
       });
       keyPath['menu-store-bot'] = {
@@ -150,7 +150,7 @@ const ModuWrapper: React.FC = () => {
       };
       exploreMenuItems.push({
         key: 'menu-store-plugin',
-        icon: <Box />,
+        icon: <Box size={18} />,
         label: intl.formatMessage({ id: 'modu.menu.pluginStore' }),
       });
       keyPath['menu-store-plugin'] = {
@@ -164,7 +164,7 @@ const ModuWrapper: React.FC = () => {
         _.forEach(publicSpaces, (space) => {
           teamsMenuItems.push({
             key: `menu-team-${space.uid}`,
-            icon: <Speech />,
+            icon: <Speech size={18} />,
             label: space.name,
           });
           keyPath[`menu-team-${space.uid}`] = {

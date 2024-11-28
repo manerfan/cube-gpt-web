@@ -202,4 +202,14 @@
         line-height: 30px !important;
         height: 30px !important;
     }
+
+    &.ant-menu-inline-collapsed {
+        .ant-menu-item {
+            .ant-menu-item-icon {
+                display: block;
+                margin: auto;
+                height: 100%;
+            }
+        }
+    }
 }
