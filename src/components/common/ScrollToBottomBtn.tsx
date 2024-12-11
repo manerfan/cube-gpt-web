@@ -30,7 +30,6 @@ const ScrollToBottomBtn: React.FC<{ className?: string }> = forwardRef(({ classN
   useImperativeHandle(ref, () => ({
     trigScrollToBottom() {
       scrollToBottom({ behavior: 'smooth' });
-      console.log('scroll to bottom');
     },
   }));
 

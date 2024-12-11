@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import LogoInfoSimple from '@/components/logo/LogoInfoSimple';
+import LogoInfoSimple from '@/components/common/logo/LogoInfoSimple';
 import { MESSAGE } from '@/services/message/typings';
 import { List, Skeleton, Space } from 'antd';
 import _ from 'lodash';

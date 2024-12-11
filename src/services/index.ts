@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
+import EventEmitter from 'eventemitter3';
 
 export * as authService from './auth';
 export * as systemService from './system';
@@ -23,6 +23,7 @@ export * as llmProviderService from './llm/provider';
 export * as llmModelService from './llm/model';
 export * as workspaceService from './workspace';
 export * as messageService from './message';
+export * as botService from './bot';
 
 export enum ErrorShowType {
   SILENT = 'SILENT',
@@ -39,3 +40,5 @@ export enum FormFieldValueStatusEnum {
   Warning = 'Warning',
   Default = 'Default',
 }
+
+export const eventBus = new EventEmitter();

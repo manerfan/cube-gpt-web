@@ -23,8 +23,8 @@ import remarkMath from 'remark-math';
 import styles from './styles.module.scss';
 
 import Markdown from 'react-markdown';
-import CodeComponent from '@/components/markdown/react-markdown/component/CodeComponent';
-import replaceParenthesesInMarkdown from '@/components/markdown/react-markdown/plugin/remark/remark-custom-math';
+import CodeComponent from '@/components/markdown/react-markdown/components/CodeComponent';
+import replaceParenthesesInMarkdown from '@/components/markdown/react-markdown/plugins/remark/remark-custom-math';
 
 const ChatMarkdown: React.FC<{
   children?: string;

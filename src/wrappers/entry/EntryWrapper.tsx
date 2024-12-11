@@ -16,15 +16,15 @@
 
 import { Link, Outlet, useIntl } from '@umijs/max';
 
-import HeaderSimple from '@/components/header/HeaderSimple';
+import HeaderSimple from '@/components/layout/header/HeaderSimple';
 import { Card, Col, Image, Layout, Row } from 'antd';
 
-import BackgroundBanderole from '@/components/background/BackgroundBanderole';
-import LogoInfo from '@/components/logo/LogoInfo';
+import BackgroundBanderole from '@/components/common/background/BackgroundBanderole';
+import LogoInfo from '@/components/common/logo/LogoInfo';
 import styles from './styles.module.scss';
 
 import { ThemeProvider } from '@lobehub/ui';
-import FooterSimple from '@/components/footer/FooterSimple';
+import FooterSimple from '@/components/layout/footer/FooterSimple';
 
 const EntryWrapper: React.FC = () => {
   const intl = useIntl();

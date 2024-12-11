@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import LogoInfo from '@/components/logo/LogoInfo';
+import LogoInfo from '@/components/common/logo/LogoInfo';
 import { Flex } from 'antd';
 
 const Chat: React.FC = () => {

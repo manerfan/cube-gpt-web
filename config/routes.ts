@@ -49,6 +49,24 @@ const spaceRoutes: Routes = [
     path: ':spaceModule',
     component: './Modu/Workspace',
   },
+  {
+    path: 'bot',
+    routes: [
+      {
+        path: ':botUid',
+        routes: [
+          {
+            path: 'edit',
+            component: './Modu/Workspace/Studio/BotEdit',
+          },
+          {
+            path: 'view',
+            component: './Modu/Workspace/Studio/BotView',
+          }
+        ]
+      },
+    ],
+  },
 ];
 
 const routes: Routes = [

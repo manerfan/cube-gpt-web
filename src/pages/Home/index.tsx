@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import BackgroundBanderole from "@/components/background/BackgroundBanderole";
-import HeaderSimple from "@/components/header/HeaderSimple";
+import BackgroundBanderole from "@/components/common/background/BackgroundBanderole";
+import HeaderSimple from "@/components/layout/header/HeaderSimple";
 import { ThemeProvider } from "@lobehub/ui";
-import Footer from '@/components/footer/Footer';
+import Footer from '@/components/layout/footer/Footer';
 import { LandingMarquee } from '@/components/landing/LandingMarquee';
 import { ByteDance, Cohere, Moonshot, Ollama, OpenAI, Zhipu, Anthropic, Qwen, Claude } from "@lobehub/icons";
 import styles from './styles.module.scss';

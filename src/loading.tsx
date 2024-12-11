@@ -15,8 +15,8 @@
  */
 
 import { Avatar, Result } from 'antd';
-import LdsRipple from './components/loading/LdsRipple';
-import IdeaSlogan from './components/logo/IdeaSlogan';
+import LdsRipple from './components/common/loading/LdsRipple';
+import IdeaSlogan from './components/common/logo/IdeaSlogan';
 
 const Loading: React.FC = () => {
   return (

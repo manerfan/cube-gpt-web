@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useRef, useState } from 'react';
 
 import {
   Button,
   Divider,
   Flex,
-  message,
   Space,
   Tooltip,
   Typography,
@@ -37,9 +36,7 @@ import {
 } from 'lucide-react';
 
 import type { MESSAGE } from '@/services/message/typings';
-import { MilkdownProvider } from '@milkdown/react';
-import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react'
-import MilkdownTextarea from '@/components/markdown/milkdown/milkdown-textarea';
+import LexicalTextarea, { LexicalTextareaRefProperty } from '@/components/markdown/lexical/lexical-textarea';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
@@ -49,53 +46,27 @@ const ChatInput: React.FC<{
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }> = ({ onSubmit, onClearMemory, onStop, loading, className, style }) => {
+  const lexicalTextareaRef = useRef<LexicalTextareaRefProperty>();
+  const [query, setQuery] = useState('');
+
   const [clearLoading, setClearLoading] = useState(false);
   const [stopLoading, setStopLoading] = useState(false);
 
-  const [query, setQuery] = useState('');
-
-  const submit = () => {
-    if (!_.isEmpty(_.trim(query))) {
+  const submit = (markdown?: string) => {
+    const content = markdown || query;
+    if (!_.isEmpty(_.trim(content))) {
       onSubmit?.({
         query: {
           inputs: [
             {
               type: 'text',
-              content: _.unescape(query),
+              content: _.unescape(content),
             },
           ],
         },
       });
     }
-    setQuery('');
-  };
-
-  const inputKeyDown = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case 'Enter': {
-        // 换行
-        if (event.shiftKey || event.ctrlKey || event.metaKey) {
-          // 发送
-          event.preventDefault();
-          submit();
-        }
-        break;
-      }
-      case '@': {
-        // 召唤机器人
-        message.info('召唤机器人');
-        break;
-      }
-      case '/':
-      case '、': {
-        // 召唤技能
-        message.info('召唤技能');
-        break;
-      }
-
-      default:
-        break;
-    }
+    lexicalTextareaRef?.current?.clearEditor();
   };
 
   return (
@@ -146,30 +117,24 @@ const ChatInput: React.FC<{
           style={style}
           className={`flex-auto rounded-xl bg-white py-4 w-full min-h-24`}
         >
-          <div className='w-full min-h-5 px-5 mb-3 max-h-40 overflow-y-scroll'>
-            <MilkdownProvider>
-              <ProsemirrorAdapterProvider>
-                <MilkdownTextarea
-                  placeholder='发送消息、@Bot 有什么问题尽管问我...'
-                  readOnly={loading}
-                  defaultValue=''
-                  value={query}
-                  onChange={setQuery}
-                  onKeyDown={inputKeyDown}
-                />
-                </ProsemirrorAdapterProvider>
-            </MilkdownProvider>
+          <div
+            className='w-full min-h-5 px-5 mb-3 max-h-40 overflow-y-scroll'
+            onKeyDown={(event) => {
+              if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                submit(query);
+              }
+            }}
+          >
+            <LexicalTextarea
+              ref={lexicalTextareaRef}
+              placeholder='发送消息、@召唤智能体、/召唤技能 有什么问题尽管问我...'
+              readOnly={loading}
+              defaultValue=''
+              showToolbar={false}
+              onChange={(markdown) => setQuery(markdown)} />
           </div>
-          {/* <Input.TextArea
-            autoSize={{ minRows: 1, maxRows: 6 }}
-            className={`border-0 rounded-0 outline-none focus:outline-none focus:border-0 focus:shadow-none leading-5 w-full min-h-5 px-5 mb-3`}
-            placeholder="发送消息、@Bot 有什么问题尽管问我..."
-            readOnly={loading}
-            onKeyDown={inputKeyDown}
-            defaultValue=''
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          /> */}
 
           {/* 底部按钮 */}
           <Flex justify="space-between" align="center" className="w-full px-4">
@@ -231,7 +196,7 @@ const ChatInput: React.FC<{
                     type="primary"
                     className="py-1 px-2 bg-sky-50"
                     icon={<img src="/logo.png" alt="modu" width={18} />}
-                    onClick={submit}
+                    onClick={() => submit(query)}
                   />
                 </Tooltip>
               ) : (

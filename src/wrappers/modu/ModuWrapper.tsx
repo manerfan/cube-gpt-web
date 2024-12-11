@@ -20,7 +20,7 @@ import _ from 'lodash';
 import styles from './styles.module.scss';
 
 import LanguageChanger from '@/components/language-changer/LanguageChanger';
-import IdeaSlogan from '@/components/logo/IdeaSlogan';
+import IdeaSlogan from '@/components/common/logo/IdeaSlogan';
 import { workspaceService } from '@/services';
 import { WorkspaceType } from '@/services/workspace';
 import {
@@ -53,6 +53,8 @@ import {
 } from 'antd';
 import { Bot, Box, MessageCircleMore, Speech, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { eventBus } from '@/services';
+
 type MenuItem = Required<MenuProps>['items'][number];
 
 type MenuPath = {
@@ -191,6 +193,18 @@ const ModuWrapper: React.FC = () => {
       });
     });
   }, [location.pathname, intl.locale]);
+
+  useEffect(() => {
+    // 处理折叠菜单的事件
+    const handleCollapsedEvent = (collapsed?: boolean) => {
+      if (collapsed === undefined) return;
+      setCollapsed(collapsed);
+    };
+    eventBus.addListener('modu.menu.collapsed', handleCollapsedEvent);
+    return () => {
+      eventBus.removeListener('modu.menu.collapsed', handleCollapsedEvent);
+    }
+  }, []);
 
   const onMenuClick = (menuItem: MenuItem) => {
     const key = menuItem!.key! as string;

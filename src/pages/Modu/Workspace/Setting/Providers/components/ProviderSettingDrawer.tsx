@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { convertFormSchema2AntdFormSchema } from '@/components/form';
+import { convertFormSchema2AntdFormSchema } from './DynamicForm';
 import { getLocaleContent } from '@/locales';
 import * as icons from '@/pages/Modu/Workspace/components/llm/icons';
 import * as llmService from '@/services/llm/provider';

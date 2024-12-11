@@ -31,7 +31,7 @@ export async function chat(
   onFinish?: () => void,
 ) {
   const connection = await sseRequest(
-    `/api/chat?workspace_uid=${workspaceUid}`,
+    `/api/chat?workspace_uid=${workspaceUid || ''}`,
     {
       method: 'POST',
       body: JSON.stringify(generateCmd),

@@ -193,6 +193,15 @@
             }
         }
     }
+
+    &.ant-tabs-content-no-padding {
+        .ant-tabs-nav {
+            margin: 0 !important;
+        }
+        .ant-tabs-content {
+            padding: 0 !important;
+        }
+    }
 }
 
 .menu-height-30 {

@@ -25,10 +25,13 @@ import { BOT } from '@/services/bot/typings';
 import * as botService from '@/services/bot';
 import _ from 'lodash';
 import { Bot, Layers2 } from 'lucide-react';
+import { useModel, history } from '@umijs/max';
 
 const Studio: React.FC<{
     workspaceUid: string
 }> = ({ workspaceUid }) => {
+    const { initialState } = useModel('@@initialState');
+    
     const [createModal, setCreateModal] = useState<{ open: boolean }>({ open: false })
     const showCreateModal = () => {
         setCreateModal({ open: true })
@@ -143,6 +146,13 @@ const Studio: React.FC<{
                                 </Dropdown>
                             </Space>
                         </Flex>)}
+                        onClick={() => {
+                            if (initialState?.userMe?.uid === bot.creatorUid) {
+                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`)
+                            } else if (!_.isEmpty(bot.publishUid)) {
+                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/view`)
+                            }
+                        }}
                     >
                         <Flex vertical className='w-full h-full'>
                             <Flex justify="flex-start" align="center" gap={8} className='w-full flex-auto'>

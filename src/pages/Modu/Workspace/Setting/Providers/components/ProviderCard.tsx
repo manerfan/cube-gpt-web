@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import StatusLight from '@/components/status/StatusLight';
+import StatusLight from './StatusLight';
 import { getLocaleContent } from '@/locales';
 import * as icons from '@/pages/Modu/Workspace/components/llm/icons';
 import { llmProviderService } from '@/services';
