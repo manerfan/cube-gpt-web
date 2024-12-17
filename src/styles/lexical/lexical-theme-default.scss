@@ -21,7 +21,7 @@
         outline-color: transparent !important;
         z-index: 1;
     }
-    
+
     .editor-placeholder {
         position: absolute;
         top: .2rem;
@@ -59,7 +59,7 @@
 
     .h1 {
         font-size: 24px;
-        color: rgb(5, 5, 5);
+        // color: rgb(5, 5, 5);
         font-weight: 700;
         margin: 0;
         text-transform: uppercase;
@@ -67,7 +67,7 @@
 
     .h2 {
         font-size: 18px;
-        color: rgb(5, 5, 5);
+        // color: rgb(5, 5, 5);
         font-weight: 400;
         margin: 0;
         text-transform: uppercase;
@@ -141,7 +141,7 @@
         background-color: rgb(240, 242, 245);
         font-family: Menlo, Consolas, Monaco, monospace;
         display: block;
-        padding: 8px 8px 8px 52px;
+        padding: 8px 8px 8px 36px;
         line-height: 1.53;
         font-size: 13px;
         margin: 0;
@@ -169,7 +169,7 @@
     .tableScrollableWrapper {
         overflow-x: scroll;
         max-width: calc(100% - 46px);
-        margin: 0px 25px 30px 0px;
+        margin: 0px 0px 10px 0px;
     }
 
     .tableScrollableWrapper>.table {
@@ -182,9 +182,14 @@
         border-spacing: 0;
         overflow-y: scroll;
         overflow-x: scroll;
-        table-layout: fixed;
+        table-layout: auto;
         width: fit-content;
         margin: 0px 25px 30px 0px;
+
+        td,
+        th {
+            min-width: 64px;
+        }
     }
 
     .tableRowStriping tr:nth-child(even) {
@@ -201,7 +206,7 @@
 
     .tableCell {
         border: 1px solid #bbb;
-        width: 75px;
+        width: auto;
         vertical-align: top;
         text-align: start;
         padding: 6px 8px;

@@ -8,7 +8,7 @@
  */
 .tableScrollableWrapper {
   overflow-x: auto;
-  margin: 0px 25px 30px 0px;
+  margin: 0px 0px 10px 0px;
 }
 .tableScrollableWrapper > .table {
   /* Remove the table's margin and put it on the wrapper */
@@ -19,9 +19,13 @@
   border-spacing: 0;
   overflow-y: scroll;
   overflow-x: scroll;
-  table-layout: fixed;
+  table-layout: auto;
   width: fit-content;
   margin: 0px 25px 30px 0px;
+  td,
+  th {
+    min-width: 64px;
+  }
 }
 .tableRowStriping tr:nth-child(even) {
   background-color: #f2f5fb;
@@ -34,7 +38,7 @@
 }
 .tableCell {
   border: 1px solid #bbb;
-  width: 75px;
+  width: auto;
   vertical-align: top;
   text-align: start;
   padding: 6px 8px;

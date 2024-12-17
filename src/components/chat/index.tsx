@@ -36,7 +36,9 @@ const ChatContent: React.FC<{
   workspaceUid?: string;
   conversationUid?: string;
   className?: string;
-}> = ({ workspaceUid, conversationUid: _conversationUid, className }) => {
+  withChatBackgroundImage?: boolean;
+  emptyNode?: React.ReactNode;
+}> = ({ workspaceUid, conversationUid: _conversationUid, className, withChatBackgroundImage=true, emptyNode }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
@@ -263,7 +265,7 @@ const ChatContent: React.FC<{
         vertical
         align="center"
         justify="center"
-        className={`h-full w-full p-6 ${styles['chat-container']} ${className}`}
+        className={`h-full w-full p-6 ${styles['chat-container']} ${withChatBackgroundImage && styles['chat-background-image']} ${className}`}
       >
         <Layout
           className={`bg-inherit h-full max-h-full w-full max-w-screen-md ${styles['chat-content']}`}
@@ -282,6 +284,7 @@ const ChatContent: React.FC<{
                 hasMore={hasMore}
                 loadMore={loadMore}
                 loadingMessageUid={loadingMessageUid}
+                emptyNode={emptyNode}
               />
               <ScrollToBottomBtn ref={chatContentPopoverRef} />
             </ScrollToBottom>

@@ -28,9 +28,12 @@ import _ from 'lodash';
 import {
   ArrowBigUp,
   AtSign,
+  Command,
   CornerDownLeft,
   FilePlus,
+  Maximize2,
   MessageCircleOff,
+  Minimize2,
   Sparkles,
   SquareSplitVertical,
 } from 'lucide-react';
@@ -51,6 +54,8 @@ const ChatInput: React.FC<{
 
   const [clearLoading, setClearLoading] = useState(false);
   const [stopLoading, setStopLoading] = useState(false);
+
+  const [inputExpand, setInputExpand] = useState(false);
 
   const submit = (markdown?: string) => {
     const content = markdown || query;
@@ -75,34 +80,9 @@ const ChatInput: React.FC<{
         justify="flex-start"
         align="flex-end"
         gap={12}
-        className={`w-full ${className}`}
+        className={`w-full relative ${className}`}
         style={style}
       >
-        <Flex vertical justify="flex-start" align="flex-start" className="w-9">
-          <Tooltip title="清除记忆">
-            <Button
-              size="small"
-              type="default"
-              shape="circle"
-              className="p-1 mb-4"
-              icon={
-                <SquareSplitVertical
-                  size={18}
-                  color="rgb(71 85 105)"
-                  style={{ marginTop: '.2rem' }}
-                />
-              }
-              disabled={loading}
-              loading={clearLoading}
-              onClick={() => {
-                if (!!onClearMemory) {
-                  setClearLoading(true);
-                  onClearMemory().finally(() => setClearLoading(false));
-                }
-              }}
-            />
-          </Tooltip>
-        </Flex>
         {/* {loading && (
           <Flex justify="center" align="center" className="w-full mb-3">
             <Button type="primary" icon={stopIcon}>
@@ -118,7 +98,7 @@ const ChatInput: React.FC<{
           className={`flex-auto rounded-xl bg-white py-4 w-full min-h-24`}
         >
           <div
-            className='w-full min-h-5 px-5 mb-3 max-h-40 overflow-y-scroll'
+            className={`w-full min-h-12 px-5 mb-3 overflow-y-scroll transition-all duration-500 ${inputExpand ? 'h-96' : 'max-h-40'}`}
             onKeyDown={(event) => {
               if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
                 event.preventDefault();
@@ -138,17 +118,36 @@ const ChatInput: React.FC<{
 
           {/* 底部按钮 */}
           <Flex justify="space-between" align="center" className="w-full px-4">
-            {/* 技能 */}
-            <Tooltip title="技能">
-              <Button
-                size="small"
-                type="text"
-                className="p-1"
-                disabled={loading}
-              >
-                <Sparkles size={18} />
-              </Button>
-            </Tooltip>
+            <Space>
+              <Tooltip title="清除记忆">
+                <Button
+                  size="small"
+                  type="text"
+                  className="p-1"
+                  disabled={loading}
+                  loading={clearLoading}
+                  onClick={() => {
+                    if (!!onClearMemory) {
+                      setClearLoading(true);
+                      onClearMemory().finally(() => setClearLoading(false));
+                    }
+                  }}
+                >
+                  <SquareSplitVertical size={18} />
+                </Button>
+              </Tooltip>
+              {/* 技能 */}
+              <Tooltip title="技能">
+                <Button
+                  size="small"
+                  type="text"
+                  className="p-1"
+                  disabled={loading}
+                >
+                  <Sparkles size={18} />
+                </Button>
+              </Tooltip>
+            </Space>
 
             <Space align="center">
               <Typography.Text type="secondary">
@@ -156,8 +155,8 @@ const ChatInput: React.FC<{
                   <CornerDownLeft size={14} className="relative top-0.5" />
                   <span>换行</span>
                   <span>/</span>
+                  <Command size={14} className="relative top-0.5" />
                   <CornerDownLeft size={14} className="relative top-0.5" />
-                  <ArrowBigUp size={16} className="relative top-0.5" />
                   <span>发送</span>
                 </Space>
               </Typography.Text>
@@ -219,6 +218,11 @@ const ChatInput: React.FC<{
             </Space>
           </Flex>
         </Flex>
+
+        <Button type='text' size='small' className='absolute h-4 p-0.5 top-1 right-1' onClick={() => setInputExpand(!inputExpand)}>
+          {inputExpand ? <Minimize2 size={12} color='rgb(156 163 175)' /> : <Maximize2 size={12} color='rgb(156 163 175)' />}
+
+        </Button>
       </Flex>
     </>
   );

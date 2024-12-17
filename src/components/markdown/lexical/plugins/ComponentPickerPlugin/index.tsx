@@ -114,7 +114,7 @@ function getDynamicOptions(editor: LexicalEditor, queryString: string) {
     return options;
   }
 
-  const tableMatch = queryString.match(/^([1-9]\d?)(?:x([1-9]\d?)?)?$/);
+  const tableMatch = queryString.match(/^(?:table)([1-9])(?:x([1-9])?)?$/);
 
   if (tableMatch !== null) {
     const rows = tableMatch[1];
@@ -126,7 +126,7 @@ function getDynamicOptions(editor: LexicalEditor, queryString: string) {
       ...colOptions.map(
         (columns) =>
           new ComponentPickerOption(`${rows}x${columns} Table`, {
-            icon: <i className="icon table" />,
+            icon: blockTypeToBlockIcon.table,
             keywords: ['table'],
             onSelect: () =>
               editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),

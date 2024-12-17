@@ -68,7 +68,7 @@ const CodeComponent = (props: any) => {
           </Flex>
           <SyntaxHighlighter
             {...rest}
-            PreTag="div"
+            PreTag="pre"
             language={language}
             wrapLongLines={true}
             style={codeTheme}

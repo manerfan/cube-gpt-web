@@ -21,6 +21,11 @@ import type { USER } from '@services/user/typings';
 declare namespace BOT {
   type BotAddCmd = {
     /**
+     * uid
+     */
+    uid?: string;
+
+    /**
      * 名称
      */
     name: string;

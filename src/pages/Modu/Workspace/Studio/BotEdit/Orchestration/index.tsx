@@ -14,21 +14,34 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { BotMode } from '@/services/bot';
 import * as botService from '@/services/bot';
 import SingleAgent from './SingleAgent';
 import MultiAgent from './MultiAgent';
+import { WORKSPACE } from '@/services/workspace/typings';
+import { BOT } from '@/services/bot/typings';
+import { eventBus } from '@/services';
 
 const BotOrchestration: React.FC<{
-    workspaceUid: string,
-    botUid: string
-}> = ({ workspaceUid, botUid }) => {
-    const [botMode, setBotMode] = useState<BotMode>(botService.BotMode.SINGLE_AGENT);
+    workspace: WORKSPACE.WorkspaceEntity,
+    bot: BOT.BotEntity
+}> = ({ workspace, bot }) => {
+    const [botMode, setBotMode] = useState<BotMode>(bot.mode as BotMode.SINGLE_AGENT);
 
-    return <div className='w-full grid' style={{ minHeight: 'calc(100vh - 70px)' }}>
-        {botMode === botService.BotMode.SINGLE_AGENT && <SingleAgent workspaceUid={workspaceUid} botUid={botUid} />}
-        {botMode === botService.BotMode.MULTI_AGENTS && <MultiAgent workspaceUid={workspaceUid} botUid={botUid} />}
+    useEffect(() => {
+        const handleBotModeEvent = (mode: BotMode) => {
+            setBotMode(mode);
+        }
+        eventBus.addListener('modu.bot.mode', handleBotModeEvent);
+        return () => {
+            eventBus.removeListener('modu.bot.mode', handleBotModeEvent);
+        }
+    }, [workspace, bot]);
+
+    return <div className='w-full grid overflow-hidden' style={{ height: 'calc(100dvh - 70px)' }}>
+        {botMode === botService.BotMode.SINGLE_AGENT && <SingleAgent workspace={workspace} bot={bot} />}
+        {botMode === botService.BotMode.MULTI_AGENTS && <MultiAgent workspace={workspace} bot={bot} />}
     </div>;
 }
 

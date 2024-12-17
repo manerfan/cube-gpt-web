@@ -16,9 +16,9 @@
 
 import { CheckCircleFilled, EditOutlined, MoreOutlined, RobotOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
-import { Flex, Radio, Input, Button, Typography, Avatar, Space, Dropdown, Tooltip, Skeleton, Divider } from 'antd';
+import { Flex, Radio, Input, Button, Typography, Avatar, Space, Dropdown, Tooltip, Skeleton, Divider, message } from 'antd';
 import styles from './styles.module.scss';
-import BotCreateModal from './BotCreateModal';
+import BotUpdateModal from './BotCreateModal';
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { BOT } from '@/services/bot/typings';
@@ -31,7 +31,7 @@ const Studio: React.FC<{
     workspaceUid: string
 }> = ({ workspaceUid }) => {
     const { initialState } = useModel('@@initialState');
-    
+
     const [createModal, setCreateModal] = useState<{ open: boolean }>({ open: false })
     const showCreateModal = () => {
         setCreateModal({ open: true })
@@ -109,6 +109,36 @@ const Studio: React.FC<{
                 </ProCard>
 
                 {_.map(bots, (bot) => {
+                    const dropdownItems = [{
+                        key: 'chat',
+                        label: <Typography.Text>快速对话</Typography.Text>,
+                        disabled: false
+                    }];
+                    if (initialState?.userMe?.uid === bot.creatorUid) {
+                        dropdownItems.push({
+                            key: 'edit',
+                            label: <Typography.Text>编辑</Typography.Text>,
+                            disabled: false
+                        });
+                        dropdownItems.push({
+                            key: 'duplicate',
+                            label: <Typography.Text>创建副本</Typography.Text>,
+                            disabled: true
+                        });
+                        dropdownItems.push({
+                            key: 'migrate',
+                            label: <Typography.Text>迁移</Typography.Text>,
+                            disabled: true
+                        });
+                        dropdownItems.push({
+                            key: 'delete',
+                            label: <Typography.Text type='danger'>删除</Typography.Text>,
+                            disabled: false
+                        });
+                    }
+
+                    const hasPublished = !!bot?.publishUid;
+
                     return <ProCard
                         hidden={refreshBots}
                         key={bot.uid}
@@ -125,24 +155,36 @@ const Studio: React.FC<{
                             </Space>
 
                             <Space>
-                                <Button size='small' icon={<StarOutlined />} color='default' variant='filled'></Button>
+                                <Tooltip title={'收藏'}>
+                                    <Button size='small' icon={<StarOutlined />} color='default' variant='filled'
+                                        className='border-none' disabled={!hasPublished}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }} />
+                                </Tooltip>
                                 <Dropdown placement="bottomRight" trigger={['click']} menu={{
-                                    items: [
-                                        {
-                                            key: '0',
-                                            label: <Typography.Text>创建副本</Typography.Text>
-                                        },
-                                        {
-                                            key: '1',
-                                            label: <Typography.Text>迁移</Typography.Text>
-                                        },
-                                        {
-                                            key: '2',
-                                            label: <Typography.Text type='danger'>删除</Typography.Text>
+                                    items: dropdownItems,
+                                    onClick: ({ key, domEvent }) => {
+                                        domEvent.stopPropagation();
+                                        domEvent.preventDefault();
+                                        switch (key) {
+                                            case 'edit':
+                                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`);
+                                                break;
+                                            case 'chat':
+                                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/view`);
+                                                break;
+                                            case 'delete':
+                                                message.info('敬请期待')
+                                                break;
                                         }
-                                    ]
+                                    }
                                 }}>
-                                    <Button size='small' icon={<MoreOutlined />} color='default' variant='filled'></Button>
+                                    <Button size='small' icon={<MoreOutlined />} color='default' variant='filled' onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }} />
                                 </Dropdown>
                             </Space>
                         </Flex>)}
@@ -158,8 +200,8 @@ const Studio: React.FC<{
                             <Flex justify="flex-start" align="center" gap={8} className='w-full flex-auto'>
                                 <Flex vertical justify="center" align="flex-start" className='h-full' style={{ width: 'calc(100% - 76px)' }}>
                                     <Flex justify="flex-start" align="center" className='w-full h-1/2 flex-auto'>
-                                        <Typography.Text ellipsis>{bot.name}</Typography.Text>
-                                        <Typography.Text strong className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publishUid) ? 'text-gray-500' : 'text-red-500'}`}>
+                                        <Typography.Text strong ellipsis className='text-lg'>{bot.name}</Typography.Text>
+                                        <Typography.Text className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publishUid) ? 'text-gray-500' : 'text-red-500'}`}>
                                             {_.isEmpty(bot.publishUid) ? <EditOutlined /> : <CheckCircleFilled />}
                                         </Typography.Text>
                                     </Flex>
@@ -221,7 +263,14 @@ const Studio: React.FC<{
             )
         }
 
-        <BotCreateModal workspaceUid={workspaceUid} open={createModal.open} onCancel={closeCreateModal} onCreate={closeCreateModal} />
+        <BotUpdateModal
+            workspaceUid={workspaceUid} open={createModal.open}
+            modalMode="create"
+            onCancel={closeCreateModal}
+            onUpdate={() => {
+                loadMoreBots(true);
+                closeCreateModal();
+            }} />
     </>
 };
 

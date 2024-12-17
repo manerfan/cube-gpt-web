@@ -49,6 +49,42 @@ export async function add(
 }
 
 /**
+ * 修改智能体
+ */
+export async function update(
+  workspaceUid: string,
+  botUid: string,
+  addCmd: BOT.BotAddCmd,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<BOT.BotEntity>> {
+  return request<Response.SingleResponse<BOT.BotEntity>>(
+    `/api/workspace/${workspaceUid}/bot/${botUid}`,
+    {
+      method: 'PUT',
+      data: { ...addCmd, workspaceUid, creatorUid: '' },
+      ...(options || {}),
+    },
+  );
+}
+
+/**
+ * 查询智能体详情
+ */
+export async function detail(
+  workspaceUid: string,
+  botUid: string,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<BOT.BotEntity>> {
+  return request<Response.SingleResponse<BOT.BotEntity>>(
+    `/api/workspace/${workspaceUid}/bot/${botUid}`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+/**
  * 查询智能体列表
  */
 export async function find(
@@ -61,7 +97,7 @@ export async function find(
     `/api/workspace/${workspaceUid}/bot`,
     {
       method: 'GET',
-      params: {...listQry, maxCount},
+      params: { ...listQry, maxCount },
       ...(options || {}),
     },
   );

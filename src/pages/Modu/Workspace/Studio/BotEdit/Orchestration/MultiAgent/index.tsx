@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import { BOT } from '@/services/bot/typings';
+import { WORKSPACE } from '@/services/workspace/typings';
 import { Splitter } from 'antd';
-import { useState } from 'react';
 
 const MultiAgent: React.FC<{
-    workspaceUid: string,
-    botUid: string
-}> = ({ workspaceUid, botUid }) => {
+    workspace: WORKSPACE.WorkspaceEntity,
+    bot: BOT.BotEntity
+}> = ({ workspace, bot }) => {
     return <Splitter className='w-full'>
         <Splitter.Panel min={480}>
             这里放编排内容

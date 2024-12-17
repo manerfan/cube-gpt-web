@@ -15,17 +15,19 @@
  */
 
 import type { BotMode } from '@/services/bot';
-import { Flex, List, Popover, Select, Space, Typography } from 'antd';
+import { Flex, List, Popover, Space, Typography } from 'antd';
 import * as botService from '@/services/bot';
 import { Layers2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import _ from 'lodash';
+import { eventBus } from '@/services';
 
 const BotModeSelect: React.FC<{
     defaultMode: BotMode
     onSelect?: (mode: BotMode) => void
 }> = ({ defaultMode, onSelect }) => {
+
     const [mode, setMode] = useState<BotMode>(defaultMode);
     const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -86,6 +88,9 @@ const BotModeSelect: React.FC<{
                             setMode(option.value);
                             onSelect?.(option.value);
                             setPopoverOpen(false);
+
+                            // 发送切换 bot mode 的事件 see BotOrchestration
+                            eventBus.emit('modu.bot.mode', option.value);
                         }}
                     >{optionRender(option)}</List.Item>
                 )}

@@ -18,19 +18,44 @@ import { eventBus } from '@/services';
 import TabHeader from '../../components/TabHeader';
 import { Avatar, Button, Flex, Space, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { BOT } from '@/services/bot/typings';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CheckCircleFilled, EditOutlined, HistoryOutlined, LeftOutlined, RobotOutlined } from '@ant-design/icons';
 import { UsersRound } from 'lucide-react';
 import BotOrchestration from './Orchestration';
+import { workspaceService, botService } from '@/services';
+import { WORKSPACE } from '@/services/workspace/typings';
+import { useParams } from '@umijs/max';
+import BotUpdateModal from '../BotCreateModal';
 
-const BotEdit: React.FC<{
-    workspaceUid: string,
-    botUid: string
-}> = ({ workspaceUid, botUid }) => {
-    // 发送折叠菜单的事件 see ModuWrapper
-    eventBus.emit('modu.menu.collapsed', true);
+const BotEdit: React.FC = () => {
+    const param = useParams();
 
+    const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
     const [bot, setBot] = useState<BOT.BotEntity>();
+
+    const [editModal, setEditModal] = useState<{ open: boolean }>({ open: false })
+
+    const showEditModal = () => {
+        setEditModal({ open: true })
+    }
+    const closeEditModal = () => {
+        setEditModal({ open: false })
+    }
+
+    useEffect(() => {
+        workspaceService.detail(param.spaceId!).then((res) => {
+            const space = res.content;
+            setWorkspace(space);
+        });
+
+        botService.detail(param.spaceId!, param.botUid!).then((res) => {
+            const bot = res.content;
+            setBot(bot);
+        });
+
+        // 发送折叠菜单的事件 see ModuWrapper
+        eventBus.emit('modu.menu.collapsed', true);
+    }, [param.spaceId, param.botUid]);
 
     // tab左右两侧内容
     const tabBarExtraContent = {
@@ -49,7 +74,7 @@ const BotEdit: React.FC<{
                             {bot?.name || 'BOT'}
                         </Typography.Text>
 
-                        <Button type="text" size='small' className='p-1'>
+                        <Button type="text" size='small' className='p-1' onClick={showEditModal}>
                             <Typography.Text className="text-gray-500 font-bold"><EditOutlined /></Typography.Text>
                         </Button>
                     </Space>
@@ -58,15 +83,17 @@ const BotEdit: React.FC<{
                         <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
                             <Space>
                                 <UsersRound size={10} />
-                                <Typography.Text className="text-xs">林中小舍</Typography.Text>
+                                <Typography.Text className="text-xs">{workspace?.name}</Typography.Text>
                             </Space>
                         </Tag>
-                        <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
-                            <Space>
-                                <CheckCircleFilled />
-                                <Typography.Text className="text-xs">已发布</Typography.Text>
-                            </Space>
-                        </Tag>
+                        {!!bot?.publishUid &&
+                            <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
+                                <Space>
+                                    <CheckCircleFilled />
+                                    <Typography.Text className="text-xs">已发布</Typography.Text>
+                                </Space>
+                            </Tag>
+                        }
                     </Space>
 
                 </Flex>
@@ -94,7 +121,7 @@ const BotEdit: React.FC<{
                     </Space>
                 </>
             ),
-            children: <BotOrchestration workspaceUid={workspaceUid} botUid={botUid} />,
+            children: workspace && bot && <BotOrchestration workspace={workspace} bot={bot} />,
         },
     ]
 
@@ -110,6 +137,16 @@ const BotEdit: React.FC<{
                 defaultActiveKey='orchestration'
                 tabBarExtraContent={tabBarExtraContent}
             />
+
+            <BotUpdateModal
+                workspaceUid={param.spaceId!} open={editModal.open}
+                modalMode="edit"
+                bot={bot}
+                onCancel={closeEditModal}
+                onUpdate={(_bot) => {
+                    setBot({ ...bot!, name: _bot.name, description: _bot.description })
+                    closeEditModal();
+                }} />
         </>
     );
 }

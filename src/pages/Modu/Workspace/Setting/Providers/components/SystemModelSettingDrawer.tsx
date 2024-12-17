@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import ModelSelector from '@/pages/Modu/Workspace/components/llm/ModelSelector';
+import ModelSelectorWithType from '@/pages/Modu/Workspace/components/llm/ModelSelector/ModelSelectorWithType';
 import type { LLM } from '@/services/llm/typings';
 import {
   LeftOutlined,
@@ -39,7 +39,7 @@ import { useIntl } from '@umijs/max';
 import { useEffect, useState } from 'react';
 
 import { ProviderStatus } from '@/services/llm/provider';
-import _ from 'lodash';
+import _, { set } from 'lodash';
 
 type ModelSetting = Record<ModelType, LLM.ModelConfig>;
 
@@ -55,57 +55,22 @@ const SystemModelSettingDrawer: React.FC<{
     return window.innerWidth < 576 ? '100%' : 520;
   };
 
-  // TEXT_GENERATION
-  const [
-    providerWithTextGenerationModels,
-    setProviderWithTextGenerationModels,
-  ] = useState<LLM.ProviderWithModelsSchema[]>([]);
-  const [
-    providerWithTextGenerationModelLoading,
-    setProviderWithTextGenerationModelLoading,
-  ] = useState<boolean>(false);
+  type ProviderWithModelMap = Record<ModelType, LLM.ProviderWithModelsSchema[]>;
+  const [providerWithModelMap, setProviderWithModelMap] = useState<ProviderWithModelMap>({} as ProviderWithModelMap);
+  // const providerWithModelMap: Record<
+  //   ModelType,
+  //   LLM.ProviderWithModelsSchema[]
+  // > = {
+  //   [ModelType.TEXT_GENERATION]: providerWithTextGenerationModels,
+  // };
 
-  const providerWithModelMap: Record<
-    ModelType,
-    LLM.ProviderWithModelsSchema[]
-  > = {
-    [ModelType.TEXT_GENERATION]: providerWithTextGenerationModels,
-  };
-
-  const handleProviderConfig = (
-    providerConfig: LLM.ProviderConfig,
-    providerWithModels: LLM.ProviderWithModelsSchema[],
-    setProviderWithModels: (
-      providerWithModels: LLM.ProviderWithModelsSchema[],
-    ) => void,
-  ) => {
-    const newProviderWithModels = _.cloneDeep(providerWithModels);
-    _.forEach(newProviderWithModels, (providerWithModel) => {
-      if (providerWithModel.provider.provider === providerConfig.providerName) {
-        providerWithModel.status = ProviderStatus.ACTIVE;
-      }
-    });
-    setProviderWithModels(newProviderWithModels);
-  };
-
-  const [modelSetting, setModelSetting] = useState<ModelSetting>(
-    {} as ModelSetting,
-  );
+  const [modelSetting, setModelSetting] = useState<ModelSetting>({} as ModelSetting);
   const [saving, setSaving] = useState<boolean>(false);
 
   useEffect(() => {
     if (!open) {
       return;
     }
-
-    // TEXT_GENERATION model schemas
-    setProviderWithTextGenerationModelLoading(true);
-    modelService
-      .allModelsOnType(workspaceUid, ModelType.TEXT_GENERATION)
-      .then((res) => {
-        setProviderWithTextGenerationModels(res.content);
-      })
-      .finally(() => setProviderWithTextGenerationModelLoading(false));
 
     // 已保存的系统模型配置
     modelService.getSystemModelConfig(workspaceUid).then((res) => {
@@ -201,9 +166,9 @@ const SystemModelSettingDrawer: React.FC<{
               </Space>
             }
           >
-            <ModelSelector
+            <ModelSelectorWithType
               workspaceUid={workspaceUid}
-              providerWithModels={providerWithTextGenerationModels}
+              modelType={ModelType.TEXT_GENERATION}
               providerName={
                 modelSetting[ModelType.TEXT_GENERATION]?.providerName
               }
@@ -211,7 +176,6 @@ const SystemModelSettingDrawer: React.FC<{
               modelParameters={
                 modelSetting[ModelType.TEXT_GENERATION]?.modelParameters
               }
-              loading={providerWithTextGenerationModelLoading}
               onSelect={(providerName, modelName, modelParameters) => {
                 const setting = _.cloneDeep(modelSetting);
                 setting[ModelType.TEXT_GENERATION] = {
@@ -221,16 +185,13 @@ const SystemModelSettingDrawer: React.FC<{
                 };
                 setModelSetting(setting);
               }}
+              onProviderWithModelsLoaded={(providerWithModels) => {
+                  setProviderWithModelMap((prev) => ({
+                    ...prev,
+                    [ModelType.TEXT_GENERATION]: providerWithModels,
+                  }));
+              }}
               onProviderConfigAdd={(providerConfig) => {
-                // 保证下拉列表中的Provider正常
-                if (!!providerConfig) {
-                  handleProviderConfig(
-                    providerConfig,
-                    providerWithTextGenerationModels,
-                    setProviderWithTextGenerationModels,
-                  );
-                }
-
                 // 保证父级Provider列表可以更新
                 onProviderConfigAdd?.(providerConfig);
               }}

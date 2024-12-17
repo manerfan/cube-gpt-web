@@ -22,12 +22,14 @@ import { useState } from 'react';
 import styles from './styles.module.scss';
 import * as botService from '@/services/bot';
 
-const BotCreateModal: React.FC<{
+const BotUpdateModal: React.FC<{
     open: boolean,
-    onCreate?: (bot: BOT.BotAddCmd) => void,
+    onUpdate?: (bot: BOT.BotAddCmd) => void,
     onCancel?: () => void,
     workspaceUid: string,
-}> = ({ open, onCreate, onCancel, workspaceUid }) => {
+    modalMode: 'create' | 'edit',
+    bot?: BOT.BotEntity,
+}> = ({ open, onUpdate, onCancel, workspaceUid, modalMode = 'create', bot }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
@@ -37,19 +39,37 @@ const BotCreateModal: React.FC<{
 
     const onSubmit = async (addCmd: BOT.BotAddCmd) => {
         setLoading(true);
-        botService.add(workspaceUid, addCmd).then((resp) => {
-            onCreate?.(resp.content);
-            message.success(`创建智能体成功`);
-        }).finally(() => setLoading(false));
+        if (modalMode === 'create') {
+            botService.add(workspaceUid, addCmd).then((resp) => {
+                onUpdate?.(resp.content);
+                message.success(`创建智能体成功`);
+            }).finally(() => setLoading(false));
+        } else {;
+            botService.update(workspaceUid, bot!.uid, addCmd).then((resp) => {
+                onUpdate?.(resp.content);
+                message.success(`修改智能体成功`);
+            }).finally(() => setLoading(false));
+        }
     };
 
     return <Modal
-        title="创建智能体"
+        title={modalMode === 'create' ? "创建智能体" : "编辑智能体"}
         open={open}
         onOk={submit}
         confirmLoading={loading}
         onCancel={onCancel}
-        destroyOnClose
+        destroyOnClose={true}
+        afterOpenChange={(open) => {
+            if(!open) {
+                form.resetFields()
+            } else if(!!bot) {
+                form.setFieldsValue({
+                    name: bot?.name,
+                    description: bot?.description,
+                    avatar: bot?.avatar
+                })
+            };
+        }}
     >
         <Form
             layout="vertical"
@@ -60,11 +80,11 @@ const BotCreateModal: React.FC<{
             <Form.Item<BOT.BotAddCmd>
                 label="智能体名称" name="name" className='font-bold'
                 rules={[{ required: true, message: '请给智能体起一个独一无二的名字吧' }]}>
-                <Input showCount maxLength={20} placeholder="给智能体起一个独一无二的名字" />
+                <Input defaultValue={bot?.name} showCount maxLength={20} placeholder="给智能体起一个独一无二的名字" />
             </Form.Item>
             <Form.Item<BOT.BotAddCmd>
                 label="智能体功能介绍" name="description" className='font-bold'>
-                <Input.TextArea showCount maxLength={500} autoSize={{ minRows: 4, maxRows: 6 }} placeholder="介绍智能体的功能，将会展示给智能体的用户" />
+                <Input.TextArea defaultValue={bot?.description} showCount maxLength={500} autoSize={{ minRows: 4, maxRows: 6 }} placeholder="介绍智能体的功能，将会展示给智能体的用户" />
             </Form.Item>
             <Form.Item<BOT.BotAddCmd>
                 label="图标" name="avatar">
@@ -95,5 +115,5 @@ const BotCreateModal: React.FC<{
     </Modal>
 };
 
-export default BotCreateModal;
+export default BotUpdateModal;
 
