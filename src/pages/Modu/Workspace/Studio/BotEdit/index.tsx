@@ -55,6 +55,7 @@ const BotEdit: React.FC = () => {
 
         // 发送折叠菜单的事件 see ModuWrapper
         eventBus.emit('modu.menu.collapsed', true);
+        window.setTimeout(() => eventBus.emit('modu.menu.collapsed', true), 500);
     }, [param.spaceId, param.botUid]);
 
     // tab左右两侧内容
@@ -86,7 +87,7 @@ const BotEdit: React.FC = () => {
                                 <Typography.Text className="text-xs">{workspace?.name}</Typography.Text>
                             </Space>
                         </Tag>
-                        {!!bot?.publishUid &&
+                        {!!bot?.publish_uid &&
                             <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
                                 <Space>
                                     <CheckCircleFilled />

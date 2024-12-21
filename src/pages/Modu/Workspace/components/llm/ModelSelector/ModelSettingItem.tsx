@@ -81,12 +81,12 @@ const ModelSettingItem: React.FC<{
       return itemValue;
     }
 
-    if (itemSchema.initialValue !== undefined) {
-      return itemSchema.initialValue;
+    if (itemSchema.initial_value !== undefined) {
+      return itemSchema.initial_value;
     }
 
-    if (itemSchema.valueType === 'digit') {
-      return itemSchema.fieldProps?.min || 0;
+    if (itemSchema.value_type === 'digit') {
+      return itemSchema.field_props?.min || 0;
     }
 
     return undefined;
@@ -98,18 +98,18 @@ const ModelSettingItem: React.FC<{
   );
 
   let itemCol = <></>;
-  switch (itemSchema.valueType) {
+  switch (itemSchema.value_type) {
     // 数字
     case 'digit': {
       // 判断是否显示滑动条
       const beSlider =
-        itemSchema.fieldProps?.min !== undefined &&
-        itemSchema.fieldProps?.max !== undefined;
+        itemSchema.field_props?.min !== undefined &&
+        itemSchema.field_props?.max !== undefined;
 
       // 步长
       const step = judgeStep(
-        itemSchema.fieldProps?.min,
-        itemSchema.fieldProps?.max,
+        itemSchema.field_props?.min,
+        itemSchema.field_props?.max,
         1,
       );
 
@@ -120,8 +120,8 @@ const ModelSettingItem: React.FC<{
             <Col span={9}>
               <Slider
                 className="my-1.5 mx-0"
-                min={itemSchema.fieldProps!.min}
-                max={itemSchema.fieldProps!.max}
+                min={itemSchema.field_props!.min}
+                max={itemSchema.field_props!.max}
                 step={step}
                 tooltip={{ open: false }}
                 value={currentValue}
@@ -137,10 +137,10 @@ const ModelSettingItem: React.FC<{
           {/** 数字框 */}
           <Col span={beSlider ? 5 : 14}>
             <InputNumber
-              min={itemSchema.fieldProps?.min || 0}
-              max={itemSchema.fieldProps?.max}
+              min={itemSchema.field_props?.min || 0}
+              max={itemSchema.field_props?.max}
               step={step}
-              precision={itemSchema.fieldProps?.precision || 0}
+              precision={itemSchema.field_props?.precision || 0}
               value={currentValue}
               size="small"
               variant="filled"
@@ -159,7 +159,7 @@ const ModelSettingItem: React.FC<{
 
     // 选择框
     case 'select': {
-      const options = _.map(itemSchema.valueEnum || [], (value) => {
+      const options = _.map(itemSchema.value_enum || [], (value) => {
         return {
           value: value.value,
           label: getLocaleContent<string>(value.text, intl.locale, ''),
@@ -175,13 +175,13 @@ const ModelSettingItem: React.FC<{
               style={{ maxWidth: '100%' }}
               size="small"
               variant="filled"
-              mode={itemSchema.fieldProps?.mode}
+              mode={itemSchema.field_props?.mode}
               allowClear
               options={options}
               value={currentValue}
               disabled={!enabeld}
               placeholder={
-                itemSchema.fieldProps?.mode === 'tags'
+                itemSchema.field_props?.mode === 'tags'
                   ? '输入并按TAB/ENTER健确认'
                   : undefined
               }

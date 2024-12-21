@@ -15,18 +15,14 @@
  */
 
 import { MESSAGE } from '@/services/message/typings';
-import {
-  FluentEmoji,
-  FluentEmojiProps,
-  useControls,
-  useCreateStore,
-} from '@lobehub/ui';
 import { useModel } from '@umijs/max';
-import { Alert, Avatar, Button, Divider, Flex, List, Typography } from 'antd';
+import { Alert, Avatar, Button, Divider, Flex, List, Spin, Typography } from 'antd';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
+import _ from 'lodash';
 import styles from './styles.module.scss';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -36,24 +32,11 @@ const ChatItem: React.FC<{
   style?: CSSProperties | undefined;
 }> = ({ message, loading, className, messageClassName, style }) => {
   const { initialState } = useModel('@@initialState');
-
-  const userStore = useCreateStore();
-  const userControl: FluentEmojiProps = useControls(
-    {
-      emoji: '👤',
-      size: {
-        max: 128,
-        min: 16,
-        step: 1,
-        value: 64,
-      },
-    },
-    { store: userStore },
-  );
+  const emptyMessage = _.isEmpty(message?.messages) || _.every(message?.messages, msg => _.isEmpty(msg.content));
 
   return (
     <>
-      {message.senderRole === 'system' && (
+      {message.sender_role === 'system' && (
         <Flex vertical justify="center" align="center" className="w-full pl-9">
           <List
             itemLayout="horizontal"
@@ -62,11 +45,11 @@ const ChatItem: React.FC<{
             dataSource={message?.messages}
             renderItem={(msg) => (
               <List.Item
-                key={msg.sectionUid}
+                key={msg.section_uid}
                 style={{ border: 'none', padding: 0 }}
               >
                 {/* 文本 */}
-                {msg.contentType === 'text' && (
+                {msg.content_type === 'text' && (
                   <Divider dashed>
                     <Typography.Text type="secondary" className='text-xs'>{msg.content as string}</Typography.Text>
                   </Divider>
@@ -76,7 +59,7 @@ const ChatItem: React.FC<{
           />
         </Flex>
       )}
-      {message.senderRole !== 'system' && (
+      {message.sender_role !== 'system' && (
         <Flex
           justify="flex-start"
           align="flex-start"
@@ -94,7 +77,7 @@ const ChatItem: React.FC<{
               className="bg-transparent"
               shape="square"
               icon={{
-                ...(message.senderRole === 'user' ? (
+                ...(message.sender_role === 'user' ? (
                   <Avatar size={32} className={`bg-user-msg font-bold`}>{initialState?.userMe?.name[0]}</Avatar>
                 ) : (
                   <img src={'/logo.png'} alt="MODU 墨读无界" />
@@ -117,10 +100,10 @@ const ChatItem: React.FC<{
               className="w-full mb-2 box-border"
             >
               <Typography.Text type="secondary">
-                {message.senderRole === 'user'
+                {message.sender_role === 'user'
                   ? initialState?.userMe?.name
                   : 'Assistant'}
-                {message.senderRole !== 'user' && (
+                {message.sender_role !== 'user' && (
                   <Typography.Text
                     type="secondary"
                     className={`${styles['operation-header']}`}
@@ -135,7 +118,7 @@ const ChatItem: React.FC<{
                 type="secondary"
                 className={`${styles['operation-header']}`}
               >
-                {moment(message.messageTime).format('YYYY-MM-DD HH:mm:ss')}
+                {moment(message.message_time).format('YYYY-MM-DD HH:mm:ss')}
               </Typography.Text>
             </Flex>
 
@@ -147,54 +130,57 @@ const ChatItem: React.FC<{
                 } ${messageClassName}`}
             >
               {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
-              <List
-                itemLayout="horizontal"
-                bordered={false}
-                className='w-full'
-                dataSource={message?.messages}
-                renderItem={(msg) => (
-                  <List.Item
-                    key={msg.sectionUid}
-                    style={{ border: 'none', padding: 0 }}
-                    className='border-0 p-0 w-full'
-                  >
-                    {/* 文本 */}
-                    {msg.contentType === 'text' && (
-                      <ChatMarkdown>{msg.content as string}</ChatMarkdown>
-                    )}
-                    {/* 异常 */}
-                    {msg.contentType === 'error' && (
-                      <Alert
-                        message="遇到异常"
-                        description={msg.content as string}
-                        type="error"
-                        showIcon
-                        className="w-full my-3"
-                      // action={
-                      //   <Space>
-                      //     <Button
-                      //       type="primary"
-                      //       danger
-                      //       size="small"
-                      //       icon={<ReloadOutlined />}
-                      //     >
-                      //       重试
-                      //     </Button>
-                      //   </Space>
-                      // }
-                      />
-                    )}
-                  </List.Item>
-                )}
-              />
+              {emptyMessage && <Spin indicator={<LoadingOutlined spin className='text-gray-400 font-medium' />} size="small" />}
+              {!emptyMessage && <>
+                <List
+                  itemLayout="horizontal"
+                  bordered={false}
+                  className='w-full'
+                  dataSource={message?.messages}
+                  renderItem={(msg) => (
+                    <List.Item
+                      key={msg.section_uid}
+                      style={{ border: 'none', padding: 0 }}
+                      className='border-0 p-0 w-full'
+                    >
+                      {/* 文本 */}
+                      {msg.content_type === 'text' && (
+                        <ChatMarkdown>{msg.content as string}</ChatMarkdown>
+                      )}
+                      {/* 异常 */}
+                      {msg.content_type === 'error' && (
+                        <Alert
+                          message="遇到异常"
+                          description={msg.content as string}
+                          type="error"
+                          showIcon
+                          className="w-full my-3"
+                        // action={
+                        //   <Space>
+                        //     <Button
+                        //       type="primary"
+                        //       danger
+                        //       size="small"
+                        //       icon={<ReloadOutlined />}
+                        //     >
+                        //       重试
+                        //     </Button>
+                        //   </Space>
+                        // }
+                        />
+                      )}
+                    </List.Item>
+                  )}
+                />
 
-              {message.senderRole !== 'user' && !loading && (
-                <Flex justify="flex-end" align="center" className="w-full mt-2">
-                  <Typography.Text type="secondary" className="text-xs">
-                    内容由AI生成
-                  </Typography.Text>
-                </Flex>
-              )}
+                {message.sender_role !== 'user' && !loading && (
+                  <Flex justify="flex-end" align="center" className="w-full mt-2">
+                    <Typography.Text type="secondary" className="text-xs">
+                      内容由AI生成
+                    </Typography.Text>
+                  </Flex>
+                )}
+              </>}
             </Flex>
           </Flex>
         </Flex>

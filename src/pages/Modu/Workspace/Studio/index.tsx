@@ -55,7 +55,7 @@ const Studio: React.FC<{
         const lastBotUid = refresh ? undefined : _.last(bots)?.uid;
         if (refresh) setRefreshBots(true);
         setLoadingBots(true);
-        botService.find(workspaceUid, { ...botListQry, afterUidLimit: lastBotUid }, 20).then((resp) => {
+        botService.find(workspaceUid, { ...botListQry, after_uid_limit: lastBotUid }, 20).then((resp) => {
             const botEntities = resp.content || [];
             setBots(refresh ? botEntities : [...bots, ...botEntities]);
             setHasMoreBots(!_.isEmpty(botEntities));
@@ -82,7 +82,7 @@ const Studio: React.FC<{
                 direction="row" wrap ghost gutter={[8, 16]}
                 title={
                     <Radio.Group defaultValue="all" buttonStyle="solid" disabled={loadingBots} onChange={(e) => {
-                        setBotListQry({ ...botListQry, isPublished: e.target.value === 'published' ? true : undefined })
+                        setBotListQry({ ...botListQry, is_published: e.target.value === 'published' ? true : undefined })
                     }}>
                         <Radio.Button value="all">所有</Radio.Button>
                         <Radio.Button value="published">已发布</Radio.Button>
@@ -114,7 +114,7 @@ const Studio: React.FC<{
                         label: <Typography.Text>快速对话</Typography.Text>,
                         disabled: false
                     }];
-                    if (initialState?.userMe?.uid === bot.creatorUid) {
+                    if (initialState?.userMe?.uid === bot.creator_uid) {
                         dropdownItems.push({
                             key: 'edit',
                             label: <Typography.Text>编辑</Typography.Text>,
@@ -137,7 +137,7 @@ const Studio: React.FC<{
                         });
                     }
 
-                    const hasPublished = !!bot?.publishUid;
+                    const hasPublished = !!bot?.publish_uid;
 
                     return <ProCard
                         hidden={refreshBots}
@@ -151,7 +151,7 @@ const Studio: React.FC<{
                         actions={(<Flex justify="space-between" align="center" className='w-full px-3' style={{ justifyContent: 'space-between' }}>
                             <Space>
                                 <Avatar size={16} icon={<UserOutlined />} />
-                                <Typography.Text type='secondary'>{bot.creator?.name || bot.creatorUid}</Typography.Text>
+                                <Typography.Text type='secondary'>{bot.creator?.name || bot.creator_uid}</Typography.Text>
                             </Space>
 
                             <Space>
@@ -189,9 +189,9 @@ const Studio: React.FC<{
                             </Space>
                         </Flex>)}
                         onClick={() => {
-                            if (initialState?.userMe?.uid === bot.creatorUid) {
+                            if (initialState?.userMe?.uid === bot.creator_uid) {
                                 history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`)
-                            } else if (!_.isEmpty(bot.publishUid)) {
+                            } else if (!_.isEmpty(bot.publish_uid)) {
                                 history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/view`)
                             }
                         }}
@@ -201,8 +201,8 @@ const Studio: React.FC<{
                                 <Flex vertical justify="center" align="flex-start" className='h-full' style={{ width: 'calc(100% - 76px)' }}>
                                     <Flex justify="flex-start" align="center" className='w-full h-1/2 flex-auto'>
                                         <Typography.Text strong ellipsis className='text-lg'>{bot.name}</Typography.Text>
-                                        <Typography.Text className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publishUid) ? 'text-gray-500' : 'text-red-500'}`}>
-                                            {_.isEmpty(bot.publishUid) ? <EditOutlined /> : <CheckCircleFilled />}
+                                        <Typography.Text className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publish_uid) ? 'text-gray-500' : 'text-red-500'}`}>
+                                            {_.isEmpty(bot.publish_uid) ? <EditOutlined /> : <CheckCircleFilled />}
                                         </Typography.Text>
                                     </Flex>
 

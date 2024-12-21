@@ -17,7 +17,6 @@
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { LLM } from './typings';
-import { toCamelCase } from '../common';
 
 export enum ProviderStatus {
   /**
@@ -45,10 +44,7 @@ export async function providers(
       params: {},
       ...(options || {}),
     },
-  ).then(resp => {
-    resp.content = toCamelCase(resp.content);
-    return resp;
-  });
+  );
 }
 
 /**

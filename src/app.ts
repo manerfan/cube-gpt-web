@@ -79,7 +79,7 @@ export async function getInitialState(): Promise<{
   const fetchAppInfo = async () => {
     try {
       const result = await systemService.profile();
-      return result.content.appInfo;
+      return result.content.app_info;
     } catch (ex) {
       return undefined;
     }

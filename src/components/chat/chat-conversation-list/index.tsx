@@ -60,7 +60,7 @@ const ChatConversationList: React.FC<{
 
   // 加载更多会话
   const loadMore = () => {
-    const lastConversationUid = _.last(conversations)?.conversationUid;
+    const lastConversationUid = _.last(conversations)?.conversation_uid;
     setLoading(true);
     messageService
       .conversations(lastConversationUid, 20)
@@ -126,10 +126,10 @@ const ChatConversationList: React.FC<{
         dataSource={conversations}
         renderItem={(conversation) => (
           <List.Item
-            key={conversation.conversationUid}
+            key={conversation.conversation_uid}
             style={{ borderColor: 'rgba(0,0,0,0.05)' }}
             className={`cursor-pointer ${styles['conversation-item']}`}
-            onClick={() => onConversationSelected?.(conversation.conversationUid)}
+            onClick={() => onConversationSelected?.(conversation.conversation_uid)}
           >
             <Flex
               justify="flex-start"
@@ -137,7 +137,7 @@ const ChatConversationList: React.FC<{
               gap="small"
               className="w-full"
             >
-              {conversation.conversationUid === editConversation?.conversationUid ? (
+              {conversation.conversation_uid === editConversation?.conversation_uid ? (
                 <Space.Compact
                   size="small"
                   className="flex-auto"
@@ -155,10 +155,10 @@ const ChatConversationList: React.FC<{
                     loading={operating}
                     onClick={() => {
                       setOperating(true);
-                      messageService.renameConversation(conversation.conversationUid, editConversation?.name)
+                      messageService.renameConversation(conversation.conversation_uid, editConversation?.name)
                         .then(() => {
                           const newConversations = _.cloneDeep(conversations);
-                          const renameConversation = _.find(newConversations, (item) => item.conversationUid === editConversation.conversationUid);
+                          const renameConversation = _.find(newConversations, (item) => item.conversation_uid === editConversation.conversation_uid);
                           if (!!renameConversation) {
                             renameConversation.name = editConversation.name;
                           }
@@ -184,7 +184,7 @@ const ChatConversationList: React.FC<{
                   type="secondary"
                   className={`w-full inline-block text-right ${styles['conversation-time']}`}
                 >
-                  {timeDisplay(conversation.createdAt)}
+                  {timeDisplay(conversation.created_at)}
                 </Typography.Text>
 
                 {/* 操作 */}
@@ -205,12 +205,12 @@ const ChatConversationList: React.FC<{
 
                       setOperating(true);
                       return messageService
-                        .deleteConversation(conversation.conversationUid)
+                        .deleteConversation(conversation.conversation_uid)
                         .then(() => {
-                          const newConversations = _.filter(conversations, item => item.conversationUid !== conversation.conversationUid);
+                          const newConversations = _.filter(conversations, item => item.conversation_uid !== conversation.conversation_uid);
                           setConversations(newConversations);
                           setEditConversation(undefined);
-                          onConversationDeleted?.(conversation.conversationUid);
+                          onConversationDeleted?.(conversation.conversation_uid);
                         })
                         .finally(() => setOperating(false));
                     }}
@@ -230,8 +230,8 @@ const ChatConversationList: React.FC<{
                     type="text"
                     size="small"
                     icon={
-                      conversation.conversationUid ===
-                        editConversation?.conversationUid ? (
+                      conversation.conversation_uid ===
+                        editConversation?.conversation_uid ? (
                         <X size={16} />
                       ) : (
                         <EditOutlined />
@@ -241,8 +241,8 @@ const ChatConversationList: React.FC<{
                     onClick={(e) => {
                       e.stopPropagation();
                       setEditConversation(
-                        conversation.conversationUid ===
-                          editConversation?.conversationUid
+                        conversation.conversation_uid ===
+                          editConversation?.conversation_uid
                           ? undefined
                           : conversation,
                       );

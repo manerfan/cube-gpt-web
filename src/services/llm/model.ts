@@ -156,25 +156,14 @@ export async function addSystemConfig(
 
 export function modelParameterCheck(
   providerWithModels: LLM.ProviderWithModelsSchema[],
-  modelSetting?: {
-    providerName: string;
-    modelName: string;
-    modelParameters: Record<string, any>;
-  },
+  modelSetting?: LLM.ModelConfig,
   locale?: string,
-):
-  | {
-      providerName: string;
-      modelName: string;
-      modelParameters: Record<string, any>;
-    }
-  | null
-  | undefined {
+): LLM.ModelConfig | null {
   // 参数校验
   if (
     _.isEmpty(modelSetting) ||
-    _.isEmpty(modelSetting.providerName) ||
-    _.isEmpty(modelSetting.modelName)
+    _.isEmpty(modelSetting.provider_name) ||
+    _.isEmpty(modelSetting.model_name)
   ) {
     message.error('请选择模型');
     return null;
@@ -184,7 +173,7 @@ export function modelParameterCheck(
   const settingProviderWithModelSchema = _.findLast(
     providerWithModels,
     (providerWithModel) =>
-      providerWithModel.provider.provider === modelSetting?.providerName,
+      providerWithModel.provider.provider === modelSetting?.provider_name,
   );
   if (_.isEmpty(settingProviderWithModelSchema)) {
     message.error('请选择合适的模型');
@@ -194,7 +183,7 @@ export function modelParameterCheck(
   // 设置的Model
   const settingModelSchema = _.findLast(
     settingProviderWithModelSchema.models,
-    (model) => model.model === modelSetting?.modelName,
+    (model) => model.model === modelSetting?.model_name,
   );
   if (_.isEmpty(settingModelSchema)) {
     message.error('请选择合适的模型');
@@ -203,7 +192,7 @@ export function modelParameterCheck(
 
   // 只取有效的参数
   const modelParameters = _.pick(
-    modelSetting.modelParameters,
+    modelSetting.model_parameters,
     _.map(settingModelSchema.parameters, (parameter) => parameter.name),
   );
 
@@ -220,7 +209,7 @@ export function modelParameterCheck(
         parameter.name,
       );
       message.error(
-        `请设置参数 [${parameterName}] (${modelSetting.providerName}:${modelSetting.modelName})`,
+        `请设置参数 [${parameterName}] (${modelSetting.provider_name}:${modelSetting.model_name})`,
       );
       return null;
     }
@@ -229,14 +218,14 @@ export function modelParameterCheck(
   // 校验数字范围
   const digitParameters = _.filter(
     settingModelSchema.parameters,
-    (parameter) => parameter.valueType === 'digit',
+    (parameter) => parameter.value_type === 'digit',
   );
   for (const parameter of digitParameters) {
     if (
-      (!!parameter.fieldProps?.min &&
-        modelParameters[parameter.name] < parameter.fieldProps.min) ||
-      (!!parameter.fieldProps?.max &&
-        modelParameters[parameter.name] > parameter.fieldProps.max)
+      (!!parameter.field_props?.min &&
+        modelParameters[parameter.name] < parameter.field_props.min) ||
+      (!!parameter.field_props?.max &&
+        modelParameters[parameter.name] > parameter.field_props.max)
     ) {
       const parameterName = getLocaleContent(
         parameter.title,
@@ -244,15 +233,15 @@ export function modelParameterCheck(
         parameter.name,
       );
       message.error(
-        `参数 [${parameterName}] (${modelSetting.providerName}:${modelSetting.modelName}) 不在有效范围内`,
+        `参数 [${parameterName}] (${modelSetting.provider_name}:${modelSetting.model_name}) 不在有效范围内`,
       );
       return null;
     }
   }
 
   return {
-    providerName: modelSetting.providerName,
-    modelName: modelSetting.modelName,
-    modelParameters: modelParameters,
+    provider_name: modelSetting.provider_name,
+    model_name: modelSetting.model_name,
+    model_parameters: modelParameters,
   };
 }

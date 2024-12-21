@@ -42,7 +42,7 @@ export async function add(
     `/api/workspace/${workspaceUid}/bot`,
     {
       method: 'POST',
-      data: { ...addCmd, workspaceUid, creatorUid: '' },
+      data: { ...addCmd, workspace_uid: workspaceUid, creator_uid: '' },
       ...(options || {}),
     },
   );
@@ -61,7 +61,7 @@ export async function update(
     `/api/workspace/${workspaceUid}/bot/${botUid}`,
     {
       method: 'PUT',
-      data: { ...addCmd, workspaceUid, creatorUid: '' },
+      data: { ...addCmd, workspace_uid: workspaceUid, creator_uid: '' },
       ...(options || {}),
     },
   );
@@ -97,7 +97,7 @@ export async function find(
     `/api/workspace/${workspaceUid}/bot`,
     {
       method: 'GET',
-      params: { ...listQry, maxCount },
+      params: { ...listQry, max_count: maxCount },
       ...(options || {}),
     },
   );

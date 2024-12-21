@@ -55,12 +55,12 @@ declare namespace BOT {
     /**
      * 是否发布
      */
-    isPublished?: boolean;
+    is_published?: boolean;
 
     /**
      * 从该uid后查询
      */
-    afterUidLimit?: string;
+    after_uid_limit?: string;
   };
 
   type BotEntity = {
@@ -72,7 +72,7 @@ declare namespace BOT {
     /**
      * 空间UID
      */
-    workspaceUid: string;
+    workspace_uid: string;
 
     /**
      * 名称
@@ -92,7 +92,7 @@ declare namespace BOT {
     /**
      * 创建人
      */
-    creatorUid: string;
+    creator_uid: string;
 
     /**
      * 创建人信息
@@ -112,6 +112,6 @@ declare namespace BOT {
     /**
      * 发布UID
      */
-    publishUid?: string;
+    publish_uid?: string;
   };
 }

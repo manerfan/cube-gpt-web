@@ -170,7 +170,7 @@ const ProviderCard: React.FC<{
                       <footer style={{ position: 'relative', bottom: 0 }}>
                         <Space wrap align="start" size={2}>
                           {_.map(
-                            providerSchema.supportedModelTypes,
+                            providerSchema.supported_model_types,
                             (modelType) => {
                               return (
                                 <Tag

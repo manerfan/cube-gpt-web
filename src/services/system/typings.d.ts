@@ -70,7 +70,7 @@ declare namespace SYSTEM {
     /**
      * 许可证
      */
-    licenseInfo: {
+    license_info: {
       name: string;
       url: string;
     };

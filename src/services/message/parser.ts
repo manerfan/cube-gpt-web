@@ -45,32 +45,32 @@ export function messageParser({
   return (data: string) => {
     const messageEvent = JSON.parse(data) as MESSAGE.MessageEvent;
 
-    if (conversationUid !== messageEvent.conversationUid) {
-      setConversationUid(messageEvent.conversationUid);
+    if (conversationUid !== messageEvent.conversation_uid) {
+      setConversationUid(messageEvent.conversation_uid);
     }
 
     if (
       !currentMessage ||
-      currentMessage.messageUid !== messageEvent.messageUid
+      currentMessage.message_uid !== messageEvent.message_uid
     ) {
       // 新消息
       currentMessage = {
-        senderUid: messageEvent.senderUid,
-        senderRole: messageEvent.senderRole,
-        messageUid: messageEvent.messageUid,
-        messageTime: messageEvent.messageTime,
+        sender_uid: messageEvent.sender_uid,
+        sender_role: messageEvent.sender_role,
+        message_uid: messageEvent.message_uid,
+        message_time: messageEvent.message_time,
         messages: [messageEvent.message],
       };
 
       conversationMessages.push(currentMessage);
       setMessages(_.cloneDeep(conversationMessages));
-      setLoadingMessageUid(messageEvent.messageUid);
+      setLoadingMessageUid(messageEvent.message_uid);
     } else {
       // 追加消息内容
       const lastSectionUid = _.last(
         _.last(conversationMessages)?.messages,
-      )?.sectionUid;
-      if (lastSectionUid !== messageEvent.message.sectionUid) {
+      )?.section_uid;
+      if (lastSectionUid !== messageEvent.message.section_uid) {
         // 新的 section
         _.last(conversationMessages)?.messages?.push(messageEvent.message);
         setMessages(conversationMessages);

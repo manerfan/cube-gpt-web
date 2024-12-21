@@ -45,7 +45,7 @@ export function convertFormSchema2AntdFormSchema<T>(
       // 字段标题
       title: getLocaleContent(formSchema.title, locale, ''),
       // 字段类型
-      valueType: formSchema.valueType,
+      valueType: formSchema.value_type,
       // 字段提示
       tooltip: getLocaleContent<string>(formSchema.tooltip, locale),
       // 初始值
@@ -70,19 +70,19 @@ export function convertFormSchema2AntdFormSchema<T>(
     } as ProFormColumnsType<T>;
 
     // 字段属性
-    if (!!formSchema.fieldProps) {
+    if (!!formSchema.field_props) {
       jsonSchema.fieldProps = {
-        ...formSchema.fieldProps,
+        ...formSchema.field_props,
         placeholder: getLocaleContent<string>(
-          formSchema.fieldProps.placeholder,
+          formSchema.field_props.placeholder,
           locale,
         ),
       };
     }
 
     // 多值类型字段内容
-    if (!!formSchema.valueEnum) {
-      const valueEnums = _.map(formSchema.valueEnum, (value) => {
+    if (!!formSchema.value_enum) {
+      const valueEnums = _.map(formSchema.value_enum, (value) => {
         return {
           value: value.value,
           text: getLocaleContent<string>(value.text, locale, ''),

@@ -31,8 +31,8 @@ export async function conversations(
     {
       method: 'GET',
       params: {
-        beforeConversationUid,
-        maxCount,
+        before_conversation_uid: beforeConversationUid,
+        max_count: maxCount,
       },
       ...(options || {}),
     },
@@ -119,8 +119,8 @@ export async function messages(
     {
       method: 'GET',
       params: {
-        beforeMessageUid,
-        maxCount,
+        before_message_uid: beforeMessageUid,
+        max_count: maxCount,
       },
       ...(options || {}),
     },

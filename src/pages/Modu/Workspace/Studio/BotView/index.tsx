@@ -14,14 +14,33 @@
  * limitations under the License.
  */
 
-import {eventBus} from '@/services';
+import { botService, eventBus, workspaceService } from '@/services';
+import { BOT } from '@/services/bot/typings';
+import { WORKSPACE } from '@/services/workspace/typings';
+import { useParams } from '@umijs/max';
+import { useEffect, useState } from 'react';
 
-const BotView: React.FC<{
-    workspaceUid: string,
-    botUid: string
-}> = ({ workspaceUid, botUid }) => {
-    // 发送折叠菜单的事件 see ModuWrapper
-    eventBus.emit('modu.menu.collapsed', true);
+const BotView: React.FC = () => {
+    const param = useParams();
+
+    const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
+    const [bot, setBot] = useState<BOT.BotEntity>();
+
+    useEffect(() => {
+        workspaceService.detail(param.spaceId!).then((res) => {
+            const space = res.content;
+            setWorkspace(space);
+        });
+
+        botService.detail(param.spaceId!, param.botUid!).then((res) => {
+            const bot = res.content;
+            setBot(bot);
+        });
+
+        // 发送折叠菜单的事件 see ModuWrapper
+        eventBus.emit('modu.menu.collapsed', true);
+        window.setTimeout(() => eventBus.emit('modu.menu.collapsed', true), 500);
+    }, [param.spaceId, param.botUid]);
     return <>BotView</>
 }
 

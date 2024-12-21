@@ -58,10 +58,6 @@ const ModelSelectorWithType: React.FC<{
         ] = useState<boolean>(false);
 
         useEffect(() => {
-            if (!open) {
-                return;
-            }
-
             // model schemas
             setProviderWithModelLoading(true);
             modelService
@@ -76,10 +72,11 @@ const ModelSelectorWithType: React.FC<{
             onProviderWithModelsLoaded?.(providerWithModels);
         }, [providerWithModels]);
 
+        // 当添加 Provider Schema 时，更新本地 Provider Schema
         const handleProviderConfig = (providerConfig: LLM.ProviderConfig) => {
             const newProviderWithModels = _.cloneDeep(providerWithModels);
             _.forEach(newProviderWithModels, (providerWithModel) => {
-                if (providerWithModel.provider.provider === providerConfig.providerName) {
+                if (providerWithModel.provider.provider === providerConfig.provider_name) {
                     providerWithModel.status = ProviderStatus.ACTIVE;
                 }
             });

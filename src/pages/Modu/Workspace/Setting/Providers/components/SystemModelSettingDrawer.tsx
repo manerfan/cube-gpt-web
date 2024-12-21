@@ -38,8 +38,7 @@ import { ModelType } from '@/services/llm/model';
 import { useIntl } from '@umijs/max';
 import { useEffect, useState } from 'react';
 
-import { ProviderStatus } from '@/services/llm/provider';
-import _, { set } from 'lodash';
+import _ from 'lodash';
 
 type ModelSetting = Record<ModelType, LLM.ModelConfig>;
 
@@ -170,18 +169,18 @@ const SystemModelSettingDrawer: React.FC<{
               workspaceUid={workspaceUid}
               modelType={ModelType.TEXT_GENERATION}
               providerName={
-                modelSetting[ModelType.TEXT_GENERATION]?.providerName
+                modelSetting[ModelType.TEXT_GENERATION]?.provider_name
               }
-              modelName={modelSetting[ModelType.TEXT_GENERATION]?.modelName}
+              modelName={modelSetting[ModelType.TEXT_GENERATION]?.model_name}
               modelParameters={
-                modelSetting[ModelType.TEXT_GENERATION]?.modelParameters
+                modelSetting[ModelType.TEXT_GENERATION]?.model_parameters
               }
               onSelect={(providerName, modelName, modelParameters) => {
                 const setting = _.cloneDeep(modelSetting);
                 setting[ModelType.TEXT_GENERATION] = {
-                  providerName,
-                  modelName,
-                  modelParameters,
+                  provider_name: providerName,
+                  model_name: modelName,
+                  model_parameters: modelParameters,
                 };
                 setModelSetting(setting);
               }}

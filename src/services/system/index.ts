@@ -17,7 +17,6 @@
 import type { Response } from '@/services/typings';
 import { request } from '@umijs/max';
 import type { SYSTEM } from './typings';
-import { toCamelCase } from '../common';
 
 /**
  * 检查是否已经完成系统设置
@@ -55,16 +54,13 @@ export async function setup(
  */
 export async function profile(
   options?: Record<string, any>,
-): Promise<Response.SingleResponse<{ appInfo: SYSTEM.AppInfo }>> {
-  return request<Response.SingleResponse<{ appInfo: SYSTEM.AppInfo }>>(
+): Promise<Response.SingleResponse<{ app_info: SYSTEM.AppInfo }>> {
+  return request<Response.SingleResponse<{ app_info: SYSTEM.AppInfo }>>(
     `/api/system/profile`,
     {
       method: 'GET',
       params: {},
       ...(options || {}),
     },
-  ).then(resp => {
-    resp.content = toCamelCase(resp.content);
-    return resp;
-  });
+  );
 }

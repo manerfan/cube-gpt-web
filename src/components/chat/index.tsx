@@ -81,7 +81,7 @@ const ChatContent: React.FC<{
 
     const fistMessageUid = clearMessages
       ? undefined
-      : _.first(messages)?.messageUid;
+      : _.first(messages)?.message_uid;
     
     setLoadingMore(true);
     messageService
@@ -148,25 +148,25 @@ const ChatContent: React.FC<{
 
     // 追加用户消息
     const parseMessageEvent = messageParser({
-      senderUid: initialState?.userMe?.uid,
-      senderRole: 'user',
-      messageUid: ulid(),
-      messageTime: new Date().getTime(),
+      sender_uid: initialState?.userMe?.uid,
+      sender_role: 'user',
+      message_uid: ulid(),
+      message_time: new Date().getTime(),
       messages: [
         ..._.map(submitQuery.query.refers || [], (ref) => {
           return {
             type: 'question',
-            contentType: ref.type,
+            content_type: ref.type,
             content: ref.content,
-            sectionUid: ulid(),
+            section_uid: ulid(),
           } as MESSAGE.MessageBlock;
         }),
         ..._.map(submitQuery.query.inputs || [], (input) => {
           return {
             type: 'question',
-            contentType: input.type,
+            content_type: input.type,
             content: input.content,
-            sectionUid: ulid(),
+            section_uid: ulid(),
           } as MESSAGE.MessageBlock;
         }),
       ],
@@ -174,7 +174,7 @@ const ChatContent: React.FC<{
 
     // 发起请求
     const stopScrollMessageToBottom = scrollMessageToBottomTicker();
-    submitQuery.conversationUid = conversationUid;
+    submitQuery.conversation_uid = conversationUid;
     generateService.chat(
       workspaceUid!!,
       submitQuery,

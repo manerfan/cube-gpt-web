@@ -45,7 +45,7 @@ declare namespace MESSAGE {
     /**
      * 会话 ID
      */
-    conversationUid?: string;
+    conversation_uid?: string;
 
     /**
      * 会话内容
@@ -67,7 +67,7 @@ declare namespace MESSAGE {
     /**
      * 消息内容的类型
      */
-    contentType: "text" | "refer:text" | "error";
+    content_type: "text" | "refer:text" | "error";
     
     /**
      * 消息内容
@@ -77,34 +77,34 @@ declare namespace MESSAGE {
     /**
      * 该部分内容 ID
      */
-    sectionUid: string;
+    section_uid: string;
   }
 
   type MessageEvent = {
     /**
      * 会话 ID
      */
-    conversationUid: string;
+    conversation_uid: string;
 
     /**
      * 发送者 ID
      */
-    senderUid: string;
+    sender_uid: string;
 
     /**
      * 发送者角色
      */
-    senderRole: "user" | "assistant";
+    sender_role: "user" | "assistant" | "system";
 
     /**
      * 消息 ID
      */
-    messageUid: string;
+    message_uid: string;
 
     /**
      * 消息时间戳
      */
-    messageTime: number;
+    message_time: number;
 
     /**
      * 消息内容
@@ -114,29 +114,29 @@ declare namespace MESSAGE {
     /**
      * 消息是否结束
      */
-    isFinished: boolean;
+    is_finished: boolean;
   }
 
   type MessageContent = {
     /**
      * 发送者 ID
      */
-    senderUid: string;
+    sender_uid: string;
 
     /**
      * 发送者角色
      */
-    senderRole: "user" | "assistant" | "system";
+    sender_role: "user" | "assistant" | "system";
 
     /**
      * 消息 ID
      */
-    messageUid: string;
+    message_uid: string;
 
     /**
      * 消息时间戳
      */
-    messageTime: number;
+    message_time: number;
 
     /**
      * 消息内容
@@ -150,7 +150,7 @@ declare namespace CONVERSATION {
     /**
      * 会话 ID
      */
-    conversationUid: string;
+    conversation_uid: string;
 
     /**
      * 会话名称
@@ -160,6 +160,6 @@ declare namespace CONVERSATION {
     /**
      * 会话创建时间
      */
-    createdAt: number;
+    created_at: number;
   }
 }

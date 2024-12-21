@@ -101,8 +101,8 @@ const SingleAgent: React.FC<{
                         align="center"
                         className='h-full'>
                         <Avatar shape="square" icon={<RobotOutlined />} />
-                        <Typography.Title level={5} className='mt-6'>智能体名称</Typography.Title>
-                        <Typography.Text type='secondary' >智能体描述智能体描述智能体描述</Typography.Text>
+                        <Typography.Title level={5} className='mt-6'>{bot?.name}</Typography.Title>
+                        <Typography.Text type='secondary'>{bot?.description}</Typography.Text>
                     </Flex>}
                 />
             </Card>

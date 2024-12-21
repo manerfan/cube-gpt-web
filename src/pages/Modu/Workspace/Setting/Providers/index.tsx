@@ -48,7 +48,7 @@ const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
       initialState?.providers || [],
       (provider) =>
         _.includes(
-          _.map(_configuredProviderConfigs, (config) => config.providerName),
+          _.map(_configuredProviderConfigs, (config) => config.provider_name),
           provider.provider,
         ),
     );
@@ -59,7 +59,7 @@ const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
       initialState?.providers || [],
       (provider) =>
         !_.includes(
-          _.map(_configuredProviderConfigs, (config) => config.providerName),
+          _.map(_configuredProviderConfigs, (config) => config.provider_name),
           provider.provider,
         ),
     );
@@ -92,7 +92,7 @@ const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
               _.filter(
                 configuredProviderConfigs || [],
                 (providerConfig) =>
-                  providerConfig.providerName !== providerName,
+                  providerConfig.provider_name !== providerName,
               ),
             );
           }}
@@ -100,7 +100,7 @@ const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
             // 添加Provider配置后，重新计算已配置/未配置列表
             const _configuredProviderConfigs = _.filter(
               configuredProviderConfigs || [],
-              (config) => config.providerName !== providerConfig.providerName,
+              (config) => config.provider_name !== providerConfig.provider_name,
             );
             _configuredProviderConfigs.push(providerConfig);
             handleProviderSchemaConfigs(_configuredProviderConfigs);
@@ -118,7 +118,7 @@ const Providers: React.FC<{ workspaceUid: string }> = ({ workspaceUid }) => {
             // 添加Provider配置后，重新计算已配置/未配置列表
             const _configuredProviderConfigs = _.filter(
               configuredProviderConfigs || [],
-              (config) => config.providerName !== providerConfig.providerName,
+              (config) => config.provider_name !== providerConfig.provider_name,
             );
             _configuredProviderConfigs.push(providerConfig);
             handleProviderSchemaConfigs(_configuredProviderConfigs);

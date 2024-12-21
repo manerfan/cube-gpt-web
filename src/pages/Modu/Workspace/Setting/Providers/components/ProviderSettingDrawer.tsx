@@ -68,9 +68,9 @@ const ProviderSettingDrawer: React.FC<{
         .then((resp) => {
           setFormColumns(
             convertFormSchema2AntdFormSchema(
-              providerSchema.credentialSchemas,
+              providerSchema.credential_schemas,
               intl.locale,
-              resp.content?.providerCredential,
+              resp.content?.provider_credential,
             ),
           );
         })
@@ -81,7 +81,7 @@ const ProviderSettingDrawer: React.FC<{
       // https://pro-components.antdigital.dev/components/schema
       setFormColumns(
         convertFormSchema2AntdFormSchema(
-          providerSchema.credentialSchemas,
+          providerSchema.credential_schemas,
           intl.locale,
         ),
       );
@@ -153,9 +153,9 @@ const ProviderSettingDrawer: React.FC<{
               setAdding(true);
               llmService
                 .addProviderConfig(workspaceUid, providerSchema!.provider, {
-                  workspaceUid: workspaceUid,
-                  providerName: providerSchema!.provider,
-                  providerCredential: values,
+                  workspace_uid: workspaceUid,
+                  provider_name: providerSchema!.provider,
+                  provider_credential: values,
                 })
                 .then((resp) => {
                   notificationApi.success({

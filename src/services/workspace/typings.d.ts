@@ -26,7 +26,7 @@ declare namespace WORKSPACE {
     /**
      * 创建者 uid
      */
-    creatorUid: string;
+    creator_uid: string;
 
     /**
      * 名称
@@ -46,6 +46,6 @@ declare namespace WORKSPACE {
     /**
      * 角色
      */
-    memberRole: WorkspaceMemberRole;
+    member_role: WorkspaceMemberRole;
   }
 }

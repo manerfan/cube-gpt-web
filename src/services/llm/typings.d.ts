@@ -50,12 +50,12 @@ declare namespace LLM {
     /**
      * 凭证
      */
-    credentialSchemas?: Display.FormSchema[];
+    credential_schemas?: Display.FormSchema[];
 
     /**
      * 支持的模型类型
      */
-    supportedModelTypes: ModelType[];
+    supported_model_types: ModelType[];
   };
 
   type ProviderIcon = {
@@ -71,9 +71,9 @@ declare namespace LLM {
    */
   type ProviderConfig = {
     uid?: string;
-    workspaceUid: string;
-    providerName: string;
-    providerCredential: Record<string, string | number>;
+    workspace_uid: string;
+    provider_name: string;
+    provider_credential: Record<string, string | number>;
   };
 
   type ModelSchema = {
@@ -129,9 +129,9 @@ declare namespace LLM {
   };
 
   type ModelConfig = {
-    providerName: string;
-    modelName: string;
-    modelParameters: Record<string, any>;
+    provider_name: string;
+    model_name: string;
+    model_parameters: Record<string, any>;
   };
 
   type ProviderWithModelsSchema = {

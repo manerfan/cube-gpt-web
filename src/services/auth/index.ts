@@ -15,7 +15,6 @@
  */
 
 import { request } from '@umijs/max';
-import { toCamelCase } from '../common';
 import type { AUTH } from './typings';
 
 /**
@@ -39,5 +38,5 @@ export async function login(
       )
       .join('&'),
     ...(options || {}),
-  }).then((resp) => toCamelCase(resp));
+  });
 }

@@ -42,7 +42,7 @@ declare namespace Response {
     success: boolean;
     code?: string;
     content: T;
-    errorShowType?: ErrorShowType;
+    error_show_type?: ErrorShowType;
   };
 
   /**
@@ -68,8 +68,8 @@ declare namespace Response {
 declare namespace Display {
   type I18nOption = {
     default: string;
-    enUs?: string;
-    zhCn?: string;
+    en_us?: string;
+    zh_cn?: string;
   };
 
   type IconOption = {
@@ -91,10 +91,10 @@ declare namespace Display {
    */
   type FormSchema = {
     name: string;
-    valueType: string;
-    valueEnum?: FormFieldValueEnum[];
-    initialValue?: any,
-    fieldProps?: { [key: string]: any };
+    value_type: string;
+    value_enum?: FormFieldValueEnum[];
+    initial_value?: any,
+    field_props?: { [key: string]: any };
     title?: I18nOption;
     tooltip?: I18nOption;
     rules?: FormFieldRule;

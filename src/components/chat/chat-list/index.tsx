@@ -52,15 +52,15 @@ const ChatList: React.FC<{
             dataSource={messages}
             renderItem={(message) => (
               <List.Item
-                key={message.messageUid}
+                key={message.message_uid}
                 style={{ border: 'none' }}
                 className="my-1"
               >
                 <ChatItem
                   message={message}
-                  loading={message.messageUid === loadingMessageUid}
+                  loading={message.message_uid === loadingMessageUid}
                   messageClassName={
-                    message.senderRole === 'user'
+                    message.sender_role === 'user'
                       ? 'bg-user-msg'
                       : 'bg-assistant-msg'
                   }

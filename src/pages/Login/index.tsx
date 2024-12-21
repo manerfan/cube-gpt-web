@@ -34,8 +34,8 @@ const Login: React.FC = () => {
       password: formData.password,
     });
 
-    window.localStorage.setItem(ACCESS_TOKEN, auth.accessToken);
-    window.localStorage.setItem(TOKEN_TYPE, auth.tokenType || 'bearer');
+    window.localStorage.setItem(ACCESS_TOKEN, auth.access_token);
+    window.localStorage.setItem(TOKEN_TYPE, auth.token_type || 'bearer');
     window.location.href = searchParams.get('redirectUri') || '/';
   };
 
