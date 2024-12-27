@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { BotMode } from '@/services/bot';
 import * as botService from '@/services/bot';
 import SingleAgent from './SingleAgent';
@@ -22,13 +22,48 @@ import MultiAgent from './MultiAgent';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { BOT } from '@/services/bot/typings';
 import { eventBus } from '@/services';
+import _ from 'lodash';
+import hash from 'object-hash';
+import { Spin } from 'antd';
 
-const BotOrchestration: React.FC<{
+export interface AgentRefProperty {
+    getAgentConfigAndCheck: () => Record<string, any> | null;
+}
+
+export interface BotRefProperty {
+    getBotConfigAndCheck: () => { mode: BotMode, config: Record<string, any> } | null;
+    refreshBotConfig: (publishUid?: string) => void;
+}
+
+const BotOrchestration = forwardRef<BotRefProperty, {
     workspace: WORKSPACE.WorkspaceEntity,
     bot: BOT.BotEntity
-}> = ({ workspace, bot }) => {
+}>(({ workspace, bot }, ref) => {
     const [botMode, setBotMode] = useState<BotMode>(bot.mode as BotMode.SINGLE_AGENT);
+    const [botConfig, setBotConfig] = useState<Record<string, any>>();
+    const agentRef = useRef<AgentRefProperty>(null);
 
+    const [refreshLoading, setRefreshLoading] = useState(false);
+    const refreshBotConfig = (publishUid?: string) => {
+        setRefreshLoading(true);
+        botService.getConfigDraft(workspace.uid, bot.uid, publishUid).then((res) => {
+            if (!!res.content?.config) {
+                setBotMode(res.content.config.mode as BotMode);
+                setBotConfig(res.content.config.config);
+            }
+        }).finally(() => setRefreshLoading(false));
+    };
+
+    useImperativeHandle(ref, () => ({
+        getBotConfigAndCheck: () => {
+            const agentConfig = agentRef.current?.getAgentConfigAndCheck() || {};
+            if (_.isEmpty(agentConfig)) return null;
+            return { config: agentConfig, mode: botMode };
+        },
+        refreshBotConfig
+    }));
+
+    // 监听 bot mode 的变化
     useEffect(() => {
         const handleBotModeEvent = (mode: BotMode) => {
             setBotMode(mode);
@@ -39,10 +74,33 @@ const BotOrchestration: React.FC<{
         }
     }, [workspace, bot]);
 
-    return <div className='w-full grid overflow-hidden' style={{ height: 'calc(100dvh - 70px)' }}>
-        {botMode === botService.BotMode.SINGLE_AGENT && <SingleAgent workspace={workspace} bot={bot} />}
-        {botMode === botService.BotMode.MULTI_AGENTS && <MultiAgent workspace={workspace} bot={bot} />}
-    </div>;
-}
+    // 刷新 bot config
+    useEffect(() => refreshBotConfig(), [workspace, bot]);
+
+    return <>
+        <div className='w-full grid overflow-hidden' style={{ height: 'calc(100dvh - 70px)' }}>
+            {botMode === botService.BotMode.SINGLE_AGENT && (
+                <SingleAgent
+                    key={hash(botConfig || {})}
+                    ref={agentRef}
+                    workspace={workspace}
+                    bot={bot}
+                    botConfig={botConfig}
+                />
+            )}
+            {botMode === botService.BotMode.MULTI_AGENTS && (
+                <MultiAgent
+                    key={hash(botConfig || {})}
+                    ref={agentRef}
+                    workspace={workspace}
+                    bot={bot}
+                    botConfig={botConfig}
+                />
+            )}
+        </div>
+
+        <Spin spinning={refreshLoading} fullscreen rootClassName='ant-spin-bg-transparent' />
+    </>;
+});
 
 export default BotOrchestration;

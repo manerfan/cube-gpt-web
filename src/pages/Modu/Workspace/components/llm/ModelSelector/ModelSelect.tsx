@@ -84,7 +84,7 @@ const ModelSelect: React.FC<{
       setSelectedModelSchema(defaultModelSchema);
     }, [providerWithModels, providerName, modelName]);
 
-    const modelPopoverRef = useRef<ModelPopoverWrapperRefProperty>();
+    const modelPopoverRef = useRef<ModelPopoverWrapperRefProperty>(null);
 
     /**
      * 防抖处理
@@ -163,7 +163,7 @@ const ModelSelect: React.FC<{
                                 <List.Item
                                   style={providerName === providerWithModel.provider.provider && modelName === model.model ? {borderBlockEnd: '1.5px solid #475569'} : {border: 'none'}}
                                   className={`relative group my-1 ${(providerName === providerWithModel.provider.provider && modelName === model.model)
-                                      ? 'border-solid rounded-lg border-slate-600'
+                                      ? 'border-solid rounded-lg border-gray-600 bg-gray-50'
                                       : 'border-none border-0'
                                     } ${model.deprecated ||
                                       providerWithModel.status !==

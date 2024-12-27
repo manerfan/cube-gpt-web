@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2024 Maner·Fan
  *
@@ -15,17 +16,19 @@
  */
 
 import { eventBus } from '@/services';
-import TabHeader from '../../components/TabHeader';
-import { Avatar, Button, Flex, Space, TabsProps, Tag, Tooltip, Typography } from 'antd';
+import TabHeader from '@/pages/Modu/Workspace/components/TabHeader';
+import { Avatar, Button, Dropdown, Flex, message, Space, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { BOT } from '@/services/bot/typings';
-import { useEffect, useState } from 'react';
-import { CheckCircleFilled, EditOutlined, HistoryOutlined, LeftOutlined, RobotOutlined } from '@ant-design/icons';
+import { useEffect, useRef, useState } from 'react';
+import { CheckCircleFilled, EditOutlined, HistoryOutlined, LeftOutlined, RobotOutlined, SaveOutlined } from '@ant-design/icons';
 import { UsersRound } from 'lucide-react';
-import BotOrchestration from './Orchestration';
+import BotOrchestration, { BotRefProperty } from './Orchestration';
 import { workspaceService, botService } from '@/services';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { useParams } from '@umijs/max';
 import BotUpdateModal from '../BotCreateModal';
+import moment from 'moment';
+import BotConfigPublishHistoryDrawer from './BotConfigPublishHistoryDrawer';
 
 const BotEdit: React.FC = () => {
     const param = useParams();
@@ -33,13 +36,30 @@ const BotEdit: React.FC = () => {
     const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
     const [bot, setBot] = useState<BOT.BotEntity>();
 
-    const [editModal, setEditModal] = useState<{ open: boolean }>({ open: false })
+    // 智能体配置
+    const botRef = useRef<BotRefProperty>(null);
+    // 保存/发布 智能体配置 状态
+    const [configActionLoading, setConfigActionLoading] = useState(false)
+    // 保存/发布 智能体配置 时间
+    const [configActionAt, setConfigActionAt] = useState<{ action: string, at: Date }>();
 
-    const showEditModal = () => {
-        setEditModal({ open: true })
+    // 基本信息辑弹窗
+    const [baseInfoEditModal, setBaseInfoEditModal] = useState<{ open: boolean }>({ open: false })
+    const showBaseInfoEditModal = () => {
+        setBaseInfoEditModal({ open: true })
     }
-    const closeEditModal = () => {
-        setEditModal({ open: false })
+    const closeBaseInfoEditModal = () => {
+        setBaseInfoEditModal({ open: false })
+    }
+
+    // 发布历史抽屉
+    const [publishHistoryDrawer, setPublishHistoryDrawer] = useState<{ open: boolean }>({ open: false })
+    const showPublishHistoryDrawer = () => {
+        setPublishHistoryDrawer({ open: true })
+    }
+    const closePublishHistoryDrawer = () => {
+        setPublishHistoryDrawer({ open: false })
+        botRef.current?.refreshBotConfig()
     }
 
     useEffect(() => {
@@ -75,7 +95,7 @@ const BotEdit: React.FC = () => {
                             {bot?.name || 'BOT'}
                         </Typography.Text>
 
-                        <Button type="text" size='small' className='p-1' onClick={showEditModal}>
+                        <Button type="text" size='small' className='p-1' onClick={showBaseInfoEditModal}>
                             <Typography.Text className="text-gray-500 font-bold"><EditOutlined /></Typography.Text>
                         </Button>
                     </Space>
@@ -87,11 +107,20 @@ const BotEdit: React.FC = () => {
                                 <Typography.Text className="text-xs">{workspace?.name}</Typography.Text>
                             </Space>
                         </Tag>
-                        {!!bot?.publish_uid &&
+                        {!configActionAt && !!bot?.publish_uid &&
                             <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
                                 <Space>
                                     <CheckCircleFilled />
                                     <Typography.Text className="text-xs">已发布</Typography.Text>
+                                </Space>
+                            </Tag>
+                        }
+                        {!!configActionAt &&
+                            <Tag bordered={false} color="#EAEAEA" style={{ color: 'black' }}>
+                                <Space>
+                                    <CheckCircleFilled />
+                                    <Typography.Text className="text-xs">已{configActionAt.action}</Typography.Text>
+                                    <Typography.Text className="text-xs">{moment(configActionAt.at).format('YYYY-MM-DD HH:mm:ss')}</Typography.Text>
                                 </Space>
                             </Tag>
                         }
@@ -104,9 +133,40 @@ const BotEdit: React.FC = () => {
         right: (
             <Space style={{ marginRight: '1rem' }}>
                 <Tooltip title='发布历史' placement='left'>
-                    <Button icon={<HistoryOutlined />} color='default' variant='filled' />
+                    <Button icon={<HistoryOutlined />} color='default' variant='filled' disabled={publishHistoryDrawer.open} onClick={showPublishHistoryDrawer} />
                 </Tooltip>
-                <Button type="primary" className='w-24'>发布</Button>
+                <Dropdown.Button type="primary" className='w-24'
+                    disabled={publishHistoryDrawer.open}
+                    menu={{
+                        items: [{
+                            key: 'save',
+                            label: '保存',
+                            icon: <SaveOutlined />,
+                            disabled: publishHistoryDrawer.open,
+                            onClick: () => {
+                                const botConfig = botRef.current?.getBotConfigAndCheck();
+                                if (!botConfig) return;
+                                setConfigActionLoading(true)
+                                botService.configSave(workspace!.uid, bot!.uid, botConfig.mode, botConfig.config).then((resp) => {
+                                    message.success('保存成功');
+                                    setConfigActionAt({ action: '保存', at: new Date() })
+                                }).finally(() => setConfigActionLoading(false));
+                            }
+                        }]
+                    }}
+                    loading={configActionLoading}
+                    onClick={() => {
+                        const botConfig = botRef.current?.getBotConfigAndCheck();
+                        if (!botConfig) return;
+                        setConfigActionLoading(true)
+                        botService.configPublish(workspace!.uid, bot!.uid, botConfig.mode, botConfig.config).then((resp) => {
+                            if (resp.success) {
+                                message.success('发布成功');
+                                setBot({ ...bot!, publish_uid: resp.content })
+                                setConfigActionAt({ action: '发布', at: new Date() })
+                            }
+                        }).finally(() => setConfigActionLoading(false));
+                    }}>发布</Dropdown.Button>
             </Space>
         ),
     };
@@ -122,7 +182,9 @@ const BotEdit: React.FC = () => {
                     </Space>
                 </>
             ),
-            children: workspace && bot && <BotOrchestration workspace={workspace} bot={bot} />,
+            children: workspace && bot && <div className={`transition-[padding] ${publishHistoryDrawer.open ? 'pr-60' : 'pr-0'}`}>
+                <BotOrchestration ref={botRef} workspace={workspace} bot={bot} />
+            </div>,
         },
     ]
 
@@ -140,13 +202,21 @@ const BotEdit: React.FC = () => {
             />
 
             <BotUpdateModal
-                workspaceUid={param.spaceId!} open={editModal.open}
+                workspaceUid={param.spaceId!} open={baseInfoEditModal.open}
                 modalMode="edit"
                 bot={bot}
-                onCancel={closeEditModal}
+                onCancel={closeBaseInfoEditModal}
                 onUpdate={(_bot) => {
                     setBot({ ...bot!, name: _bot.name, description: _bot.description })
-                    closeEditModal();
+                    closeBaseInfoEditModal();
+                }} />
+
+            <BotConfigPublishHistoryDrawer
+                workspace={workspace!} bot={bot!}
+                open={publishHistoryDrawer.open}
+                onClose={closePublishHistoryDrawer}
+                onSelect={(publishUid) => {
+                    botRef.current?.refreshBotConfig(publishUid)
                 }} />
         </>
     );

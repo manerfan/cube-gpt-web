@@ -34,13 +34,13 @@ export interface ModelPopoverWrapperRefProperty {
 /**
  * 模型弹出菜单的包装器
  */
-const ModelPopoverWrapper: React.FC<{
+const ModelPopoverWrapper = forwardRef<ModelPopoverWrapperRefProperty, {
   popover: React.ReactNode;
   provider?: LLM.ProviderSchema;
   model?: LLM.ModelSchema;
   providerStatus?: ProviderStatus;
   block?: boolean;
-}> = forwardRef(({ popover, provider, model, providerStatus, block }, ref) => {
+}>(({ popover, provider, model, providerStatus, block }, ref) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -62,13 +62,11 @@ const ModelPopoverWrapper: React.FC<{
         }}
       >
         <div
-          className={`min-h-8 rounded-md px-2 py-1 cursor-pointer ${
-            block ? 'w-full' : 'w-auto'
-          } ${
-            providerStatus === ProviderStatus.UN_CONFIGURED || model?.deprecated
+          className={`min-h-8 rounded-md px-2 py-1 cursor-pointer ${block ? 'w-full' : 'w-auto'
+            } ${providerStatus === ProviderStatus.UN_CONFIGURED || model?.deprecated || !provider || !model
               ? 'bg-orange-50 hover:bg-orange-100'
               : 'bg-gray-100 hover:bg-gray-200'
-          }`}
+            }`}
         >
           <Flex justify="space-between" align="center">
             <ModelItem
@@ -77,8 +75,8 @@ const ModelPopoverWrapper: React.FC<{
               slider
               empty={
                 <Space align="center">
-                  <Box size={16} color="#9A9A9A" className="block" />
-                  <Typography.Text type="secondary">选择模型</Typography.Text>
+                  <Box size={16} className="block text-red-400" />
+                  <Typography.Text className="text-red-400">选择模型</Typography.Text>
                 </Space>
               }
               onClick={() => setPopoverOpen(true)}
@@ -87,16 +85,16 @@ const ModelPopoverWrapper: React.FC<{
             <Space className="ml-3">
               {(providerStatus === ProviderStatus.UN_CONFIGURED ||
                 model?.deprecated) && (
-                <Tooltip title={model?.deprecated ? '已弃用' : '未配置'}>
-                  <Typography.Text type="warning" strong className="leading-8">
-                    {model?.deprecated ? (
-                      <WarningFilled />
-                    ) : (
-                      <WarningOutlined />
-                    )}
-                  </Typography.Text>
-                </Tooltip>
-              )}
+                  <Tooltip title={model?.deprecated ? '已弃用' : '未配置'}>
+                    <Typography.Text type="warning" strong className="leading-8">
+                      {model?.deprecated ? (
+                        <WarningFilled />
+                      ) : (
+                        <WarningOutlined />
+                      )}
+                    </Typography.Text>
+                  </Tooltip>
+                )}
               <Typography.Text
                 type="secondary"
                 strong

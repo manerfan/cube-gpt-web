@@ -17,11 +17,20 @@
 import { BOT } from '@/services/bot/typings';
 import { WORKSPACE } from '@/services/workspace/typings';
 import { Splitter } from 'antd';
+import { forwardRef, useImperativeHandle } from 'react';
+import { AgentRefProperty } from '..';
 
-const MultiAgent: React.FC<{
+const MultiAgent = forwardRef<AgentRefProperty, {
     workspace: WORKSPACE.WorkspaceEntity,
-    bot: BOT.BotEntity
-}> = ({ workspace, bot }) => {
+    bot: BOT.BotEntity,
+    botConfig?: Record<string, any>
+}>(({ workspace, bot, botConfig }, ref) => {
+    useImperativeHandle(ref, () => ({
+        getAgentConfigAndCheck: () => {
+            return null;
+        }
+    }));
+
     return <Splitter className='w-full'>
         <Splitter.Panel min={480}>
             这里放编排内容
@@ -30,6 +39,6 @@ const MultiAgent: React.FC<{
             这里放调试内容
         </Splitter.Panel>
     </Splitter>
-}
+})
 
 export default MultiAgent;

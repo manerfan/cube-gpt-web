@@ -126,15 +126,14 @@ const ChatInput: React.FC<{
                   className="p-1"
                   disabled={loading}
                   loading={clearLoading}
+                  icon={<SquareSplitVertical size={18} />}
                   onClick={() => {
                     if (!!onClearMemory) {
                       setClearLoading(true);
                       onClearMemory().finally(() => setClearLoading(false));
                     }
                   }}
-                >
-                  <SquareSplitVertical size={18} />
-                </Button>
+                />
               </Tooltip>
               {/* 技能 */}
               <Tooltip title="技能">

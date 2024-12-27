@@ -81,8 +81,8 @@ const BotModeSelect: React.FC<{
                     <List.Item
                         style={option.value === mode ? { borderBlockEnd: '1.5px solid #475569' } : { borderBlockEnd: '1.5px solid #e2e8f0' }}
                         className={`relative group my-3 border-solid rounded-lg hover:bg-gray-100 cursor-pointer ${(option.value === mode)
-                            ? 'border-slate-600 bg-slate-100'
-                            : 'border-slate-200'
+                            ? 'border-gray-600 bg-gray-50'
+                            : 'border-gray-200'
                             }`}
                         onClick={() => {
                             setMode(option.value);

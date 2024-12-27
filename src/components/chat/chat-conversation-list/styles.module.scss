@@ -22,6 +22,10 @@
     }
 
     .conversation-operator {
+        button {
+            height: 20px;
+        }
+
         display: none;
     }
 
@@ -46,6 +50,7 @@
 
         .skeleton-item {
             width: 100% !important;
+
             &>span {
                 width: 100% !important;
             }

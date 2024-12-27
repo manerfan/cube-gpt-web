@@ -108,6 +108,14 @@
             font-size: 12px !important;
         }
     }
+
+    .ant-select-selector {
+        .ant-select-selection-search {
+            input {
+                box-shadow: none !important;
+            }
+        }
+    }
 }
 
 .ant-tabs {
@@ -220,5 +228,12 @@
                 height: 100%;
             }
         }
+    }
+}
+
+.ant-spin-bg-transparent {
+    background: transparent !important;
+    .ant-spin-dot-holder {
+        color: inherit !important;
     }
 }

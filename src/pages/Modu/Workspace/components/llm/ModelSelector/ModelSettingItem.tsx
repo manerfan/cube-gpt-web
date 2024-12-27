@@ -119,7 +119,7 @@ const ModelSettingItem: React.FC<{
           {beSlider && (
             <Col span={9}>
               <Slider
-                className="my-1.5 mx-0"
+                className="my-1.5 mx-0 w-full"
                 min={itemSchema.field_props!.min}
                 max={itemSchema.field_props!.max}
                 step={step}
@@ -172,7 +172,7 @@ const ModelSettingItem: React.FC<{
         <>
           <Col span={14}>
             <Select
-              style={{ maxWidth: '100%' }}
+              className='w-full'
               size="small"
               variant="filled"
               mode={itemSchema.field_props?.mode}

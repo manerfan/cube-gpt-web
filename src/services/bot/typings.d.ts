@@ -105,11 +105,6 @@ declare namespace BOT {
     mode: string;
 
     /**
-     * BOT配置
-     */
-    config?: any;
-
-    /**
      * 发布UID
      */
     publish_uid?: string;
