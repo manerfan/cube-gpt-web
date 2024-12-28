@@ -201,7 +201,7 @@ const Studio: React.FC<{
                                 <Flex vertical justify="center" align="flex-start" className='h-full' style={{ width: 'calc(100% - 76px)' }}>
                                     <Flex justify="flex-start" align="center" className='w-full h-1/2 flex-auto'>
                                         <Typography.Text strong ellipsis className='text-lg'>{bot.name}</Typography.Text>
-                                        <Typography.Text className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publish_uid) ? 'text-gray-500' : 'text-red-500'}`}>
+                                        <Typography.Text className={`w-6 pl-2 flex-initial ${_.isEmpty(bot.publish_uid) ? 'text-gray-500' : 'text-green-500'}`}>
                                             {_.isEmpty(bot.publish_uid) ? <EditOutlined /> : <CheckCircleFilled />}
                                         </Typography.Text>
                                     </Flex>

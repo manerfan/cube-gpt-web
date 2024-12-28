@@ -98,7 +98,7 @@ const ProviderCard: React.FC<{
                 type="primary"
                 size="small"
                 icon={<SettingOutlined />}
-                className="text-gray-500 font-bold border-animation"
+                className="text-gray-500 font-bold border-colorful"
                 onClick={() => {
                   setSystemModelSettingDrawerOpen(true);
                 }}

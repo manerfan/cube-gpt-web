@@ -15,21 +15,21 @@
  */
 
 import { workspaceService } from '@/services';
-import { getPathAndModule } from '@/services/common';
 import { WorkspaceType } from '@/services/workspace';
 import { WORKSPACE } from '@/services/workspace/typings';
-import { SettingOutlined } from '@ant-design/icons';
+import { SmileOutlined } from '@ant-design/icons';
 import {
   FluentEmoji,
   FluentEmojiProps,
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { history, useIntl, useLocation, useParams } from '@umijs/max';
-import { Avatar, Button, Space, TabsProps, Typography } from 'antd';
-import { BookCopy, Bot, } from 'lucide-react';
+import { useIntl, useParams } from '@umijs/max';
+import { Avatar, Result, Space, TabsProps, Typography } from 'antd';
+import { BookCopy, Bot, BrainCircuit, } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TabHeader from './components/TabHeader';
+import Providers from './Setting/Providers';
 import Studio from './Studio';
 
 const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {
@@ -38,8 +38,6 @@ const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {
 
 const Workspace: React.FC = () => {
   const intl = useIntl();
-
-  const location = useLocation();
   const param = useParams();
 
   const [workspace, setWorkspace] = useState<WORKSPACE.WorkspaceEntity>();
@@ -89,8 +87,23 @@ const Workspace: React.FC = () => {
           </Space>
         </>
       ),
-      children: 'Content of Tab Pane Bots',
+      children: <Result
+        icon={<SmileOutlined />}
+        title="资源库正在建设中，敬请期待..."
+      />,
+    }, {
+      key: 'provider',
+      label: (
+        <>
+          <Space align="center" size={0}>
+            <BrainCircuit size={22} className="ant-tabs-tab-btn-icon" />
+            模型管理
+          </Space>
+        </>
+      ),
+      children: <Providers workspaceUid={param!.spaceId!} />,
     },
+
 
     // {
     //   key: 'plugins',
@@ -154,21 +167,21 @@ const Workspace: React.FC = () => {
         </Typography.Text>
       </Space>
     ),
-    right: (
-      <Space style={{ marginRight: '1rem' }}>
-        <Button
-          type="primary"
-          icon={<SettingOutlined />}
-          className="text-gray-500 font-bold border-animation"
-          onClick={() => {
-            const [path] = getPathAndModule(location.pathname);
-            history.push(`${path}/setting/providers`);
-          }}
-        >
-          {intl.formatMessage({ id: 'modu.space.tab.setting' })}
-        </Button>
-      </Space>
-    ),
+    // right: (
+    //   <Space style={{ marginRight: '1rem' }}>
+    //     <Button
+    //       type="primary"
+    //       icon={<SettingOutlined />}
+    //       className="text-gray-500 font-bold border-colorful"
+    //       onClick={() => {
+    //         const [path] = getPathAndModule(location.pathname);
+    //         history.push(`${path}/setting/providers`);
+    //       }}
+    //     >
+    //       {intl.formatMessage({ id: 'modu.space.tab.setting' })}
+    //     </Button>
+    //   </Space>
+    // ),
   };
 
   return (
