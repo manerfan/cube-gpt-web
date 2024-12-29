@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CheckCircleFilled, EditOutlined, MoreOutlined, RobotOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, EditOutlined, MoreOutlined, RobotOutlined, StarFilled, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { Flex, Radio, Input, Button, Typography, Avatar, Space, Dropdown, Tooltip, Skeleton, Divider, message } from 'antd';
 import styles from './styles.module.scss';
@@ -46,6 +46,8 @@ const Studio: React.FC<{
     const [botListQry, setBotListQry] = useState<BOT.BotListQry>({});
     const [loadingBots, setLoadingBots] = useState(false);
     const [refreshBots, setRefreshBots] = useState(false);
+
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
 
     const loadMoreBots = (refresh: boolean = false) => {
         if (loadingBots) {
@@ -156,11 +158,27 @@ const Studio: React.FC<{
 
                             <Space>
                                 <Tooltip title={'收藏'}>
-                                    <Button size='small' icon={<StarOutlined />} color='default' variant='filled'
+                                    <Button size='small' color='default' variant='filled'
+                                        icon={bot.is_favorite ? <Typography.Text className='text-yellow-400'><StarFilled /></Typography.Text> : <StarOutlined />}
+                                        loading={favoriteLoading}
                                         className='border-none' disabled={!hasPublished}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             e.preventDefault();
+
+                                            setFavoriteLoading(true);
+                                            botService.favorite(workspaceUid, bot.uid, !bot.is_favorite).then((resp) => {
+                                                if (resp.success && resp.content) {
+                                                    const newBots = _.cloneDeep(bots);
+                                                    const newBot = _.find(newBots, (b) => b.uid === bot.uid);
+                                                    if (newBot) {
+                                                        newBot.is_favorite = !bot.is_favorite;
+                                                    }
+                                                    setBots(newBots);
+                                                }
+                                            }).finally(() => {
+                                                setFavoriteLoading(false);
+                                            })
                                         }} />
                                 </Tooltip>
                                 <Dropdown placement="bottomRight" trigger={['click']} menu={{

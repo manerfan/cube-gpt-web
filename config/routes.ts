@@ -102,6 +102,12 @@ const routes: Routes = [
         component: './Modu/Chat',
         wrappers: ['@/wrappers/modu/ModuContentWrapper'],
       },
+      // 用户
+      {
+        path: 'user/:userUid',
+        component: './User',
+        wrappers: ['@/wrappers/modu/ModuContentWrapper'],
+      },
       // 市场
       {
         path: 'store',

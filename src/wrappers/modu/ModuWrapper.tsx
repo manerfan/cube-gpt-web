@@ -37,7 +37,7 @@ import {
   useControls,
   useCreateStore,
 } from '@lobehub/ui';
-import { Outlet, history, useIntl, useLocation, useModel } from '@umijs/max';
+import { Link, Outlet, history, useIntl, useLocation, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import {
   Avatar,
@@ -367,8 +367,8 @@ const ModuWrapper: React.FC = () => {
           render: () => {
             return (
               <>
-                <Popover trigger="click" title={<></>}>
-                  <Button type="text" style={{ height: 50 }}>
+                <Button type="text" style={{ height: 50 }}>
+                  <Link to={`/modu/user/${initialState?.userMe?.uid}`} >
                     <Space>
                       <Avatar icon={<FluentEmoji type={'anim'} {...control} />} />
                       {!collapsed && (
@@ -377,8 +377,8 @@ const ModuWrapper: React.FC = () => {
                         </Typography.Text>
                       )}
                     </Space>
-                  </Button>
-                </Popover>
+                  </Link>
+                </Button>
               </>
             );
           },

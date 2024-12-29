@@ -108,5 +108,10 @@ declare namespace BOT {
      * 发布UID
      */
     publish_uid?: string;
+
+    /**
+     * 是否收藏
+     */
+    is_favorite?: boolean;
   };
 }

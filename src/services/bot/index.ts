@@ -105,6 +105,25 @@ export async function find(
 }
 
 /**
+ * 收藏智能体
+ */
+export async function favorite(
+  workspaceUid: string,
+  botUid: string,
+  favorite: boolean,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<string>> {
+  return request<Response.SingleResponse<string>>(
+    `/api/workspace/${workspaceUid}/bot/${botUid}/favorite`,
+    {
+      method: 'POST',
+      params: { is_favorite: favorite },
+      ...(options || {}),
+    },
+  );
+}
+
+/**
  * 保存配置
  */
 export async function configSave(
