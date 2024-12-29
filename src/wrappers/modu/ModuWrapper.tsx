@@ -46,7 +46,6 @@ import {
   Flex,
   Layout,
   Menu,
-  Popover,
   Space,
   Tooltip,
   Typography,
@@ -74,7 +73,7 @@ const ModuWrapper: React.FC = () => {
   const store = useCreateStore();
   const control: FluentEmojiProps = useControls(
     {
-      emoji: '👤',
+      emoji: '😃',
       size: {
         max: 128,
         min: 16,

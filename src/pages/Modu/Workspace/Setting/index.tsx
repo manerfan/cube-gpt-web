@@ -36,7 +36,7 @@ import {
 } from 'antd';
 import { BrainCircuit, Contact } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import TabHeader from '../components/TabHeader';
+import TabHeader from '@/components/common/TabHeader';
 import Providers from './Providers';
 
 const isPublicSpace = (space?: WORKSPACE.WorkspaceEntity) => {

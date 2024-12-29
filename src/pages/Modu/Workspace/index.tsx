@@ -28,7 +28,7 @@ import { useIntl, useParams } from '@umijs/max';
 import { Avatar, Result, Space, TabsProps, Typography } from 'antd';
 import { BookCopy, Bot, BrainCircuit, } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import TabHeader from './components/TabHeader';
+import TabHeader from '@/components/common/TabHeader';
 import Providers from './Setting/Providers';
 import Studio from './Studio';
 

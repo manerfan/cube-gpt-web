@@ -16,7 +16,7 @@
  */
 
 import { eventBus } from '@/services';
-import TabHeader from '@/pages/Modu/Workspace/components/TabHeader';
+import TabHeader from '@/components/common/TabHeader';
 import { Avatar, Button, Dropdown, Flex, message, Space, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { BOT } from '@/services/bot/typings';
 import { useEffect, useRef, useState } from 'react';

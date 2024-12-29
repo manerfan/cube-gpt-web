@@ -26,12 +26,13 @@ const TabHeader: React.FC<{
   centered?: boolean,
   size?: SizeType;
   sticky?: boolean,
+  className?: string,
   contentNoPpadding?: boolean;
   locationUpdate?: boolean,
   tabBarRender?: boolean,
   defaultActiveKey?: string;
   tabBarExtraContent?: Partial<Record<'left' | 'right', React.ReactNode>>
-}> = ({ items, centered, size, sticky, contentNoPpadding, locationUpdate, tabBarRender, defaultActiveKey, tabBarExtraContent }) => {
+}> = ({ items, centered, size, sticky, className, contentNoPpadding, locationUpdate, tabBarRender, defaultActiveKey, tabBarExtraContent }) => {
   const location = useLocation();
 
   // 选择的菜单KEY
@@ -75,7 +76,7 @@ const TabHeader: React.FC<{
       renderTabBar={!!tabBarRender ? renderTabBar : undefined}
       tabBarExtraContent={tabBarExtraContent}
       items={items}
-      className={ contentNoPpadding ? 'ant-tabs-content-no-padding' : ''}
+      className={`${className} ${contentNoPpadding ? 'ant-tabs-content-no-padding' : ''}`}
     />
   );
 };
