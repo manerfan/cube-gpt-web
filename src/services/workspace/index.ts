@@ -63,6 +63,21 @@ export async function list(
 }
 
 /**
+ * 获取 我的空间 详情
+ */
+export async function mine(
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<WORKSPACE.WorkspaceEntity>> {
+  return request<Response.SingleResponse<WORKSPACE.WorkspaceEntity>>(
+    `/api/workspace/mine`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+/**
  * 空间详情
  */
 export async function detail(

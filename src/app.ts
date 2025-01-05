@@ -19,6 +19,7 @@ import {
   llmProviderService,
   systemService,
   userService,
+  workspaceService,
 } from '@/services';
 import type { Response } from '@/services/typings';
 import {
@@ -33,6 +34,7 @@ import { ACCESS_TOKEN, TOKEN_TYPE } from './constants';
 import { LLM } from './services/llm/typings';
 import { SYSTEM } from './services/system/typings';
 import { USER } from './services/user/typings';
+import { WORKSPACE } from './services/workspace/typings';
 
 const loginPath = '/login';
 const ignoreAuthPath = ['/login', '/setup'];
@@ -49,6 +51,8 @@ export function render(oldRender: Function) {
 export async function getInitialState(): Promise<{
   // 当前登录账号
   userMe?: USER.UserEntity;
+  // 我的工作空间
+  mineWorkspace?: WORKSPACE.WorkspaceEntity;
   // 初始化状态
   setupStatus?: boolean;
   // 应用
@@ -61,6 +65,15 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const result = await userService.me();
+      return result.content;
+    } catch (ex) {
+      return undefined;
+    }
+  };
+
+  const fetchMineWorkspace = async () => {
+    try {
+      const result = await workspaceService.mine();
       return result.content;
     } catch (ex) {
       return undefined;
@@ -94,17 +107,19 @@ export async function getInitialState(): Promise<{
     }
   };
 
-  const [userMe, setupStatus, appInfo, providers] = await Promise.all<
+  const [userMe, workspace, setupStatus, appInfo, providers] = await Promise.all<
     [
       Promise<USER.UserEntity | undefined>,
+      Promise<WORKSPACE.WorkspaceEntity | undefined>,
       Promise<boolean | undefined>,
       Promise<SYSTEM.AppInfo | undefined>,
       Promise<LLM.ProviderSchema[] | undefined>,
     ]
-  >([fetchUserInfo(), fetchSetupStatus(), fetchAppInfo(), fetchProviders()]);
+  >([fetchUserInfo(), fetchMineWorkspace(), fetchSetupStatus(), fetchAppInfo(), fetchProviders()]);
 
   return {
     userMe: await userMe,
+    mineWorkspace: await workspace,
     setupStatus: await setupStatus,
     appInfo: await appInfo,
     providers: await providers,

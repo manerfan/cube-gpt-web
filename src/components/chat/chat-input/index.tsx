@@ -113,7 +113,15 @@ const ChatInput: React.FC<{
               readOnly={loading}
               defaultValue=''
               showToolbar={false}
-              onChange={(markdown) => setQuery(markdown)} />
+              onChange={(markdown) => setQuery(markdown)}
+              botMentionOptions={{
+                enable: true,
+                trigger: '@',
+                onSelect: (botFavorite) => {
+                  console.log('===1===', botFavorite);
+                },
+              }}
+            />
           </div>
 
           {/* 底部按钮 */}

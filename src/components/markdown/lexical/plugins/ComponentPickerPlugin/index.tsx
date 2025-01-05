@@ -37,6 +37,7 @@ import { blockTypeToBlockIcon, blockTypeToBlockName } from '../../context/Toolba
 import { Flex, Typography, Modal } from 'antd';
 import { HookAPI } from 'antd/es/modal/useModal';
 import { Sheet, Sigma } from 'lucide-react';
+import { debounce } from 'lodash';
 
 export class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
@@ -266,14 +267,15 @@ function getBaseOptions(editor: LexicalEditor, modal: HookAPI) {
 }
 
 type Option = {
-  trigger: string,
+  trigger?: string,
   showBaseOptions?: boolean,
 };
 
 export default function ComponentPickerMenuPlugin({
-  trigger,
+  trigger = '/',
   showBaseOptions = true
 }: Option): JSX.Element {
+  // 编辑器
   const [editor] = useLexicalComposerContext();
 
   // 关键词
@@ -325,17 +327,6 @@ export default function ComponentPickerMenuPlugin({
   );
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const debounce = (fn: () => void, interval: number) => {
-    let timer: any;
-    return () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        fn.apply(this);
-      }, interval);
-    };
-  }
-
   const debouncedHandleResize = debounce(() => {
     setWindowHeight(window.innerHeight);
     if (!typeaheadRef?.current) {

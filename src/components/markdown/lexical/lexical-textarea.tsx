@@ -24,7 +24,7 @@ import { TRANSFORMERS } from './plugins/ExtTransformers';
 import { ToolbarContext } from './context/ToolbarContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { TableContext } from './plugins/TablePlugin';
-import LexicalInnerEditor, { LexicalInnerEditorRefProperty } from './lexical-editor';
+import LexicalInnerEditor, { BotMentionOptions, LexicalInnerEditorRefProperty } from './lexical-editor';
 import nodes from './nodes';
 import {
     CLEAR_EDITOR_COMMAND,
@@ -46,8 +46,9 @@ const LexicalTextarea: React.FC<{
     defaultValue?: string,
     showToolbar?: boolean,
     onChange?: (markdown: string) => void,
-}> = forwardRef(({ placeholder, readOnly, defaultValue, showToolbar, onChange }, ref) => {
-    const lexicalInnerEditorPopoverRef = useRef<LexicalInnerEditorRefProperty>();
+    botMentionOptions?: BotMentionOptions,
+}> = forwardRef(({ placeholder, readOnly, defaultValue, showToolbar, onChange, botMentionOptions }, ref) => {
+    const lexicalInnerEditorPopoverRef = useRef<LexicalInnerEditorRefProperty>(null);
 
     useImperativeHandle(ref, () => ({
         clearEditor() {
@@ -108,7 +109,8 @@ const LexicalTextarea: React.FC<{
                             ref={lexicalInnerEditorPopoverRef}
                             placeholder={placeholder}
                             showToolbar={showToolbar}
-                            onChange={onChange} />
+                            onChange={onChange}
+                            botMentionOptions={botMentionOptions} />
                     </ToolbarContext>
                 </TableContext>
             </SharedHistoryContext>

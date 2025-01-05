@@ -1,0 +1,17 @@
+.no-more-tip {
+    &::before {
+        width: 160px !important;
+    }
+    &::after {
+        width: 160px !important;
+    }
+}
+
+.skeleton-card {
+    &>div {
+        &>div {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+}

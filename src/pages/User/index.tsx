@@ -15,10 +15,12 @@
  */
 
 import TabHeader from "@/components/common/TabHeader";
-import { EditOutlined } from "@ant-design/icons";
-import { FluentEmoji, FluentEmojiProps, Hero, useControls, useCreateStore } from "@lobehub/ui";
+import { EditOutlined, SmileOutlined } from "@ant-design/icons";
+import { FluentEmoji, FluentEmojiProps, useControls, useCreateStore } from "@lobehub/ui";
 import { Link, useModel, useParams } from "@umijs/max";
 import { Avatar, Button, Flex, Result, Space, TabsProps, Typography } from "antd";
+import UserFavorite from "./Favorite";
+import UserCreation from "./Creation";
 
 const User: React.FC = () => {
     const { initialState } = useModel('@@initialState');
@@ -43,32 +45,12 @@ const User: React.FC = () => {
         {
             key: 'creations',
             label: <Typography.Text>作品</Typography.Text>,
-            children: <Flex vertical justify="center" align="center" className="h-96"><Hero
-                description="敬请期待，马上到来！"
-                actions={[
-                    {
-                        link: '/modu/chat',
-                        text: '先和我聊聊',
-                        type: 'primary',
-                    },
-                ]}
-                title="<b>. MODU</b> CHAT"
-            /></Flex>,
+            children: <UserCreation />,
         },
         {
             key: 'favorites',
             label: <Typography.Text>收藏</Typography.Text>,
-            children: <Flex vertical justify="center" align="center" className="h-96"><Hero
-                description="敬请期待，马上到来！"
-                actions={[
-                    {
-                        link: '/modu/chat',
-                        text: '先和我聊聊',
-                        type: 'primary',
-                    },
-                ]}
-                title="<b>. MODU</b> CHAT"
-            /></Flex>,
+            children: <UserFavorite />,
         },
     ]
 
@@ -94,14 +76,13 @@ const User: React.FC = () => {
                         <Button type="text" size="small" icon={<Typography.Text type="secondary"><EditOutlined /></Typography.Text>} />
                     </Flex>
                 </Flex>
-
             </Flex>
             <Flex className="px-20 py-5">
                 <TabHeader
                     className="w-full"
                     contentNoPpadding
                     items={items}
-                    defaultActiveKey='creations'
+                    defaultActiveKey='favorites'
                 />
             </Flex>
         </>

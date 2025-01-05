@@ -16,14 +16,14 @@
 
 import { Button } from 'antd';
 import { ArrowDownToLine } from 'lucide-react';
-import React, { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
 
 export interface ScrollToBottomBtnRefProperty {
   trigScrollToBottom: () => void;
 }
 
-const ScrollToBottomBtn: React.FC<{ className?: string }> = forwardRef(({ className }, ref) => {
+const ScrollToBottomBtn = forwardRef<ScrollToBottomBtnRefProperty, { className?: string }>(({ className }, ref) => {
   const scrollToBottom = useScrollToBottom();
   const [sticky] = useSticky();
 

@@ -15,8 +15,9 @@
  */
 
 import '@interface/typings';
+import type { USER } from '@/services/user/typings';
 import type { BotMode } from './index';
-import type { USER } from '@services/user/typings';
+import type { WORKSPACE } from '@/services/workspace/typings';
 
 declare namespace BOT {
   type BotAddCmd = {
@@ -73,6 +74,11 @@ declare namespace BOT {
      * 空间UID
      */
     workspace_uid: string;
+
+    /**
+     * 空间
+     */
+    workspace?: WORKSPACE.WorkspaceEntity;
 
     /**
      * 名称

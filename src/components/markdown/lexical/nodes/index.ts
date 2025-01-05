@@ -24,6 +24,7 @@ import {TableCellNode, TableNode, TableRowNode} from '@lexical/table';
 // import {AutocompleteNode} from './AutocompleteNode';
 // import {EmojiNode} from './EmojiNode';
 import {EquationNode} from './EquationNode';
+import { MentionNode } from './MentionNode';
 // import {ExcalidrawNode} from './ExcalidrawNode';
 // import {FigmaNode} from './FigmaNode';
 // import {ImageNode} from './ImageNode';
@@ -57,7 +58,7 @@ const Nodes: Array<Klass<LexicalNode>> = [
   // StickyNode,
   // ImageNode,
   // InlineImageNode,
-  // MentionNode,
+  MentionNode,
   // EmojiNode,
   // ExcalidrawNode,
   EquationNode,

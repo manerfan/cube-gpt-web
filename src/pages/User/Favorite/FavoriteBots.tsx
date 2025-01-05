@@ -14,103 +14,72 @@
  * limitations under the License.
  */
 
-import { CheckCircleFilled, EditOutlined, MoreOutlined, RobotOutlined, StarFilled, StarOutlined, UserOutlined } from '@ant-design/icons';
-import { ProCard } from '@ant-design/pro-components';
-import { Flex, Radio, Input, Button, Typography, Avatar, Space, Dropdown, Tooltip, Skeleton, Divider, message } from 'antd';
-import styles from './styles.module.scss';
-import BotUpdateModal from './BotCreateModal';
-import { useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
-import { BOT } from '@/services/bot/typings';
-import * as botService from '@/services/bot';
+
+import { useEffect, useState } from "react";
+
+import { USER_FAVORITE } from "@/services/user/favorite/typings";
+
 import _ from 'lodash';
-import { Bot, Layers2 } from 'lucide-react';
-import { useModel, history } from '@umijs/max';
+import InfiniteScroll from "react-infinite-scroller";
+import { Avatar, Button, Divider, Dropdown, Flex, Input, Skeleton, Space, Tooltip, Typography } from "antd";
 
-const Studio: React.FC<{
-    workspaceUid: string
-}> = ({ workspaceUid }) => {
+import styles from '../styles.module.scss';
+import { ProCard } from "@ant-design/pro-components";
+import { useModel, history } from "@umijs/max";
+import { CheckCircleFilled, EditOutlined, MoreOutlined, RobotOutlined, StarFilled, StarOutlined, UserOutlined } from "@ant-design/icons";
+import { botService, favoriteService } from "@/services";
+import { Bot, Layers2 } from "lucide-react";
+
+const FavoriteBots: React.FC = () => {
     const { initialState } = useModel('@@initialState');
+    const [favoriteBots, setFavoriteBots] = useState<USER_FAVORITE.BotFavoriteEntity[]>([]);
+    const [hasMoreFavorites, setHasMoreFavorites] = useState(true);
+    const [refreshFavorites, setRefreshFavorites] = useState(false);
 
-    const [createModal, setCreateModal] = useState<{ open: boolean }>({ open: false })
-    const showCreateModal = () => {
-        setCreateModal({ open: true })
-    }
-    const closeCreateModal = () => {
-        setCreateModal({ open: false })
-    }
-
-    const [bots, setBots] = useState<BOT.BotEntity[]>([]);
-    const [hasMoreBots, setHasMoreBots] = useState(true);
-
-    const [botListQry, setBotListQry] = useState<BOT.BotListQry>({});
-    const [loadingBots, setLoadingBots] = useState(false);
-    const [refreshBots, setRefreshBots] = useState(false);
+    const [favoriteListQry, setFavoriteListQry] = useState<USER_FAVORITE.BotFavoriteListQry>({});
+    const [loadingFavorites, setLoadingFavorites] = useState(false);
 
     const [favoriteLoading, setFavoriteLoading] = useState(false);
 
-    const loadMoreBots = (refresh: boolean = false) => {
-        if (loadingBots) {
+    const loadMoreFavorits = (refresh: boolean = false) => {
+        if (loadingFavorites) {
             return;
         }
 
-        const lastBotUid = refresh ? undefined : _.last(bots)?.uid;
-        if (refresh) setRefreshBots(true);
-        setLoadingBots(true);
-        botService.find(workspaceUid, { ...botListQry, after_uid_limit: lastBotUid }, 20).then((resp) => {
-            const botEntities = resp.content || [];
-            setBots(refresh ? botEntities : [...bots, ...botEntities]);
-            setHasMoreBots(!_.isEmpty(botEntities));
+        const lastFavoriteUid = refresh ? undefined : _.last(favoriteBots)?.favorite_uid;
+        if (refresh) setRefreshFavorites(true);
+        setLoadingFavorites(true);
+        favoriteService.findFavoriteBots({ ...favoriteListQry, after_uid_limit: lastFavoriteUid }, 20).then((resp) => {
+            const favoriteEntities = resp.content || [];
+            setFavoriteBots(refresh ? favoriteEntities : [...favoriteBots, ...favoriteEntities]);
+            setHasMoreFavorites(!_.isEmpty(favoriteEntities));
         }).finally(() => {
-            if (refresh) setRefreshBots(false);
-            setLoadingBots(false);
+            if (refresh) setRefreshFavorites(false);
+            setLoadingFavorites(false);
         });
     }
 
     useEffect(() => {
-        loadMoreBots(true);
-    }, [workspaceUid, botListQry])
+        loadMoreFavorits(true);
+    }, [favoriteListQry])
 
     return <>
         <InfiniteScroll
-            loadMore={() => {
-                loadMoreBots(false)
-            }}
-            hasMore={hasMoreBots}
-            useWindow={true}
-            initialLoad={false}
-        >
+        loadMore={() => {
+                loadMoreFavorits(false)
+        }}
+        hasMore={hasMoreFavorites}
+        useWindow={true}
+        initialLoad={false}
+    >
             <ProCard
+                className="relative"
                 direction="row" wrap ghost gutter={[8, 16]}
-                title={
-                    <Radio.Group defaultValue="all" buttonStyle="solid" disabled={loadingBots} onChange={(e) => {
-                        setBotListQry({ ...botListQry, is_published: e.target.value === 'published' ? true : undefined })
-                    }}>
-                        <Radio.Button value="all">所有</Radio.Button>
-                        <Radio.Button value="published">已发布</Radio.Button>
-                    </Radio.Group>
-                }
-                extra={<Input.Search placeholder="搜索智能体" loading={loadingBots} allowClear className='w-48' onSearch={(keyword) => {
-                    setBotListQry({ ...botListQry, keyword })
+                extra={<Input.Search placeholder="搜索智能体" loading={loadingFavorites} allowClear className='absolute w-48 -top-8 right-0' onSearch={(keyword) => {
+                    setFavoriteListQry({ ...favoriteListQry, keyword })
                 }} />}
             >
-                <ProCard
-                    key="addBot"
-                    bordered
-                    hoverable
-                    style={{ height: 160 }}
-                    bodyStyle={{ padding: 0 }}
-                    colSpan={{ xs: 24, sm: 12, md: 12, lg: 8, xl: 8, xxl: 6, }}
-                >
-                    <Button color="default" variant="filled" className='w-full h-full' disabled={loadingBots} onClick={showCreateModal}>
-                        <Flex vertical className='w-full h-full' justify="center" align="center" gap={6}>
-                            <Avatar src="/icons/plus.svg" />
-                            <Typography.Text className='text-gray-500'>创建智能体</Typography.Text>
-                        </Flex>
-                    </Button>
-                </ProCard>
-
-                {_.map(bots, (bot) => {
+                {_.map(favoriteBots, (bot) => {
                     const dropdownItems = [{
                         key: 'chat',
                         label: <Typography.Text>快速对话</Typography.Text>,
@@ -122,27 +91,12 @@ const Studio: React.FC<{
                             label: <Typography.Text>编辑</Typography.Text>,
                             disabled: false
                         });
-                        dropdownItems.push({
-                            key: 'duplicate',
-                            label: <Typography.Text>创建副本</Typography.Text>,
-                            disabled: true
-                        });
-                        dropdownItems.push({
-                            key: 'migrate',
-                            label: <Typography.Text>迁移</Typography.Text>,
-                            disabled: true
-                        });
-                        dropdownItems.push({
-                            key: 'delete',
-                            label: <Typography.Text type='danger'>删除</Typography.Text>,
-                            disabled: false
-                        });
                     }
 
                     const hasPublished = !!bot?.publish_uid;
 
                     return <ProCard
-                        hidden={refreshBots}
+                        hidden={refreshFavorites}
                         key={bot.uid}
                         bordered
                         hoverable
@@ -151,9 +105,10 @@ const Studio: React.FC<{
                         style={{ height: 160 }}
                         colSpan={{ xs: 24, sm: 12, md: 12, lg: 8, xl: 8, xxl: 6, }}
                         actions={(<Flex justify="space-between" align="center" className='w-full px-3' style={{ justifyContent: 'space-between' }}>
-                            <Space>
+                            <Space className="!max-w-56">
                                 <Avatar size={16} icon={<UserOutlined />} />
-                                <Typography.Text type='secondary'>{bot.creator?.name || bot.creator_uid}</Typography.Text>
+                                <Typography.Text type='secondary' className="!max-w-18" ellipsis>{bot.creator?.name || bot.creator_uid}</Typography.Text>
+                                <Typography.Text type='secondary' className="!max-w-28" ellipsis>{bot.workspace?.name}</Typography.Text>
                             </Space>
 
                             <Space>
@@ -165,16 +120,13 @@ const Studio: React.FC<{
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             e.preventDefault();
-
                                             setFavoriteLoading(true);
-                                            botService.favorite(workspaceUid, bot.uid, !bot.is_favorite).then((resp) => {
+                                            botService.favorite(bot.workspace_uid, bot.uid, !bot.is_favorite).then((resp) => {
                                                 if (resp.success && resp.content) {
-                                                    const newBots = _.cloneDeep(bots);
-                                                    const newBot = _.find(newBots, (b) => b.uid === bot.uid);
-                                                    if (newBot) {
-                                                        newBot.is_favorite = !bot.is_favorite;
+                                                    if (!!bot.is_favorite) {
+                                                        const newFavorites = _.filter(favoriteBots, (b) => b.uid !== bot.uid);
+                                                        setFavoriteBots(newFavorites);
                                                     }
-                                                    setBots(newBots);
                                                 }
                                             }).finally(() => {
                                                 setFavoriteLoading(false);
@@ -188,13 +140,10 @@ const Studio: React.FC<{
                                         domEvent.preventDefault();
                                         switch (key) {
                                             case 'edit':
-                                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`);
+                                                history.push(`/modu/space/${bot.workspace_uid}/bot/${bot.uid}/edit`);
                                                 break;
                                             case 'chat':
-                                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/view`);
-                                                break;
-                                            case 'delete':
-                                                message.info('敬请期待')
+                                                history.push(`/modu/space/${bot.workspace_uid}/bot/${bot.uid}/view`);
                                                 break;
                                         }
                                     }
@@ -208,9 +157,9 @@ const Studio: React.FC<{
                         </Flex>)}
                         onClick={() => {
                             if (initialState?.userMe?.uid === bot.creator_uid) {
-                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`)
+                                history.push(`/modu/space/${bot.workspace_uid}/bot/${bot.uid}/edit`)
                             } else if (!_.isEmpty(bot.publish_uid)) {
-                                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/view`)
+                                history.push(`/modu/space/${bot.workspace_uid}/bot/${bot.uid}/view`)
                             }
                         }}
                     >
@@ -244,7 +193,7 @@ const Studio: React.FC<{
                 })}
 
                 {/* 加载动画 */}
-                {(refreshBots || loadingBots) && _.times(2, (i) => <ProCard
+                {(refreshFavorites || loadingFavorites) && _.times(2, (i) => <ProCard
                     key={`skeleton-${i}`}
                     bodyStyle={{ padding: '0' }}
                     style={{ height: 160 }}
@@ -258,39 +207,29 @@ const Studio: React.FC<{
                 )}
             </ProCard>
 
-            {!loadingBots && !hasMoreBots && (
+        {!loadingFavorites && !hasMoreFavorites && (
                 <Flex justify="center" align="center" className="w-full mt-5">
                     <div>
                         <Divider className={`${styles['no-more-tip']}`}>
                             <Typography.Text type="secondary" className="text-xs">
-                                没有更多智能体
+                                没有更多收藏
                             </Typography.Text>
                         </Divider>
                     </div>
                 </Flex>
             )}
-        </InfiniteScroll>
+    </InfiniteScroll>
 
         {
-            hasMoreBots && (
+            hasMoreFavorites && (
                 <Flex justify="center" align="center" className="w-full mt-10">
-                    <Button color="default" variant="filled" size="small" loading={loadingBots} onClick={() => loadMoreBots()}>
+                    <Button color="default" variant="filled" size="small" loading={loadingFavorites} onClick={() => loadMoreFavorits()}>
                         <Typography.Text type="secondary">加载更多</Typography.Text>
                     </Button>
                 </Flex>
             )
         }
-
-        <BotUpdateModal
-            workspaceUid={workspaceUid} open={createModal.open}
-            modalMode="create"
-            onCancel={closeCreateModal}
-            onUpdate={(bot) => {
-                closeCreateModal();
-                history.push(`/modu/space/${workspaceUid}/bot/${bot.uid}/edit`);
-            }} />
     </>
-};
+}
 
-export default Studio;
-
+export default FavoriteBots;

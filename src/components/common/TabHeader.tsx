@@ -17,12 +17,14 @@
 import { getPathAndModule } from '@/services/common';
 import { history, useLocation } from '@umijs/max';
 import { Tabs, TabsProps } from 'antd';
+import { TabsType } from 'antd/es/tabs';
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
 import { useState } from 'react';
 import StickyBox from 'react-sticky-box';
 
 const TabHeader: React.FC<{
   items: TabsProps['items'],
+  type?: TabsType,
   centered?: boolean,
   size?: SizeType;
   sticky?: boolean,
@@ -32,7 +34,7 @@ const TabHeader: React.FC<{
   tabBarRender?: boolean,
   defaultActiveKey?: string;
   tabBarExtraContent?: Partial<Record<'left' | 'right', React.ReactNode>>
-}> = ({ items, centered, size, sticky, className, contentNoPpadding, locationUpdate, tabBarRender, defaultActiveKey, tabBarExtraContent }) => {
+}> = ({ items, type, centered, size, sticky, className, contentNoPpadding, locationUpdate, tabBarRender, defaultActiveKey, tabBarExtraContent }) => {
   const location = useLocation();
 
   // 选择的菜单KEY
@@ -62,6 +64,7 @@ const TabHeader: React.FC<{
 
   return (
     <Tabs
+      type={type}
       centered={centered}
       size={size || "large"}
       defaultActiveKey={defaultActiveKey}

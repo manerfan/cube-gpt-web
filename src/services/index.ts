@@ -24,6 +24,7 @@ export * as llmModelService from './llm/model';
 export * as workspaceService from './workspace';
 export * as messageService from './message';
 export * as botService from './bot';
+export * as favoriteService from './user/favorite';
 
 export enum ErrorShowType {
   SILENT = 'SILENT',

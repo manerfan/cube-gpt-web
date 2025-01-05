@@ -53,6 +53,8 @@ import {
 import { Bot, Box, MessageCircleMore, Speech, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { eventBus } from '@/services';
+import BotUpdateModal from '@/pages/Modu/Workspace/Studio/BotCreateModal';
+import { WORKSPACE } from '@/services/workspace/typings';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -94,6 +96,16 @@ const ModuWrapper: React.FC = () => {
   // 菜单KEY和跳转路径的映射
   const [menuKeyPath, setMenuKeyPath] = useState<MenuPath>({});
 
+  const [privateSpace, setPrivateSpace] = useState<WORKSPACE.WorkspaceEntity>();
+
+  const [createBotModal, setCreateBotModal] = useState<{ open: boolean }>({ open: false })
+  const showCreateBotModal = () => {
+    setCreateBotModal({ open: true })
+  }
+  const closeCreateBotModal = () => {
+    setCreateBotModal({ open: false })
+  }
+
   useEffect(() => {
     // 查询空间列表
     workspaceService.list().then((resp) => {
@@ -106,6 +118,7 @@ const ModuWrapper: React.FC = () => {
           (workspace) => workspace.type === WorkspaceType.PRIVATE,
         ),
       );
+      setPrivateSpace(privateSpace);
 
       // 公共空间
       const publicSpaces =
@@ -241,7 +254,7 @@ const ModuWrapper: React.FC = () => {
               <div style={{ marginTop: 24 }} />
               <Space direction="vertical">
                 {!collapsed && (
-                  <Button block type="primary">
+                  <Button block type="primary" onClick={showCreateBotModal}>
                     <PlusOutlined />{' '}
                     {intl.formatMessage({ id: 'modu.menu.createBot' })}
                   </Button>
@@ -395,6 +408,16 @@ const ModuWrapper: React.FC = () => {
           <Outlet />
         </Layout>
       </ProLayout>
+
+      <BotUpdateModal
+        workspaceUid={initialState?.mineWorkspace?.uid}
+        open={createBotModal.open}
+        modalMode="create"
+        onCancel={closeCreateBotModal}
+        onUpdate={(bot) => {
+          history.push(`/modu/space/${initialState!.mineWorkspace!.uid}/bot/${bot.uid}/edit`);
+          closeCreateBotModal();
+        }} />
     </ThemeProvider>
   );
 };

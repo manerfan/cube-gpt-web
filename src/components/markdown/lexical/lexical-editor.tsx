@@ -21,7 +21,6 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
-import ToolbarPlugin from './plugins/ToolbarPlugin';
 
 import { $convertToMarkdownString } from '@lexical/markdown';
 import { Typography } from 'antd';
@@ -49,27 +48,35 @@ import TabFocusPlugin from './plugins/TabFocusPlugin';
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
+import { USER_FAVORITE } from '@/services/user/favorite/typings';
 
 export interface LexicalInnerEditorRefProperty {
     getEditor: () => LexicalEditor;
     getMarkdownContent: () => string;
 }
 
+export type BotMentionOptions = {
+    enable?: boolean,
+    trigger?: string,
+    onSelect?: (botFavorite: USER_FAVORITE.BotFavoriteEntity) => void;
+}
+
 /**
  * 需要保证该组件无状态
  */
-const LexicalInnerEditor: React.FC<{
+const LexicalInnerEditor = forwardRef<LexicalInnerEditorRefProperty, {
     placeholder?: string,
     showToolbar?: boolean,
     onChange?: (markdown: string) => void,
-}> = forwardRef(({ placeholder, showToolbar = true, onChange }, ref) => {
+    botMentionOptions?: BotMentionOptions
+}>(({ placeholder, showToolbar = true, onChange, botMentionOptions }, ref) => {
     const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
     const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
     const [editor] = useLexicalComposerContext();
     const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
     const { historyState } = useSharedHistoryContext();
 
-    const [markdown, setMarkdown] = useState<string>();
+    const [markdown, setMarkdown] = useState<string>('');
 
     useImperativeHandle(ref, () => ({
         getEditor() {
@@ -105,14 +112,15 @@ const LexicalInnerEditor: React.FC<{
 
     return <>
         {/* 工具栏 */}
-        {showToolbar &&
-            <ToolbarPlugin
+        {showToolbar && (() => {
+            const ToolbarPlugin = require('./plugins/ToolbarPlugin').default;
+            return <ToolbarPlugin
                 editor={editor}
                 activeEditor={editor}
                 setActiveEditor={() => { }}
                 setIsLinkEditMode={setIsLinkEditMode}
-            />
-        }
+            />;
+        })()}
 
         {/* 键盘事件监听 */}
         {/* <KeyboardEventPlugin editor={editor} onKeyboardEvent={(event: KeyboardEvent) => {
@@ -177,7 +185,16 @@ const LexicalInnerEditor: React.FC<{
         <SelectionAlwaysOnDisplay />
 
         {/* 斜杠青年 */}
-        <ComponentPickerPlugin trigger="/" />
+        <ComponentPickerPlugin />
+
+        {/* @BOT */}
+        {botMentionOptions?.enable && (() => {
+            const BotMentionsPlugin = require('./plugins/BotMentionsPlugin').default;
+            return <BotMentionsPlugin
+                trigger={botMentionOptions.trigger}
+                onSelect={botMentionOptions.onSelect}
+            />;
+        })()}
 
         {floatingAnchorElem && !isSmallWidthViewport && (<>
             {/* 代码块工具 */}

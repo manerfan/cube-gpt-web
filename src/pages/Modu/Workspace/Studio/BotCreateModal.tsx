@@ -24,7 +24,7 @@ import * as botService from '@/services/bot';
 
 const BotUpdateModal: React.FC<{
     open: boolean,
-    onUpdate?: (bot: BOT.BotAddCmd) => void,
+    onUpdate?: (bot: BOT.BotEntity) => void,
     onCancel?: () => void,
     workspaceUid: string,
     modalMode: 'create' | 'edit',

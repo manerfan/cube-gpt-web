@@ -41,7 +41,7 @@ const ChatContent: React.FC<{
 }> = ({ workspaceUid, conversationUid: _conversationUid, className, withChatBackgroundImage=true, emptyNode }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
-  const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>();
+  const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>(null);
   const { initialState } = useModel('@@initialState');
 
   // 当前会话
