@@ -17,6 +17,8 @@
 import '@interface/typings';
 
 declare namespace MESSAGE {
+  type SenderRole = "user" | "assistant" | "system";
+  
   type Item = {
     /**
      * 类型
@@ -80,6 +82,28 @@ declare namespace MESSAGE {
     section_uid: string;
   }
 
+  type SenderInfo = {
+    /**
+     * 发送者 ID
+     */
+    uid: string;
+
+    /**
+     * 发送者名称
+     */
+    name: string;
+
+    /**
+     * 发送者头像
+     */
+    avatar?: string;
+
+    /**
+     * 发送者角色
+     */
+    role: string;
+  }
+
   type MessageEvent = {
     /**
      * 会话 ID
@@ -94,7 +118,12 @@ declare namespace MESSAGE {
     /**
      * 发送者角色
      */
-    sender_role: "user" | "assistant" | "system";
+    sender_role: SenderRole;
+
+    /**
+     * 发送者信息
+     */
+    sender_info?: SenderInfo;
 
     /**
      * 消息 ID
@@ -126,7 +155,12 @@ declare namespace MESSAGE {
     /**
      * 发送者角色
      */
-    sender_role: "user" | "assistant" | "system";
+    sender_role: SenderRole;
+
+    /**
+     * 发送者信息
+     */
+    sender_info?: SenderInfo;
 
     /**
      * 消息 ID

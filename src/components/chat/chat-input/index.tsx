@@ -21,12 +21,12 @@ import {
   Divider,
   Flex,
   Space,
+  Tag,
   Tooltip,
   Typography,
 } from 'antd';
 import _ from 'lodash';
 import {
-  ArrowBigUp,
   AtSign,
   Command,
   CornerDownLeft,
@@ -40,6 +40,7 @@ import {
 
 import type { MESSAGE } from '@/services/message/typings';
 import LexicalTextarea, { LexicalTextareaRefProperty } from '@/components/markdown/lexical/lexical-textarea';
+import { BOT } from '@/services/bot/typings';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
@@ -49,10 +50,12 @@ const ChatInput: React.FC<{
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }> = ({ onSubmit, onClearMemory, onStop, loading, className, style }) => {
-  const lexicalTextareaRef = useRef<LexicalTextareaRefProperty>();
+  const lexicalTextareaRef = useRef<LexicalTextareaRefProperty>(null);
   const [query, setQuery] = useState('');
 
-  const [clearLoading, setClearLoading] = useState(false);
+  const [mentions, setMentions] = useState<BOT.BotEntity>();
+
+  const [clearMemoryLoading, setClearMemoryLoading] = useState(false);
   const [stopLoading, setStopLoading] = useState(false);
 
   const [inputExpand, setInputExpand] = useState(false);
@@ -61,6 +64,7 @@ const ChatInput: React.FC<{
     const content = markdown || query;
     if (!_.isEmpty(_.trim(content))) {
       onSubmit?.({
+        mentions: mentions?.uid ? [mentions.uid] : undefined,
         query: {
           inputs: [
             {
@@ -96,9 +100,16 @@ const ChatInput: React.FC<{
           align="flex-start"
           style={style}
           className={`flex-auto rounded-xl bg-white py-4 w-full min-h-24`}
+          gap={12}
         >
+          {/* @BOT */}
+          {mentions && <Flex justify="flex-start" align="center" className="w-full px-4" gap={4}>
+            <Tag bordered={false} closeIcon onClose={() => setMentions(undefined)}>@ {mentions.name}</Tag>
+          </Flex>}
+
+          {/* 输入框 */}
           <div
-            className={`w-full min-h-12 px-5 mb-3 overflow-y-scroll transition-all duration-500 ${inputExpand ? 'h-96' : 'max-h-40'}`}
+            className={`w-full min-h-12 px-5 overflow-y-scroll transition-all duration-500 ${inputExpand ? 'h-96' : 'max-h-40'}`}
             onKeyDown={(event) => {
               if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
                 event.preventDefault();
@@ -117,9 +128,7 @@ const ChatInput: React.FC<{
               botMentionOptions={{
                 enable: true,
                 trigger: '@',
-                onSelect: (botFavorite) => {
-                  console.log('===1===', botFavorite);
-                },
+                onSelect: setMentions,
               }}
             />
           </div>
@@ -133,12 +142,12 @@ const ChatInput: React.FC<{
                   type="text"
                   className="p-1"
                   disabled={loading}
-                  loading={clearLoading}
+                  loading={clearMemoryLoading}
                   icon={<SquareSplitVertical size={18} />}
                   onClick={() => {
                     if (!!onClearMemory) {
-                      setClearLoading(true);
-                      onClearMemory().finally(() => setClearLoading(false));
+                      setClearMemoryLoading(true);
+                      onClearMemory().finally(() => setClearMemoryLoading(false));
                     }
                   }}
                 />

@@ -57,6 +57,7 @@ export function messageParser({
       currentMessage = {
         sender_uid: messageEvent.sender_uid,
         sender_role: messageEvent.sender_role,
+        sender_info: messageEvent.sender_info,
         message_uid: messageEvent.message_uid,
         message_time: messageEvent.message_time,
         messages: [messageEvent.message],

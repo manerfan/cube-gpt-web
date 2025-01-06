@@ -150,6 +150,12 @@ const ChatContent: React.FC<{
     const parseMessageEvent = messageParser({
       sender_uid: initialState?.userMe?.uid,
       sender_role: 'user',
+      sender_info: {
+        uid: initialState?.userMe?.uid,
+        name: initialState?.userMe?.name || '用户',
+        avatar: initialState?.userMe?.avatar,
+        role: 'user',
+      },
       message_uid: ulid(),
       message_time: new Date().getTime(),
       messages: [
