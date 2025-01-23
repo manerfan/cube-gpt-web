@@ -271,3 +271,22 @@
         color: inherit !important;
     }
 }
+
+.ant-upload-wrapper {
+    &.ant-upload-16 {
+
+        .ant-upload-select,
+        .ant-upload-list-item-container {
+            width: 64px !important;
+            height: 64px !important;
+        }
+
+        .ant-upload {
+            padding: 1.5px !important;
+        }
+
+        .ant-upload-list-item {
+            padding: 4px !important;
+        }
+    }
+}

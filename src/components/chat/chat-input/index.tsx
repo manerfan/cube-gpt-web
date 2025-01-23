@@ -84,7 +84,7 @@ const ChatInput: React.FC<{
         justify="flex-start"
         align="flex-end"
         gap={12}
-        className={`w-full relative ${className}`}
+        className={`ray-animation w-full relative ${className}`}
         style={style}
       >
         {/* {loading && (
@@ -237,8 +237,9 @@ const ChatInput: React.FC<{
 
         <Button type='text' size='small' className='absolute h-4 p-0.5 top-1 right-1' onClick={() => setInputExpand(!inputExpand)}>
           {inputExpand ? <Minimize2 size={12} color='rgb(156 163 175)' /> : <Maximize2 size={12} color='rgb(156 163 175)' />}
-
         </Button>
+
+        {loading && <div className='ray-border-animation'/>}
       </Flex>
     </>
   );

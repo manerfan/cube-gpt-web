@@ -42,7 +42,7 @@
     }
 
     .paragraph {
-        margin: 0;
+        margin: 0 0 6px 0;
         position: relative;
     }
 
@@ -61,7 +61,7 @@
         font-size: 24px;
         // color: rgb(5, 5, 5);
         font-weight: 700;
-        margin: 0;
+        margin: 4px 0 10px 0;
         text-transform: uppercase;
     }
 
@@ -69,14 +69,18 @@
         font-size: 18px;
         // color: rgb(5, 5, 5);
         font-weight: 400;
-        margin: 0;
+        margin: 4px 0 8px 0;
         text-transform: uppercase;
     }
 
     .h3 {
         font-size: 14px;
-        margin: 0;
+        margin: 2px 0 6px 0;
         text-transform: uppercase;
+    }
+
+    .h4, .h5, .h6 {
+        margin: 2px 0 4px 0;
     }
 
     .indent {
@@ -383,12 +387,12 @@
 
     .ul {
         padding: 0;
-        margin: 0;
+        margin: 0 0 4px 0;
         list-style-position: outside;
     }
 
     .listItem {
-        margin: 0 32px;
+        margin: 0 32px 4px;
     }
 
     .listItemChecked,

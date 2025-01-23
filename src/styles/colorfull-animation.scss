@@ -190,3 +190,64 @@
         }
     }
 }
+
+// 射线
+.ray-animation {
+    &>* {
+        z-index: 2;
+    }
+
+    .ray-border-animation {
+        border-radius: 12px;
+        height: calc(100% + 4px);
+        width: calc(100% + 4px);
+        overflow: hidden;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        z-index: 1;
+
+        &:before {
+            -webkit-animation: animatedgradient 4s linear infinite;
+            animation: animatedgradient 4s linear infinite;
+            background-image: conic-gradient(from 90deg at 19% 50%, #fff -54deg, hsla(0, 0%, 100%, 0) 158deg, #237bff 185deg, #5b4df9 242deg, #ff72c0 264deg, #ffb38a 278deg, #fff 306deg, hsla(0, 0%, 100%, 0) 518deg);
+            content: "";
+            height: 630%;
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            -webkit-transform-origin: left top;
+            -ms-transform-origin: left top;
+            transform-origin: left top;
+            width: 9.7%;
+            z-index: 0;
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            border-radius: 8px;
+            background: #fff;
+            z-index: 1;
+        }
+
+        @-webkit-keyframes animatedgradient {
+            to {
+                rotate: 1turn
+            }
+        }
+
+        @keyframes animatedgradient {
+            to {
+                rotate: 1turn
+            }
+        }
+    }
+}

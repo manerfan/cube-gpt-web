@@ -143,8 +143,8 @@ const ChatItem: React.FC<{
               vertical
               justify="flex-start"
               align="flex-start"
-              className={`w-auto max-w-full box-border bg-white rounded-lg p-3 ${loading ? 'bg-assistant-msg-loading' : ''
-                } ${messageClassName}`}
+              className={`ray-animation w-auto max-w-full box-border bg-white rounded-lg p-3 relative 
+                ${loading ? 'bg-assistant-msg-loading' : ''} ${messageClassName}`}
             >
               {/* 一条消息中有很多 section，遍历每个 section 进行渲染 */}
               {emptyMessage && <Spin indicator={<LoadingOutlined spin className='text-gray-400 font-medium' />} size="small" />}
@@ -198,6 +198,7 @@ const ChatItem: React.FC<{
                   </Flex>
                 )}
               </>}
+              {/* {message.sender_role !== 'user' && loading && <div className='ray-border-animation'/>} */}
             </Flex>
           </Flex>
         </Flex>

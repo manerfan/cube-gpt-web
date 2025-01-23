@@ -22,7 +22,7 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   tailwindcss: {},
   metas: metas,
-  title: 'MODU 墨读无界 | 想你所想 及你所及!',
+  title: 'MODU 墨读无界 | MODU Beyond Boundaries!',
   locale: {
     default: 'zh-CN',
     baseSeparator: '-',

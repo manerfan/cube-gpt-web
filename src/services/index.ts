@@ -25,6 +25,7 @@ export * as workspaceService from './workspace';
 export * as messageService from './message';
 export * as botService from './bot';
 export * as favoriteService from './user/favorite';
+export * as fileService from './file';
 
 export enum ErrorShowType {
   SILENT = 'SILENT',

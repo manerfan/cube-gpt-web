@@ -88,7 +88,7 @@ const BotEdit: React.FC = () => {
                     className="text-gray-500 font-bold"
                     onClick={() => history.back()}
                 />
-                <Avatar shape="square" icon={bot?.avatar ? bot?.avatar : <RobotOutlined />} />
+                <Avatar shape="square" icon={<RobotOutlined />} src={bot?.avatar} />
                 <Flex vertical justify='center' align="flex-start" className='ml-2'>
                     <Space>
                         <Typography.Text>
@@ -207,7 +207,7 @@ const BotEdit: React.FC = () => {
                 bot={bot}
                 onCancel={closeBaseInfoEditModal}
                 onUpdate={(_bot) => {
-                    setBot({ ...bot!, name: _bot.name, description: _bot.description })
+                    setBot({ ...bot!, name: _bot.name, description: _bot.description, avatar: _bot.avatar })
                     closeBaseInfoEditModal();
                 }} />
 

@@ -215,7 +215,7 @@ const Studio: React.FC<{
                         }}
                     >
                         <Flex vertical className='w-full h-full'>
-                            <Flex justify="flex-start" align="center" gap={8} className='w-full flex-auto'>
+                            <Flex justify="flex-start" align="center" gap={8} className='w-full flex-auto h-[76px]'>
                                 <Flex vertical justify="center" align="flex-start" className='h-full' style={{ width: 'calc(100% - 76px)' }}>
                                     <Flex justify="flex-start" align="center" className='w-full h-1/2 flex-auto'>
                                         <Typography.Text strong ellipsis className='text-lg'>{bot.name}</Typography.Text>
@@ -229,7 +229,7 @@ const Studio: React.FC<{
                                     </Tooltip>
                                 </Flex>
                                 <Flex justify="center" align="center" className='h-full aspect-square'>
-                                    <Avatar shape="square" icon={<RobotOutlined />} className='h-full w-full' />
+                                    <Avatar shape="square" icon={<RobotOutlined />} className='h-full w-full' src={bot.avatar} />
                                 </Flex>
                             </Flex>
                             <Flex justify="flex-start" align="center" className='w-full h-6'>
