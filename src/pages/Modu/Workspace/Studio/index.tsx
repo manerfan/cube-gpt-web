@@ -229,7 +229,7 @@ const Studio: React.FC<{
                                     </Tooltip>
                                 </Flex>
                                 <Flex justify="center" align="center" className='h-full aspect-square'>
-                                    <Avatar shape="square" icon={<RobotOutlined />} className='h-full w-full' src={bot.avatar} />
+                                    <Avatar shape="square" icon={<RobotOutlined />} className='h-full w-full' src={bot.avatar_url} />
                                 </Flex>
                             </Flex>
                             <Flex justify="flex-start" align="center" className='w-full h-6'>

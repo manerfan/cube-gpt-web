@@ -15,15 +15,14 @@
  */
 
 import { MESSAGE } from '@/services/message/typings';
+import { LoadingOutlined, RobotOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Alert, Avatar, Button, Divider, Flex, List, Spin, Typography } from 'antd';
+import _ from 'lodash';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
-import _ from 'lodash';
 import styles from './styles.module.scss';
-import { LoadingOutlined } from '@ant-design/icons';
-import { FluentEmoji, FluentEmojiProps, useControls, useCreateStore } from '@lobehub/ui';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -34,20 +33,6 @@ const ChatItem: React.FC<{
 }> = ({ message, loading, className, messageClassName, style }) => {
   const { initialState } = useModel('@@initialState');
   const emptyMessage = _.isEmpty(message?.messages) || _.every(message?.messages, msg => _.isEmpty(msg.content));
-
-  const store = useCreateStore();
-  const control: FluentEmojiProps = useControls(
-    {
-      emoji: '🫠',
-      size: {
-        max: 128,
-        min: 16,
-        step: 1,
-        value: 32,
-      },
-    },
-    { store },
-  );
 
   return (
     <>
@@ -93,11 +78,9 @@ const ChatItem: React.FC<{
               shape="square"
               icon={{
                 ...(message.sender_role === 'user' ? (
-                  <Avatar size={32} className={`bg-user-msg font-bold`}>{initialState?.userMe?.name[0]}</Avatar>
-                ) : (!!message.sender_info
-                  ? <Avatar size={32} icon={<FluentEmoji type={'anim'} {...control} />} />
-                  : <img src={'/logo.png'} alt="MODU 墨读无界" />
-                )),
+                  <Avatar shape='square' size={32} className={`bg-user-msg font-bold`}>{initialState?.userMe?.name[0]}</Avatar>
+                ) : <Avatar shape='square' size={32} icon={<RobotOutlined />} src={message.sender_info?.avatar || '/logo.png'} />
+                ),
               }}
             />
           </Flex>

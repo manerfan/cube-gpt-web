@@ -17,6 +17,7 @@
 import React, { CSSProperties, useRef, useState } from 'react';
 
 import {
+  Avatar,
   Button,
   Divider,
   Flex,
@@ -41,6 +42,7 @@ import {
 import type { MESSAGE } from '@/services/message/typings';
 import LexicalTextarea, { LexicalTextareaRefProperty } from '@/components/markdown/lexical/lexical-textarea';
 import { BOT } from '@/services/bot/typings';
+import { RobotOutlined } from '@ant-design/icons';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
@@ -104,7 +106,9 @@ const ChatInput: React.FC<{
         >
           {/* @BOT */}
           {mentions && <Flex justify="flex-start" align="center" className="w-full px-4" gap={4}>
-            <Tag bordered={false} closeIcon onClose={() => setMentions(undefined)}>@ {mentions.name}</Tag>
+            <Tag bordered={false} closeIcon onClose={() => setMentions(undefined)}>
+              <Space size={4} align='center'><Avatar shape="square" size={18} icon={<RobotOutlined />} src={mentions.avatar_url} /> {mentions.name}</Space>
+            </Tag>
           </Flex>}
 
           {/* 输入框 */}

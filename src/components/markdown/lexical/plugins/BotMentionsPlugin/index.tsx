@@ -64,7 +64,7 @@ function MentionsTypeaheadMenuItem({
       onMouseEnter={onMouseEnter}
       onClick={onClick}>
       <Flex justify='space-between' align='center' gap={8} className='px-1'>
-        <Avatar size={16} icon={<RobotOutlined />} />
+        <Avatar shape='square' size={16} icon={<RobotOutlined />} src={option.bot.avatar_url} />
         <Typography.Text>{option.bot.name}</Typography.Text>
       </Flex>
     </li>

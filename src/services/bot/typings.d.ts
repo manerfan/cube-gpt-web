@@ -91,6 +91,11 @@ declare namespace BOT {
     avatar?: string;
 
     /**
+     * 头像URL
+     */
+    avatar_url?: string;
+
+    /**
      * 描述
      */
     description?: string;

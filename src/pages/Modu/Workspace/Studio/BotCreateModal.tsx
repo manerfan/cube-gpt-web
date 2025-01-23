@@ -18,7 +18,7 @@ import { BOT } from '@/services/bot/typings';
 import { EditOutlined, LoadingOutlined, RobotOutlined } from '@ant-design/icons';
 import { Input, Modal, Form, Avatar, Space, Button, Tooltip, Divider, Typography, message, Upload } from 'antd';
 import { Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import * as botService from '@/services/bot';
 import ImgCrop from 'antd-img-crop';
@@ -36,8 +36,17 @@ const BotUpdateModal: React.FC<{
     const [form] = Form.useForm();
     const [submitLoading, setSubmitLoading] = useState(false);
 
-    const [avatar, setAvatar] = useState<FILE.SimpleFile>();
+    const [avatar, setAvatar] = useState<FILE.SimpleFile | undefined>(() => {
+        if (!!bot && !!bot.avatar) {
+            return {
+                file_key: bot.avatar,
+                file_url: bot.avatar_url || ''
+            }
+        }
+        return undefined;
+    });
     const [avatarUploading, setAvatarUploading] = useState(false);
+
     const submit = async () => {
         form.submit();
     };
@@ -73,7 +82,15 @@ const BotUpdateModal: React.FC<{
                     name: bot?.name,
                     description: bot?.description,
                     avatar: bot?.avatar
-                })
+                });
+                if (!!bot.avatar) {
+                    setAvatar({
+                        file_key: bot.avatar,
+                        file_url: bot.avatar_url || ''
+                    });
+                } else {
+                    setAvatar(undefined);
+                }
             };
         }}
     >

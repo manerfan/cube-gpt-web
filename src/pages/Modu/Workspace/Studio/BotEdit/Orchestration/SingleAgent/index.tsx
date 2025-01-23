@@ -134,7 +134,7 @@ const SingleAgent = forwardRef<AgentRefProperty, {
                         justify="center"
                         align="center"
                         className='h-full'>
-                        <Avatar shape="square" icon={<RobotOutlined />} src={bot?.avatar} />
+                        <Avatar shape="square" icon={<RobotOutlined />} src={bot?.avatar_url} />
                         <Typography.Title level={5} className='mt-6'>{bot?.name}</Typography.Title>
                         <Typography.Text type='secondary'>{bot?.description}</Typography.Text>
                     </Flex>}
