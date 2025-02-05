@@ -15,6 +15,7 @@
  */
 
 import '@interface/typings';
+import { BOT } from '@/services/bot/typings';
 
 declare namespace MESSAGE {
   type SenderRole = "user" | "assistant" | "system";
@@ -57,7 +58,7 @@ declare namespace MESSAGE {
     /**
      * 提及的机器人
      */
-    mentions?: string[];
+    mentions?: BOT.Bot[];
   }
 
   type MessageBlock = {
@@ -69,7 +70,7 @@ declare namespace MESSAGE {
     /**
      * 消息内容的类型
      */
-    content_type: "text" | "refer:text" | "error";
+    content_type: "text" | "refer:text" | "mention" | "error";
     
     /**
      * 消息内容

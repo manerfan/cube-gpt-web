@@ -19,7 +19,7 @@ import HeaderSimple from "@/components/layout/header/HeaderSimple";
 import { ThemeProvider } from "@lobehub/ui";
 import Footer from '@/components/layout/footer/Footer';
 import { LandingMarquee } from '@/components/landing/LandingMarquee';
-import { ByteDance, Cohere, Moonshot, Ollama, OpenAI, Zhipu, Anthropic, Qwen, Claude } from "@lobehub/icons";
+import { ByteDance, Cohere, Moonshot, Ollama, OpenAI, Zhipu, Anthropic, Qwen, Claude, BaiduCloud, DeepSeek } from "@lobehub/icons";
 import styles from './styles.module.scss';
 import { Button, Flex, Space, Typography, Image } from "antd";
 import { GithubOutlined } from "@ant-design/icons";
@@ -202,27 +202,29 @@ const PageUIHome: React.FC = () => {
                     withBackground
                     className={`${styles['content']} ${styles['large-padding-content']} ${styles['w-full']}`}
                 >
+                    <LandingShowcaseItem><DeepSeek.Color size='80%' /></LandingShowcaseItem>
                     <LandingShowcaseItem><OpenAI size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><Ollama size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><Cohere size='80%' /></LandingShowcaseItem>
                     <LandingShowcaseItem><Anthropic size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><Claude size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><Qwen size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><Zhipu size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><Claude.Color size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><Ollama size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><Qwen.Color size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><BaiduCloud.Color size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><Zhipu.Color size='80%' /></LandingShowcaseItem>
                     <LandingShowcaseItem><Moonshot size='80%' /></LandingShowcaseItem>
-                    <LandingShowcaseItem><ByteDance size='80%' /></LandingShowcaseItem>
+                    <LandingShowcaseItem><ByteDance.Color size='80%' /></LandingShowcaseItem>
                 </LandingShowcase>
 
                 <LandingMarquee variant="primary" className={`${styles['content']} ${styles['marquee']}  ${styles['w-full']} mt-12 lg:mt-0`}>
+                    <DeepSeek size={64} />
                     <OpenAI size={64} />
-                    <Ollama size={64} />
-                    <Cohere size={64} />
                     <Anthropic size={64} />
                     <Claude size={64} />
+                    <Ollama size={64} />
+                    <Qwen size={64} />
+                    <BaiduCloud size={64} />
                     <Zhipu size={64} />
                     <Moonshot size={64} />
                     <ByteDance size={64} />
-                    <Qwen size={64} />
                 </LandingMarquee>
 
                 <Flex

@@ -20,6 +20,23 @@ import type { BotMode } from './index';
 import type { WORKSPACE } from '@/services/workspace/typings';
 
 declare namespace BOT {
+  type Bot = {
+    /**
+     * uid
+     */
+    uid?: string;
+
+    /**
+     * 名称
+     */
+    name: string;
+
+    /**
+     * 头像
+     */
+    avatar?: string;
+  }
+
   type BotAddCmd = {
     /**
      * uid

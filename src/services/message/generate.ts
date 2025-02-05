@@ -30,6 +30,17 @@ export async function chat(
   onMessage: SeverSendEventCallbackFn,
   onFinish?: () => void,
 ) {
+  if (generateCmd.mentions) {
+    generateCmd.mentions = generateCmd.mentions.map((mention) => {
+      return {
+        uid: mention.uid,
+        name: mention.name,
+        avatar: mention.avatar,
+      };
+      }
+    );
+  }
+
   const connection = await sseRequest(
     `/api/chat?workspace_uid=${workspaceUid || ''}`,
     {

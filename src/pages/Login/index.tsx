@@ -54,9 +54,7 @@ const Login: React.FC = () => {
         name="username"
         rules={[
           {
-            required: true,
-            min: 5,
-            max: 128,
+            required: true
           },
         ]}
         placeholder={intl.formatMessage({ id: 'login.email.placeholder' })}
@@ -70,15 +68,12 @@ const Login: React.FC = () => {
         name="password"
         rules={[
           {
-            required: true,
-            min: 6,
-            max: 32,
+            required: true
           },
         ]}
         placeholder={intl.formatMessage({ id: 'login.password.placeholder' })}
         fieldProps={{
           size: 'large',
-          minLength: 6,
           maxLength: 32,
           prefix: <LockOutlined className="site-form-item-icon" />,
         }}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { CSSProperties, useRef, useState } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 
 import {
   Avatar,
@@ -43,6 +43,7 @@ import type { MESSAGE } from '@/services/message/typings';
 import LexicalTextarea, { LexicalTextareaRefProperty } from '@/components/markdown/lexical/lexical-textarea';
 import { BOT } from '@/services/bot/typings';
 import { RobotOutlined } from '@ant-design/icons';
+import { eventBus } from '@/services';
 
 const ChatInput: React.FC<{
   onSubmit?: (values: MESSAGE.GenerateCmd) => void;
@@ -62,11 +63,26 @@ const ChatInput: React.FC<{
 
   const [inputExpand, setInputExpand] = useState(false);
 
+  useEffect(() => {
+    // 处理@事件
+    const handleBotMentionEvent = (bot?: BOT.BotEntity) => {
+      if (!bot) {
+        return;
+      }
+
+      setMentions(bot);
+    };
+    eventBus.addListener('modu.bot.mention', handleBotMentionEvent);
+    return () => {
+      eventBus.removeListener('modu.bot.mention', handleBotMentionEvent);
+    }
+  }, []);
+
   const submit = (markdown?: string) => {
     const content = markdown || query;
     if (!_.isEmpty(_.trim(content))) {
       onSubmit?.({
-        mentions: mentions?.uid ? [mentions.uid] : undefined,
+        mentions: !!mentions ? [mentions] : [],
         query: {
           inputs: [
             {
@@ -182,7 +198,7 @@ const ChatInput: React.FC<{
               </Typography.Text>
 
               {/* 选择机器人 */}
-              <Tooltip title="@机器人">
+              <Tooltip title="试试直接输入 @">
                 <Button
                   size="small"
                   type="text"

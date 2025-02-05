@@ -38,7 +38,7 @@ const ChatContent: React.FC<{
   className?: string;
   withChatBackgroundImage?: boolean;
   emptyNode?: React.ReactNode;
-}> = ({ workspaceUid, conversationUid: _conversationUid, className, withChatBackgroundImage=true, emptyNode }) => {
+}> = ({ workspaceUid, conversationUid: _conversationUid, className, withChatBackgroundImage = true, emptyNode }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const chatContentPopoverRef = useRef<ScrollToBottomBtnRefProperty>(null);
@@ -82,7 +82,7 @@ const ChatContent: React.FC<{
     const fistMessageUid = clearMessages
       ? undefined
       : _.first(messages)?.message_uid;
-    
+
     setLoadingMore(true);
     messageService
       .messages(convUid, fistMessageUid, 10)
@@ -159,6 +159,18 @@ const ChatContent: React.FC<{
       message_uid: ulid(),
       message_time: new Date().getTime(),
       messages: [
+        ..._.map(submitQuery.mentions || [], (mention) => {
+          return {
+            type: 'question',
+            content_type: 'mention',
+            content: {
+              "uid": mention.uid,
+              "name": mention.name,
+              "avatar": mention.avatar,
+            },
+            section_uid: ulid(),
+          } as MESSAGE.MessageBlock;
+        }),
         ..._.map(submitQuery.query.refers || [], (ref) => {
           return {
             type: 'question',

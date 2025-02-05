@@ -17,12 +17,14 @@
 import { MESSAGE } from '@/services/message/typings';
 import { LoadingOutlined, RobotOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Alert, Avatar, Button, Divider, Flex, List, Spin, Typography } from 'antd';
+import { Alert, Avatar, Button, Divider, Flex, List, Spin, Tag, Typography } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, { CSSProperties } from 'react';
 import ChatMarkdown from './chat-markdown';
 import styles from './styles.module.scss';
+import { eventBus } from '@/services';
+import { BOT } from '@/services/bot/typings';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -103,12 +105,21 @@ const ChatItem: React.FC<{
                 {!!message.sender_info?.name || (message.sender_role === 'user'
                   ? initialState?.userMe?.name
                   : '智能助手')}
-                {message.sender_role !== 'user' && (
+                {message.sender_role === 'assistant' && !!message.sender_info && (
                   <Typography.Text
                     type="secondary"
                     className={`${styles['operation-header']}`}
                   >
-                    <Button type="link" className="p-1">
+                    <Button type="link" className="p-1" onClick={() => {
+                      if (message.sender_role === 'assistant' && !!message.sender_info) {
+                        eventBus.emit('modu.bot.mention', {
+                          "uid": message.sender_info.uid,
+                          "name": message.sender_info.name,
+                          "avatar": message.sender_info.avatar,
+                          "avatar_url": message.sender_info.avatar,
+                        } as BOT.BotEntity);
+                      }
+                    }}>
                       @
                     </Button>
                   </Typography.Text>
@@ -143,6 +154,10 @@ const ChatItem: React.FC<{
                       style={{ border: 'none', padding: 0 }}
                       className='border-0 p-0 w-full'
                     >
+                      {/* mention */}
+                      {msg.content_type === 'mention' && (
+                        <Tag color="rgba(255,255,255,0.1)" className='mb-1'>@ {(msg.content as BOT.Bot).name}</Tag>
+                      )}
                       {/* 文本 */}
                       {msg.content_type === 'text' && (
                         <ChatMarkdown>{msg.content as string}</ChatMarkdown>

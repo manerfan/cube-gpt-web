@@ -116,7 +116,7 @@ const BotUpdateModal: React.FC<{
                         <Upload
                             name='file'
                             action="/api/file/upload"
-                            accept='image/*'
+                            accept='.jpg,.jpeg,.png,.bmp'
                             listType="picture-card"
                             multiple={false}
                             maxCount={1}
