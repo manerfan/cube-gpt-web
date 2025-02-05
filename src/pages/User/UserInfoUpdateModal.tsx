@@ -16,31 +16,33 @@
 
 import { BOT } from '@/services/bot/typings';
 import { EditOutlined, LoadingOutlined, RobotOutlined } from '@ant-design/icons';
-import { Input, Modal, Form, Avatar, Space, Button, Tooltip, Divider, Typography, message, Upload } from 'antd';
+import { Input, Modal, Form, Avatar, Space, Button, Tooltip, Divider, Typography, Upload, message } from 'antd';
 import { Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import styles from './styles.module.scss';
-import * as botService from '@/services/bot';
+import { userService } from '@/services';
 import ImgCrop from 'antd-img-crop';
 import { fileService } from '@/services';
 import { FILE } from '@/services/file/typings';
+import { USER } from '@/services/user/typings';
+import { useModel } from '@umijs/max';
 
-const BotUpdateModal: React.FC<{
+const UserInfoUpdateModal: React.FC<{
     open: boolean,
-    onUpdate?: (bot: BOT.BotEntity) => void,
+    onUpdate?: (bot: USER.UserEntity) => void,
     onCancel?: () => void,
-    workspaceUid: string,
-    modalMode: 'create' | 'edit',
-    bot?: BOT.BotEntity,
-}> = ({ open, onUpdate, onCancel, workspaceUid, modalMode = 'create', bot }) => {
+}> = ({ open, onUpdate, onCancel }) => {
+    const { initialState, refresh, setInitialState } = useModel('@@initialState');
+
     const [form] = Form.useForm();
     const [submitLoading, setSubmitLoading] = useState(false);
 
     const [avatar, setAvatar] = useState<FILE.SimpleFile | undefined>(() => {
-        if (!!bot && !!bot.avatar) {
+        const user = initialState?.userMe
+        if (!!user && !!user.avatar) {
             return {
-                file_key: bot.avatar,
-                file_url: bot.avatar_url || ''
+                file_key: user.avatar,
+                file_url: user.avatar_url || ''
             }
         }
         return undefined;
@@ -51,24 +53,23 @@ const BotUpdateModal: React.FC<{
         form.submit();
     };
 
-    const onSubmit = async (addCmd: BOT.BotAddCmd) => {
+    const onSubmit = async (base_info: USER.UserBaseInfo) => {
         setSubmitLoading(true);
-        addCmd.avatar = avatar?.file_key;
-        if (modalMode === 'create') {
-            botService.add(workspaceUid, addCmd).then((resp) => {
-                onUpdate?.(resp.content);
-                message.success(`创建智能体成功`);
-            }).finally(() => setSubmitLoading(false));
-        } else {
-            botService.update(workspaceUid, bot!.uid, addCmd).then((resp) => {
-                onUpdate?.(resp.content);
-                message.success(`修改智能体成功`);
-            }).finally(() => setSubmitLoading(false));
-        }
-    };
+        base_info.avatar = avatar?.file_key;
+        userService.update(base_info).then((resp) => {
+            const user = resp.content;
+            setInitialState({
+                ...initialState,
+                userMe: user
+            });
+            refresh();
+            onUpdate?.(user);
+            message.success(`修改成功`);
+        }).finally(() => setSubmitLoading(false));
+    }
 
     return <Modal
-        title={modalMode === 'create' ? "创建智能体" : "编辑智能体"}
+        title="编辑个人信息"
         open={open}
         onOk={submit}
         confirmLoading={submitLoading}
@@ -77,16 +78,16 @@ const BotUpdateModal: React.FC<{
         afterOpenChange={(open) => {
             if (!open) {
                 form.resetFields()
-            } else if (!!bot) {
+            } else if (!!initialState?.userMe) {
                 form.setFieldsValue({
-                    name: bot?.name,
-                    description: bot?.description,
-                    avatar: bot?.avatar
+                    name: initialState?.userMe?.name,
+                    description: initialState?.userMe?.description,
+                    avatar: initialState?.userMe?.avatar
                 });
-                if (!!bot.avatar) {
+                if (!!initialState?.userMe.avatar) {
                     setAvatar({
-                        file_key: bot.avatar,
-                        file_url: bot.avatar_url || ''
+                        file_key: initialState?.userMe.avatar,
+                        file_url: initialState?.userMe.avatar_url || ''
                     });
                 } else {
                     setAvatar(undefined);
@@ -101,16 +102,16 @@ const BotUpdateModal: React.FC<{
             onFinish={onSubmit}
         >
             <Form.Item<BOT.BotAddCmd>
-                label="智能体名称" name="name" className='font-bold'
-                rules={[{ required: true, message: '请给智能体起一个独一无二的名字吧' }]}>
-                <Input defaultValue={bot?.name} showCount maxLength={20} placeholder="给智能体起一个独一无二的名字" />
+                label="用户名" name="name" className='font-bold'
+                rules={[{ required: true, message: '请给自己起一个独一无二的名字吧' }]}>
+                <Input defaultValue={initialState?.userMe?.name} showCount maxLength={20} placeholder="给自己起一个独一无二的名字" />
             </Form.Item>
             <Form.Item<BOT.BotAddCmd>
-                label="智能体功能介绍" name="description" className='font-bold'>
-                <Input.TextArea defaultValue={bot?.description} showCount maxLength={500} autoSize={{ minRows: 4, maxRows: 6 }} placeholder="介绍智能体的功能，将会展示给智能体的用户" />
+                label="自我介绍" name="description" className='font-bold'>
+                <Input.TextArea defaultValue={initialState?.userMe?.description} showCount maxLength={500} autoSize={{ minRows: 4, maxRows: 6 }} placeholder="介绍一下自己，让大家更好的了解你" />
             </Form.Item>
             <Form.Item<BOT.BotAddCmd>
-                label="图标" name="avatar">
+                label="头像" name="avatar">
                 <Space align='end' split={<Divider type="vertical" />}>
                     <ImgCrop rotationSlider quality={0.5} aspect={1} modalTitle='裁剪'>
                         <Upload
@@ -153,7 +154,7 @@ const BotUpdateModal: React.FC<{
                         </Upload>
                     </ImgCrop>
 
-                    <Tooltip title="输入智能体名称和介绍后，点击自动生成头像 [暂未开放]">
+                    <Tooltip title="自动生成头像 [暂未开放]">
                         <Button
                             size="small"
                             color="default"
@@ -169,5 +170,4 @@ const BotUpdateModal: React.FC<{
     </Modal>
 };
 
-export default BotUpdateModal;
-
+export default UserInfoUpdateModal;

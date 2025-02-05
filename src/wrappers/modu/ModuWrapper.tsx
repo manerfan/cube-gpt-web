@@ -382,7 +382,7 @@ const ModuWrapper: React.FC = () => {
                 <Button type="text" style={{ height: 50 }}>
                   <Link to={`/modu/user/${initialState?.userMe?.uid}`} >
                     <Space>
-                      <Avatar icon={<FluentEmoji type={'anim'} {...control} />} />
+                      <Avatar icon={<FluentEmoji type={'anim'} {...control} />} src={initialState?.userMe?.avatar_url} />
                       {!collapsed && (
                         <Typography.Text className="hidden md:inline">
                           {initialState?.userMe?.name}

@@ -30,3 +30,17 @@ export async function me(
     ...(options || {}),
   });
 }
+
+/**
+ * 更新用户信息
+ */
+export async function update(
+  userBaseInfo: USER.UserBaseInfo,
+  options?: Record<string, any>,
+): Promise<Response.SingleResponse<USER.UserEntity>> {
+  return request<Response.SingleResponse<USER.UserEntity>>(`/api/user/me`, {
+    method: 'PUT',
+    data: userBaseInfo,
+    ...(options || {}),
+  });
+}

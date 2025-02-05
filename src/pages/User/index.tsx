@@ -15,16 +15,26 @@
  */
 
 import TabHeader from "@/components/common/TabHeader";
-import { EditOutlined, SmileOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { FluentEmoji, FluentEmojiProps, useControls, useCreateStore } from "@lobehub/ui";
 import { Link, useModel, useParams } from "@umijs/max";
 import { Avatar, Button, Flex, Result, Space, TabsProps, Typography } from "antd";
 import UserFavorite from "./Favorite";
 import UserCreation from "./Creation";
+import UserInfoUpdateModal from "./UserInfoUpdateModal";
+import { useState } from "react";
 
 const User: React.FC = () => {
-    const { initialState } = useModel('@@initialState');
+    const { initialState, setInitialState} = useModel('@@initialState');
     const param = useParams();
+
+    const [updateModal, setUpdateModal] = useState<{ open: boolean }>({ open: false })
+    const showUpdateModal = () => {
+        setUpdateModal({ open: true })
+    }
+    const closeUpdateModal = () => {
+        setUpdateModal({ open: false })
+    }
 
     const store = useCreateStore();
     const control: FluentEmojiProps = useControls(
@@ -65,15 +75,15 @@ const User: React.FC = () => {
         </Flex>)
         : (<>
             <Flex className="px-20 py-10" gap={20}>
-                <Avatar size={64} icon={<FluentEmoji type={'anim'} {...control} />} />
+                <Avatar size={64} icon={<FluentEmoji type={'anim'} {...control} />} src={initialState?.userMe?.avatar_url} />
                 <Flex vertical justify="center" align="flex-start" className="h-16 flex-auto">
                     <Space align="center" className="h-8">
                         <Typography.Title level={3} className="!m-0">{initialState?.userMe?.name}</Typography.Title>
                         <Typography.Text type="secondary">{initialState?.userMe?.email}</Typography.Text>
                     </Space>
                     <Flex justify="flex-start" align="center" className="h-8" gap={10}>
-                        <Typography.Text type="secondary">这个用户很懒，什么都没有留下</Typography.Text>
-                        <Button type="text" size="small" icon={<Typography.Text type="secondary"><EditOutlined /></Typography.Text>} />
+                        <Typography.Text type="secondary">{initialState?.userMe?.description || "这个用户很懒，什么都没有留下"}</Typography.Text>
+                        <Button type="text" size="small" icon={<Typography.Text type="secondary" onClick={showUpdateModal}><EditOutlined /></Typography.Text>} />
                     </Flex>
                 </Flex>
             </Flex>
@@ -85,6 +95,12 @@ const User: React.FC = () => {
                     defaultActiveKey='favorites'
                 />
             </Flex>
+
+            <UserInfoUpdateModal
+                open={updateModal.open}
+                onCancel={closeUpdateModal}
+                onUpdate={closeUpdateModal}
+            />
         </>
         ));
 };

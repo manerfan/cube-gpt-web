@@ -21,6 +21,14 @@ declare namespace USER {
     uid: str;
     name: string;
     email: string;
-    avatar: string;
+    avatar?: string;
+    avatar_url?: string;
+    description?: string;
   };
+
+  type UserBaseInfo = {
+    name: string;
+    avatar?: string;
+    description?: string;
+  }
 }
