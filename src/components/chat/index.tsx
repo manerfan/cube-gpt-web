@@ -153,7 +153,7 @@ const ChatContent: React.FC<{
       sender_info: {
         uid: initialState?.userMe?.uid,
         name: initialState?.userMe?.name || '用户',
-        avatar: initialState?.userMe?.avatar,
+        avatar: initialState?.userMe?.avatar_url,
         role: 'user',
       },
       message_uid: ulid(),

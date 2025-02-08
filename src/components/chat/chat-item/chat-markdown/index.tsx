@@ -20,6 +20,7 @@ import remarkGfm from 'remark-gfm';
 import remarkToc from 'remark-toc';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import rehypeExternalLinks from 'rehype-external-links';
 import styles from './styles.module.scss';
 
 import Markdown from 'react-markdown';
@@ -35,7 +36,9 @@ const ChatMarkdown: React.FC<{
     <>
       <div className={`${className} ${styles['markdown']}`} style={style}>
         <Markdown
-          rehypePlugins={[rehypeRaw, rehypeKatex]}
+          rehypePlugins={[
+            [rehypeExternalLinks, {target: '_blank', rel: 'noopener noreferrer'}], 
+            rehypeRaw, rehypeKatex,]}
           remarkPlugins={[remarkGfm, remarkToc, remarkMath]}
           components={{
             code: CodeComponent,

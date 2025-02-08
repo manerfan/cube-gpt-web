@@ -25,6 +25,8 @@ import ChatMarkdown from './chat-markdown';
 import styles from './styles.module.scss';
 import { eventBus } from '@/services';
 import { BOT } from '@/services/bot/typings';
+import ChatReferCards from './chat-refer-cards';
+import ChatThink from './chat-think';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -80,7 +82,7 @@ const ChatItem: React.FC<{
               shape="square"
               icon={{
                 ...(message.sender_role === 'user' ? (
-                  <Avatar shape='square' size={32} className={`bg-user-msg font-bold`}>{initialState?.userMe?.name[0]}</Avatar>
+                  <Avatar shape='square' size={32} className={`bg-user-msg font-bold`} src={message.sender_info?.avatar}>{initialState?.userMe?.name[0]}</Avatar>
                 ) : <Avatar shape='square' size={32} icon={<RobotOutlined />} src={message.sender_info?.avatar || '/logo.png'} />
                 ),
               }}
@@ -158,9 +160,17 @@ const ChatItem: React.FC<{
                       {msg.content_type === 'mention' && (
                         <Tag color="rgba(255,255,255,0.1)" className='mb-1'>@ {(msg.content as BOT.Bot).name}</Tag>
                       )}
+                      {/* 思考 */}
+                      {msg.content_type === 'think:text' && (
+                        <ChatThink content={msg.content as string} isFinished={msg.is_finished || !loading} />
+                      )}
                       {/* 文本 */}
                       {msg.content_type === 'text' && (
                         <ChatMarkdown>{msg.content as string}</ChatMarkdown>
+                      )}
+                      {/* 引用卡片 */}
+                      {msg.content_type === 'refer:cards' && (
+                        <ChatReferCards referCards={msg.content as MESSAGE.ReferCard[]} />
                       )}
                       {/* 异常 */}
                       {msg.content_type === 'error' && (
@@ -191,7 +201,7 @@ const ChatItem: React.FC<{
                 {message.sender_role !== 'user' && !loading && (
                   <Flex justify="flex-end" align="center" className="w-full mt-2">
                     <Typography.Text type="secondary" className="text-xs">
-                      内容由AI生成
+                      内容由AI生成，仅供参考
                     </Typography.Text>
                   </Flex>
                 )}

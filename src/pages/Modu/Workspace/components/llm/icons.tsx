@@ -15,7 +15,7 @@
  */
 
 import { LLM } from '@/services/llm/typings';
-import { Moonshot, OpenAI, Zhipu } from '@lobehub/icons';
+import { DeepSeek, Moonshot, OpenAI, Qwen, Zhipu } from '@lobehub/icons';
 import { Avatar, Image, Typography } from 'antd';
 
 const providerIcon: { [key: string]: LLM.ProviderIcon } = {
@@ -39,7 +39,21 @@ const providerIcon: { [key: string]: LLM.ProviderIcon } = {
     combine: (size?: number) => <Zhipu.Combine type={'color'} size={size}/>,
     avatar: (size?: number) => <Zhipu.Avatar size={size || 18}/>,
     color: Zhipu.colorPrimary,
-  }
+  },
+  deepseek: {
+    icon: (size?: number) => <DeepSeek.Color size={size}/>,
+    text: (size?: number) => <DeepSeek.Text size={size}/>,
+    combine: (size?: number) => <DeepSeek.Combine type={'color'} size={size}/>,
+    avatar: (size?: number) => <DeepSeek.Avatar size={size || 18}/>,
+    color: DeepSeek.colorPrimary,
+  },
+  tongyi: {
+    icon: (size?: number) => <Qwen.Color size={size}/>,
+    text: (size?: number) => <Qwen.Text size={size}/>,
+    combine: (size?: number) => <Qwen.Combine type={'color'} size={size}/>,
+    avatar: (size?: number) => <Qwen.Avatar size={size || 18}/>,
+    color: Qwen.colorPrimary,
+  },
 };
 
 /**

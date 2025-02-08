@@ -70,17 +70,22 @@ declare namespace MESSAGE {
     /**
      * 消息内容的类型
      */
-    content_type: "text" | "refer:text" | "mention" | "error";
+    content_type: "text" | "refer:text" | "refer:cards" | "think:text" | "mention" | "error";
     
     /**
      * 消息内容
      */
-    content: string | Record<string, any>;
+    content: string | Record<string, any> | string[] | Record<string, any>[];
 
     /**
      * 该部分内容 ID
      */
     section_uid: string;
+
+    /**
+     * 该部分内容是否结束
+     */
+    is_finished?: boolean;
   }
 
   type SenderInfo = {
@@ -177,6 +182,15 @@ declare namespace MESSAGE {
      * 消息内容
      */
     messages: MessageBlock[];
+  }
+
+  type ReferCard = {
+    index: number;
+    name?: string;
+    title: string;
+    description?: string;
+    icon?: string;
+    url?: string;
   }
 }
 

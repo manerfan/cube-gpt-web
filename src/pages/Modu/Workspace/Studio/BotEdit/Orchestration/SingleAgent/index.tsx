@@ -53,10 +53,10 @@ const SingleAgent = forwardRef<AgentRefProperty, {
                 message.warning('模型参数不合法');
                 return null;
             }
-            if (_.isEmpty(promptInfo) || _.isEmpty(promptInfo.prompt)) {
-                message.warning('请输入智能体人设与回复逻辑的描述');
-                return null;
-            }
+            // if (_.isEmpty(promptInfo) || _.isEmpty(promptInfo.prompt)) {
+            //     message.warning('请输入智能体人设与回复逻辑的描述');
+            //     return null;
+            // }
 
             return { model_config, prompt_info: promptInfo };
         }

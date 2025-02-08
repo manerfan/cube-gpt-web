@@ -79,6 +79,7 @@ export function messageParser({
         // 在原 section 上追加内容
         const lastMessageBlock = _.last(_.last(conversationMessages)?.messages);
         lastMessageBlock.content += messageEvent.message.content;
+        lastMessageBlock.is_finished = messageEvent.message.is_finished;
         setMessages(_.cloneDeep(conversationMessages));
       }
     }

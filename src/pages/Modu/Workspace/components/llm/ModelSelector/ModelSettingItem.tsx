@@ -18,6 +18,7 @@ import { getLocaleContent } from '@/locales';
 import { Display } from '@/services/typings';
 import {
   CheckOutlined,
+  CloseOutlined,
   EyeInvisibleOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
@@ -194,6 +195,26 @@ const ModelSettingItem: React.FC<{
         </>
       );
       break;
+    }
+    // 开关
+    case 'switch': {
+      itemCol = (
+        <>
+          <Col span={14}>
+            <Switch
+              size="small"
+              value={currentValue}
+              disabled={!enabeld}
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              onChange={(value) => {
+                setCurrentValue(value);
+                onChange?.(value);
+              }}
+            />
+          </Col>
+        </>
+      );
     }
     default: {
       break;
