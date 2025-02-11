@@ -70,7 +70,7 @@ declare namespace MESSAGE {
     /**
      * 消息内容的类型
      */
-    content_type: "text" | "refer:text" | "refer:cards" | "think:text" | "mention" | "error";
+    content_type: "text" | "refer:text" | "refer:cards" | "reasoning:text" | "mention" | "error";
     
     /**
      * 消息内容

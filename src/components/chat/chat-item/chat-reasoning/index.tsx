@@ -21,7 +21,7 @@ import { Collapse, Typography } from 'antd';
 import { Sparkles } from "lucide-react";
 import ChatMarkdown from "../chat-markdown";
 
-const ChatReferCards: React.FC<{
+const ChatReasoningCards: React.FC<{
     content?: string;
     isFinished?: boolean;
     className?: string | undefined;
@@ -43,4 +43,4 @@ const ChatReferCards: React.FC<{
     )
 }
 
-export default ChatReferCards;
+export default ChatReasoningCards;

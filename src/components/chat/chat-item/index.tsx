@@ -26,7 +26,7 @@ import styles from './styles.module.scss';
 import { eventBus } from '@/services';
 import { BOT } from '@/services/bot/typings';
 import ChatReferCards from './chat-refer-cards';
-import ChatThink from './chat-think';
+import ChatReasoning from './chat-reasoning';
 
 const ChatItem: React.FC<{
   message: MESSAGE.MessageContent;
@@ -161,8 +161,8 @@ const ChatItem: React.FC<{
                         <Tag color="rgba(255,255,255,0.1)" className='mb-1'>@ {(msg.content as BOT.Bot).name}</Tag>
                       )}
                       {/* 思考 */}
-                      {msg.content_type === 'think:text' && (
-                        <ChatThink content={msg.content as string} isFinished={msg.is_finished || !loading} />
+                      {msg.content_type === 'reasoning:text' && (
+                        <ChatReasoning content={msg.content as string} isFinished={msg.is_finished || !loading} />
                       )}
                       {/* 文本 */}
                       {msg.content_type === 'text' && (
