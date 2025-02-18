@@ -15,7 +15,7 @@
  */
 
 import { MESSAGE } from "@/services/message/typings";
-import { CSSProperties } from "react";
+import { CSSProperties, memo } from "react";
 import styles from './styles.module.scss';
 import { Avatar, Card, Flex, Tag, Typography } from "antd";
 import _ from 'lodash';
@@ -24,7 +24,7 @@ const ChatReferCards: React.FC<{
   referCards: MESSAGE.ReferCard[];
   className?: string | undefined;
   style?: CSSProperties | undefined;
-}> = ({ referCards, className, style }) => {
+}> = memo(({ referCards, className, style }) => {
   return (
     <>
       <div className={`max-w-full overflow-auto p-2 ${className} ${styles['refer-cards']}`} style={style}>
@@ -35,7 +35,7 @@ const ChatReferCards: React.FC<{
             }}>
               <Flex vertical justify="space-between" align="flex-start" className="w-full h-full">
                 <Flex justify="flex-start" align="center" gap={4} className="w-full">
-                  <Tag className="m-0 rounded-xl h-4 px-1" style={{lineHeight: "14px"}} color="rgb(156 163 175)" >{referCard.index}</Tag>
+                  <Tag className="m-0 rounded-xl h-4 px-1" style={{ lineHeight: "14px" }} color="rgb(156 163 175)" >{referCard.index}</Tag>
                   <Typography.Text strong ellipsis className="flex-auto">{referCard.title}</Typography.Text>
                 </Flex>
                 <Flex justify="flex-start" align="center" gap={4} className="w-full py-2">
@@ -52,6 +52,6 @@ const ChatReferCards: React.FC<{
       </div>
     </>
   );
-};
+});
 
 export default ChatReferCards;

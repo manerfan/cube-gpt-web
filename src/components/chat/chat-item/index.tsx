@@ -40,6 +40,7 @@ const ChatItem: React.FC<{
 
   return (
     <>
+      {/* 系统消息 */}
       {message.sender_role === 'system' && (
         <Flex vertical justify="center" align="center" className="w-full pl-9">
           <List
@@ -63,6 +64,7 @@ const ChatItem: React.FC<{
           />
         </Flex>
       )}
+      {/* 用户/智能体消息 */}
       {message.sender_role !== 'system' && (
         <Flex
           justify="flex-start"
@@ -71,6 +73,7 @@ const ChatItem: React.FC<{
           className={`w-full ${styles['chat-item']} ${className}`}
           style={style}
         >
+          {/* 左侧 - 头像 */}
           <Flex
             vertical
             justify="flex-start"
@@ -83,12 +86,13 @@ const ChatItem: React.FC<{
               icon={{
                 ...(message.sender_role === 'user' ? (
                   <Avatar shape='square' size={32} className={`bg-user-msg font-bold`} src={message.sender_info?.avatar}>{initialState?.userMe?.name[0]}</Avatar>
-                ) : <Avatar shape='square' size={32} icon={<RobotOutlined />} src={message.sender_info?.avatar || '/logo.png'} />
+                ) : <Avatar shape='square' size={32} className='bg-blue-200' icon={<RobotOutlined />} src={message.sender_info?.avatar || '/logo.png'} >{message.sender_info?.name}</Avatar>
                 ),
               }}
             />
           </Flex>
 
+          {/* 右侧 */}
           <Flex
             vertical
             justify="flex-start"
@@ -96,6 +100,7 @@ const ChatItem: React.FC<{
             className="flex-auto box-border"
             style={{ width: 'calc(100% - 36px - 12px)' }}
           >
+            {/* 右上 - 头部信息 */}
             <Flex
               justify="flex-start"
               align="center"
@@ -135,6 +140,7 @@ const ChatItem: React.FC<{
               </Typography.Text>
             </Flex>
 
+            {/* 右下 - 消息 */}
             <Flex
               vertical
               justify="flex-start"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CSSProperties, useState } from "react";
+import { CSSProperties, memo, useState } from "react";
 import styles from './styles.module.scss';
 
 import { Collapse, Typography } from 'antd';
@@ -26,7 +26,7 @@ const ChatReasoningCards: React.FC<{
     isFinished?: boolean;
     className?: string | undefined;
     style?: CSSProperties | undefined;
-}> = ({ content, isFinished = true, className, style }) => {
+}> = memo(({ content, isFinished = true, className, style }) => {
     const [finished] = useState(isFinished);
     return (
         <>
@@ -41,6 +41,6 @@ const ChatReasoningCards: React.FC<{
             </div>
         </>
     )
-}
+});
 
 export default ChatReasoningCards;

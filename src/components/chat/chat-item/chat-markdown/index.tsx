@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CSSProperties } from 'react';
+import { CSSProperties, memo } from 'react';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import remarkToc from 'remark-toc';
@@ -29,15 +29,15 @@ import replaceParenthesesInMarkdown from '@/components/markdown/react-markdown/p
 
 const ChatMarkdown: React.FC<{
   children?: string;
-  className?: string | undefined;
-  style?: CSSProperties | undefined;
-}> = ({ children, className, style }) => {
+  className?: string;
+  style?: CSSProperties;
+}> = memo(({ children, className, style }) => {
   return (
     <>
       <div className={`${className} ${styles['markdown']}`} style={style}>
         <Markdown
           rehypePlugins={[
-            [rehypeExternalLinks, {target: '_blank', rel: 'noopener noreferrer'}], 
+            [rehypeExternalLinks, { target: '_blank', rel: 'noopener noreferrer' }],
             rehypeRaw, rehypeKatex,]}
           remarkPlugins={[remarkGfm, remarkToc, remarkMath]}
           components={{
@@ -49,6 +49,8 @@ const ChatMarkdown: React.FC<{
       </div>
     </>
   );
-};
+});
+
+ChatMarkdown.displayName = 'ChatMarkdown';
 
 export default ChatMarkdown;

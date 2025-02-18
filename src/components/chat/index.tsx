@@ -58,6 +58,21 @@ const ChatContent: React.FC<{
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
+  const resetMessages = (messages: MESSAGE.MessageContent[]) => {
+    setMessages(messages);
+  };
+
+  const pushMessages = (_messages: MESSAGE.MessageContent[]) => {
+    const newMessages = [...messages, ..._messages];
+    if (_.size(newMessages) > 60) {
+      // 只保留最新的
+      newMessages.splice(0, newMessages.length - 60);
+      setHasMore(true);
+    }
+    setMessages(newMessages);
+  };
+
+
   // 滚动到消息列表底部
   const scrollMessageToBottom = () => {
     chatContentPopoverRef.current?.trigScrollToBottom();
@@ -93,7 +108,7 @@ const ChatContent: React.FC<{
         }
 
         const newMessages = _.cloneDeep(messages) || [];
-        setMessages(
+        resetMessages(
           clearMessages ? resp.content : [...resp.content, ...newMessages],
         );
       })
@@ -108,7 +123,7 @@ const ChatContent: React.FC<{
     }
 
     setConversationUid(_conversationUid);
-    setMessages([]);
+    resetMessages([]);
     setHasMore(!!_conversationUid);
 
     if (!!_conversationUid) {
@@ -133,7 +148,7 @@ const ChatContent: React.FC<{
       conversationUid,
       setConversationUid,
       messages,
-      setMessages,
+      setMessages: resetMessages,
       setLoadingMessageUid,
       appendMessage,
     });
@@ -255,9 +270,7 @@ const ChatContent: React.FC<{
     // 清空记忆，展示系统消息
     const resp = await generateService.clearMemory(conversationUid!!);
     if (!_.isEmpty(resp.content)) {
-      const newMessages = _.cloneDeep(messages);
-      newMessages.push(...resp.content);
-      setMessages(newMessages);
+      pushMessages(resp.content);
     }
 
     scrollMessageToBottom();
